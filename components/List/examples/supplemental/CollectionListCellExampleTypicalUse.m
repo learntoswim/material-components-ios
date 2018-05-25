@@ -130,6 +130,10 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
 
 #pragma mark - <UICollectionViewDataSource>
 
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+  NSLog(@"selected %@",@(indexPath.item));
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
   return 100;//[_content count];
@@ -152,17 +156,17 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
 #endif
   cell.cellWidth = cellWidth;
   if (indexPath.item % 3 == 0) {
-    UIImageView *leadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-    leadingView.image = [UIImage imageNamed:@"Favorite"];
+//    UIImageView *leadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
+//    leadingView.image = [UIImage imageNamed:@"Favorite"];
 
-    cell.leadingView = leadingView;
+//    cell.leadingView = leadingView;
   }
 
   if (indexPath.item % 2 == 0) {
 //    UIView *leadingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 50)];
 //    leadingView.backgroundColor = [UIColor purpleColor];
-    UISwitch *uiSwitch = [[UISwitch alloc] init];
-    cell.trailingView = uiSwitch;
+//    UISwitch *uiSwitch = [[UISwitch alloc] init];
+//    cell.trailingView = uiSwitch;
     if (indexPath.item != 2) {
       cell.centerTrailingViewVertically = YES;
     }
@@ -191,6 +195,23 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
   
   if (indexPath.item % 2 == 0) {
     cell.automaticallySetTextOffset = YES;
+  }
+  
+  if (indexPath.item == 1) {
+    cell.automaticallySetTextOffset = YES;
+//    cell.leadingView = nil;
+//    cell.trailingView = nil;
+    cell.overlineText = @"Stuff";
+    cell.titleText = @"title";
+    cell.detailText = @"detail";
+
+    
+  }
+  if (indexPath.item == 23) {
+    NSLog(@"");
+    cell.overlineText = nil;
+    cell.automaticallySetTextOffset = YES;
+    
   }
 
   
@@ -235,6 +256,7 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
     [self.collectionView.collectionViewLayout invalidateLayout];
   }];
 }
+
 
 #pragma mark - CatalogByConvention
 

@@ -16,7 +16,7 @@ static const CGFloat kDefaultMarginBottom = 10.0;
 static const CGFloat kDefaultMarginLeading = 10.0;
 static const CGFloat kDefaultMarginTrailing = 10.0;
 static const CGFloat kDefaultViewPadding = 10.0;
-static const CGFloat kDefaultVerticalLabelPadding = 10.0;
+static const CGFloat kDefaultVerticalLabelPadding = 8.0;
 
 @interface MDCListItemCell ()
 
@@ -132,21 +132,18 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   // Create leadingContainer
   self.leadingContainer = [[UIView alloc] init];
   self.leadingContainer.translatesAutoresizingMaskIntoConstraints = NO;
-//  self.leadingContainer.backgroundColor = [UIColor lightGrayColor];
   self.leadingContainer.accessibilityIdentifier = @"leadingContainer";
   [self.contentView addSubview:self.leadingContainer];
 
   // Create trailingContainer
   self.trailingContainer = [[UIView alloc] init];
   self.trailingContainer.translatesAutoresizingMaskIntoConstraints = NO;
-//  self.trailingContainer.backgroundColor = [UIColor blueColor];
   self.trailingContainer.accessibilityIdentifier = @"trailingContainer";
   [self.contentView addSubview:self.trailingContainer];
 
   // Create textContainer
   self.textContainer = [[UIView alloc] init];
   self.textContainer.translatesAutoresizingMaskIntoConstraints = NO;
-//  self.textContainer.backgroundColor = [UIColor redColor];
   self.textContainer.accessibilityIdentifier = @"textContainer";
   [self.contentView addSubview:self.textContainer];
 
@@ -154,7 +151,6 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   self.overlineLabel = [[UILabel alloc] init];
   self.overlineLabel.numberOfLines = 0;
   self.overlineLabel.translatesAutoresizingMaskIntoConstraints = NO;
-//  self.overlineLabel.backgroundColor = [UIColor yellowColor];
   self.overlineLabel.textColor = [UIColor blackColor];
   self.overlineLabel.accessibilityIdentifier = @"overlineLabel";
   [self.textContainer addSubview:self.overlineLabel];
@@ -163,7 +159,6 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   self.titleLabel = [[UILabel alloc] init];
   self.titleLabel.numberOfLines = 0;
   self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-//  self.titleLabel.backgroundColor = [UIColor blackColor];
   self.titleLabel.textColor = [UIColor blackColor];
   self.titleLabel.accessibilityIdentifier = @"titleLabel";
   [self.textContainer addSubview:self.titleLabel];
@@ -172,7 +167,6 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   self.detailLabel = [[UILabel alloc] init];
   self.detailLabel.numberOfLines = 0;
   self.detailLabel.translatesAutoresizingMaskIntoConstraints = NO;
-//  self.detailLabel.backgroundColor = [UIColor redColor];
   self.detailLabel.textColor = [UIColor blackColor];
   [self.contentView addSubview:self.detailLabel];
 }
@@ -187,7 +181,6 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
                                attribute:NSLayoutAttributeNotAnAttribute
                               multiplier:1.0
                                 constant:0.0];
-//  self.leadingContainerWidthConstraint.priority = UILayoutPriorityDefaultHigh;
   self.leadingContainerWidthConstraint.active = YES;
 
   // Constrain height
@@ -199,7 +192,6 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
                                attribute:NSLayoutAttributeNotAnAttribute
                               multiplier:1.0
                                 constant:0.0];
-//  self.leadingContainerHeightConstraint.priority = UILayoutPriorityDefaultHigh;
   self.leadingContainerHeightConstraint.active = YES;
   
   // Constrain to leading edge
@@ -640,12 +632,6 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   _overlineText = overlineText;
   self.overlineLabel.text = _overlineText;
   
-//  if (_overlineText.length > 0) {
-//    self.overlineLabelTopConstraint.constant = kDefaultViewPadding;
-//  } else {
-//    self.overlineLabelTopConstraint.constant = 0;
-//  }
-  
   [self adjustTextContainerConstraintsAfterTextChange];
 
   [self setNeedsLayout];
@@ -659,7 +645,7 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   self.titleLabel.text = _titleText;
 
   if (_titleText.length > 0) {
-    self.titleLabelTopConstraint.constant = kDefaultViewPadding;
+    self.titleLabelTopConstraint.constant = kDefaultVerticalLabelPadding;
   } else {
     self.titleLabelTopConstraint.constant = 0;
   }
@@ -677,7 +663,7 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   self.detailLabel.text = _detailText;
   
   if (_detailText.length > 0) {
-    self.detailLabelTopConstraint.constant = kDefaultViewPadding;
+    self.detailLabelTopConstraint.constant = kDefaultVerticalLabelPadding;
   } else {
     self.detailLabelTopConstraint.constant = 0;
   }
@@ -796,6 +782,16 @@ static const CGFloat kDefaultVerticalLabelPadding = 10.0;
   self.titleLabel.font = titleFont;
   self.detailLabel.font = detailFont;
   [self setNeedsLayout];
+}
+
+
+-(UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
+  UICollectionViewLayoutAttributes *attributes = [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
+  CGPoint origin = attributes.frame.origin;
+  CGSize size = [self.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+  CGRect frame = CGRectMake(origin.x, origin.y, size.width, size.height);
+  attributes.frame = frame;
+  return attributes;
 }
 
 @end
