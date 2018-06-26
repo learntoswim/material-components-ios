@@ -14,10 +14,11 @@
  limitations under the License.
  */
 
+#import "CollectionListCellExampleTypicalUse.h"
+
+#import "CollectionViewListCell.h"
 #import "MaterialIcons+ic_info.h"
 #import "MaterialTypographyScheme.h"
-#import "supplemental/CollectionListCellExampleTypicalUse.h"
-#import "supplemental/CollectionViewListCell.h"
 
 static NSString *const kReusableIdentifierItem = @"itemCellIdentifier";
 static NSString *const kExampleDetailText =
@@ -125,7 +126,7 @@ static const CGFloat kSmallArbitraryCellWidth = 100.f;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
-  return [_content count];
+  return 100;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
@@ -143,10 +144,10 @@ static const CGFloat kSmallArbitraryCellWidth = 100.f;
   }
 #endif
   [cell setCellWidth:cellWidth];
-  cell.titleLabel.text = _content[indexPath.item][0];
-  cell.titleLabel.textAlignment = [_content[indexPath.item][1] integerValue];
-  cell.detailsTextLabel.text = _content[indexPath.item][2];
-  cell.detailsTextLabel.textAlignment = [_content[indexPath.item][3] integerValue];
+  cell.titleLabel.text = _content[indexPath.item % _content.count][0];
+  cell.titleLabel.textAlignment = [_content[indexPath.item % _content.count][1] integerValue];
+  cell.detailsTextLabel.text = _content[indexPath.item % _content.count][2];
+  cell.detailsTextLabel.textAlignment = [_content[indexPath.item % _content.count][3] integerValue];
   if (indexPath.item % 3 == 0) {
     [cell setImage:[MDCIcons imageFor_ic_info]];
   }
@@ -173,7 +174,7 @@ static const CGFloat kSmallArbitraryCellWidth = 100.f;
 #pragma mark - CatalogByConvention
 
 + (NSArray *)catalogBreadcrumbs {
-  return @[ @"Lists", @"List Cell Example" ];
+  return @[ @"Lists", @"Collection List Cell Example Typical Use" ];
 }
 
 + (BOOL)catalogIsPrimaryDemo {
@@ -181,7 +182,7 @@ static const CGFloat kSmallArbitraryCellWidth = 100.f;
 }
 
 + (NSString *)catalogDescription {
-  return @"Material Collection Lists are continuous, vertical indexes of text or images.";
+  return @"Collection List Cell Example Typical Use";
 }
 
 + (BOOL)catalogIsPresentable {
