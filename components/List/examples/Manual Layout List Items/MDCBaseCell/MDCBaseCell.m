@@ -11,7 +11,7 @@
  limitations under the License.
  */
 
-#import "MDCBaseCollectionViewCell.h"
+#import "MDCBaseCell.h"
 
 #import "MaterialInk.h"
 #import "MaterialShadowLayer.h"
@@ -19,14 +19,14 @@
 
 static NSString *const MDCListBaseCellInkViewKey = @"MDCListBaseCellInkViewKey";
 
-@interface MDCBaseCollectionViewCell ()
+@interface MDCBaseCell ()
 
 @property (nonatomic, assign) CGPoint lastTouch;
 @property (strong, nonatomic, nonnull) MDCInkView *inkView;
 
 @end
 
-@implementation MDCBaseCollectionViewCell
+@implementation MDCBaseCell
 
 #pragma mark Object Lifecycle
 
@@ -116,12 +116,23 @@ static NSString *const MDCListBaseCellInkViewKey = @"MDCListBaseCellInkViewKey";
 
 #pragma mark Accessors
 
--(void)setElevation:(MDCShadowElevation)elevation {
-  if (elevation == _elevation) {
+-(void)setCurrentElevation:(MDCShadowElevation)currentElevation {
+  if (currentElevation == _currentElevation) {
     return;
   }
-  _elevation = elevation;
+  _currentElevation = currentElevation;
   [self updateShadowElevation];
+}
+
+-(void)setCurrentInkColor:(UIColor *)currentInkColor {
+  if ([self.currentInkColor  isEqual:currentInkColor]) {
+    return;
+  }
+  self.inkView.inkColor = currentInkColor;
+}
+
+-(UIColor *)currentInkColor {
+  return self.inkView.inkColor;
 }
 
 #pragma mark Shadow
@@ -132,7 +143,7 @@ static NSString *const MDCListBaseCellInkViewKey = @"MDCListBaseCellInkViewKey";
 
 - (void)updateShadowElevation {
   self.layer.shadowPath = [self boundingPath].CGPath;
-  [(MDCShadowLayer *)self.layer setElevation:self.elevation];
+  [(MDCShadowLayer *)self.layer setElevation:self.currentElevation];
 }
 
 @end

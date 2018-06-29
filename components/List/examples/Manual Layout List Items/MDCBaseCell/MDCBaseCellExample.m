@@ -11,29 +11,28 @@
  limitations under the License.
  */
 
-#import "MDCListItemCellExample.h"
+#import "MDCBaseCellExample.h"
 
-#import "MDCListItemCell.h"
+#import "MDCBaseCell.h"
 
 static CGFloat const kArbitraryCellHeight = 75.f;
-static NSString *const kListItemCellIdentifier = @"kListItemCellIdentifier";
+static NSString *const kBaseCellIdentifier = @"kBaseCellIdentifier";
 
-@interface MDCListItemCellExample () <UICollectionViewDelegate,
-                                      UICollectionViewDataSource>
+@interface MDCBaseCellExample () <UICollectionViewDelegate,
+                                  UICollectionViewDataSource>
 
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) UICollectionViewFlowLayout *collectionViewLayout;
-@property (strong, nonatomic) NSArray *randomStrings;
 @property (nonatomic, assign) NSInteger numberOfCells;
+
 @end
 
-@implementation MDCListItemCellExample
+@implementation MDCBaseCellExample
 
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.parentViewController.automaticallyAdjustsScrollViewInsets = NO;
   self.automaticallyAdjustsScrollViewInsets = NO;
-  [self createDataSource];
   [self createCollectionView];
 }
 
@@ -42,27 +41,19 @@ static NSString *const kListItemCellIdentifier = @"kListItemCellIdentifier";
   [self positionCollectionView];
 }
 
-- (void)createDataSource {
-  self.numberOfCells = 100;
-  NSMutableArray *randomStrings = [[NSMutableArray alloc] initWithCapacity:self.numberOfCells];
-  for (NSInteger i = 0; i < self.numberOfCells; i++) {
-    [randomStrings addObject:[self generateRandomString]];
-  }
-  self.randomStrings = [randomStrings mutableCopy];
-}
-
 - (void)createCollectionView {
   self.collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
-  self.collectionViewLayout.estimatedItemSize = CGSizeMake(self.collectionView.bounds.size.width, kArbitraryCellHeight);
-  self.collectionViewLayout.minimumInteritemSpacing = 1;
-  self.collectionViewLayout.minimumLineSpacing = 0;
+  self.collectionViewLayout.estimatedItemSize = CGSizeMake(self.collectionView.bounds.size.width - 20, kArbitraryCellHeight);
+  self.collectionViewLayout.minimumInteritemSpacing = 5;
+  self.collectionViewLayout.minimumLineSpacing = 5;
   self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
                                            collectionViewLayout:self.collectionViewLayout];
   self.collectionView.backgroundColor = [UIColor whiteColor];
-  [self.collectionView registerClass:[MDCListItemCell class]
-          forCellWithReuseIdentifier:kListItemCellIdentifier];
+  [self.collectionView registerClass:[MDCBaseCell class]
+          forCellWithReuseIdentifier:kBaseCellIdentifier];
   self.collectionView.delegate = self;
   self.collectionView.dataSource = self;
+  self.numberOfCells = 100;
   [self.view addSubview:self.collectionView];
 }
 
@@ -81,9 +72,20 @@ static NSString *const kListItemCellIdentifier = @"kListItemCellIdentifier";
 #endif
   CGRect frame = CGRectMake(originX, originY, width, height);
   self.collectionView.frame = frame;
-  self.collectionViewLayout.estimatedItemSize = CGSizeMake(self.collectionView.bounds.size.width, kArbitraryCellHeight);
+  self.collectionViewLayout.estimatedItemSize = CGSizeMake(self.collectionView.bounds.size.width - 20, kArbitraryCellHeight);
   [self.collectionViewLayout invalidateLayout];
   [self.collectionView reloadData];
+}
+
+- (UIColor *)randomColor {
+  NSArray *colors = @[[UIColor redColor],
+                      [UIColor orangeColor],
+                      [UIColor yellowColor],
+                      [UIColor greenColor],
+                      [UIColor blueColor],
+                      [UIColor purpleColor]];
+  NSInteger idx = 0 + arc4random() % (colors.count - 0);
+  return colors[idx];
 }
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -95,38 +97,29 @@ static NSString *const kListItemCellIdentifier = @"kListItemCellIdentifier";
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-  MDCListItemCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kListItemCellIdentifier
-                                                                       forIndexPath:indexPath];
-  cell.cellWidth = CGRectGetWidth(collectionView.bounds);
-  cell.titleLabel.text = self.randomStrings[indexPath.item];
-  cell.detailLabel.text = self.randomStrings[(indexPath.item + 1) % self.randomStrings.count];
-  cell.leadingImageView.image = [UIImage imageNamed:@"Cake"];
-  cell.trailingImageView.image = [UIImage imageNamed:@"Favorite"];
-  cell.mdc_adjustsFontForContentSizeCategory = YES;
+  MDCBaseCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kBaseCellIdentifier
+                                                                              forIndexPath:indexPath];
+  cell.backgroundColor = [UIColor lightGrayColor];
+  cell.currentElevation = 0;
+  cell.currentInkColor = [self randomColor];
   return cell;
 }
 
-- (NSString *)generateRandomString {
-  NSInteger numberOfWords = 0 + arc4random() % (25 - 0);
-  NSMutableArray *wordArray = [[NSMutableArray alloc] initWithCapacity:numberOfWords];
-  for (NSInteger i = 0; i < numberOfWords; i++) {
-    NSInteger lengthOfWord = 0 + arc4random() % (10 - 0);
-    NSMutableArray *letterArray = [[NSMutableArray alloc] initWithCapacity:lengthOfWord];
-    for (NSInteger j = 0; j < lengthOfWord; j++) {
-      int asciiCode = 97 + arc4random() % (122 - 97);
-      NSString *characterString = [NSString stringWithFormat:@"%c", asciiCode]; // A
-      [letterArray addObject:characterString];
-    }
-    NSString *word = [letterArray componentsJoinedByString:@""];
-    [wordArray addObject:word];
-  }
-  return [wordArray componentsJoinedByString:@" "];
+-(void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+  MDCBaseCell *cell = (MDCBaseCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+  cell.currentElevation = 50;
+  cell.currentInkColor = [self randomColor];
 }
 
+-(void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+  MDCBaseCell *cell = (MDCBaseCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+  cell.currentElevation = 0;
+  cell.currentInkColor = [self randomColor];
+}
 #pragma mark - CatalogByConvention
 
 + (NSArray *)catalogBreadcrumbs {
-  return @[ @"Lists", @"Manual Layout List 3" ];
+  return @[ @"Lists", @"Manual Layout Base List Cell" ];
 }
 
 + (BOOL)catalogIsPrimaryDemo {
@@ -134,7 +127,7 @@ static NSString *const kListItemCellIdentifier = @"kListItemCellIdentifier";
 }
 
 + (NSString *)catalogDescription {
-  return @"Manual Layout List 3";
+  return @"Manual Layout Base List Cell";
 }
 
 + (BOOL)catalogIsPresentable {
