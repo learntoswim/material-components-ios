@@ -991,6 +991,7 @@ static UITextFieldViewMode _underlineViewModeDefault = UITextFieldViewModeWhileE
   } else {
     if (![self.textInput.leadingUnderlineLabel.text isEqualToString:helperText]) {
       self.textInput.leadingUnderlineLabel.text = helperText;
+      [self.textInput layoutIfNeeded];
       [self updateLayout];
     }
   }
@@ -1561,6 +1562,10 @@ static UITextFieldViewMode _underlineViewModeDefault = UITextFieldViewModeWhileE
     self.textInput.accessibilityValue = nil;
     self.textInput.leadingUnderlineLabel.accessibilityLabel = nil;
   }
+
+  [self.textInput setNeedsLayout];
+  [self.textInput layoutIfNeeded];
+  [self updateLayout];
 }
 
 #pragma mark - Accessibility
