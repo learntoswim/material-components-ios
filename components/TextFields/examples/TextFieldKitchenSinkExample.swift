@@ -111,6 +111,14 @@ final class TextFieldKitchenSinkSwiftExample: UIViewController {
     setupExampleViews()
   }
 
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    allInputControllers.forEach { controller in
+//      controller.setErrorText("Uh oh! Try something else.", errorAccessibilityValue: nil)
+      controller.setErrorText("Uh oh! Try something else. Uh oh! Try something else. Uh oh! Try something else. Uh oh! Try something else. Uh oh! Try something else. Uh oh! Try something else.", errorAccessibilityValue: nil)
+    }
+  }
+
   func setupFilledTextFields() -> [MDCTextInputControllerFilled] {
     let textFieldFilled = MDCTextField()
     textFieldFilled.translatesAutoresizingMaskIntoConstraints = false
