@@ -60,6 +60,11 @@
   [self.contentViewController didMoveToParentViewController:self];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, self.contentViewController.view);
+}
+
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
 
