@@ -102,7 +102,7 @@
 #pragma mark - CatalogByConvention
 
 + (NSArray *)catalogBreadcrumbs {
-  return @[ @"List Items", @"MDCBaseCell Example" ];
+  return @[ @"Lists", @"MDCBaseCell Example" ];
 }
 
 + (BOOL)catalogIsPrimaryDemo {
