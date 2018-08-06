@@ -16,5 +16,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CollectionsContainerExample : UIViewController <UICollectionViewDataSource>
+@interface CollectionsContainerExample : UIViewController <UICollectionViewDataSource,
+                                                           UICollectionViewDelegateFlowLayout>
 @end
