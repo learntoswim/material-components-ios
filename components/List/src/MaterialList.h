@@ -15,3 +15,4 @@
  */
 
 #import "MDCBaseCell.h"
+#import "MDCListItemCell.h"
