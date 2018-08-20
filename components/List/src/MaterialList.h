@@ -15,4 +15,4 @@
  */
 
 #import "MDCBaseCell.h"
-#import "MDCBasicStereoCell.h"
+#import "MDCSelfSizingStereoCell.h"
