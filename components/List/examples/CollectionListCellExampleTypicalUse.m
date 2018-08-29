@@ -14,23 +14,21 @@
  limitations under the License.
  */
 
-#import "ManualLayoutListCellExample1.h"
-
-#import "ManualLayoutListItemCell1.h"
 #import "MaterialIcons+ic_info.h"
 #import "MaterialTypographyScheme.h"
+#import "supplemental/CollectionListCellExampleTypicalUse.h"
+#import "supplemental/CollectionViewListCell.h"
 
-
-static NSString *const kManualLayoutListItemCell1ReuseIdentifier = @"kManualLayoutListItemCell1ReuseIdentifier";
-
+static NSString *const kReusableIdentifierItem = @"itemCellIdentifier";
+static NSString *const kExampleDetailText =
+    @"Pellentesque non quam ornare, porta urna sed, malesuada felis. Praesent at gravida felis, "
+     "non facilisis enim. Proin dapibus laoreet lorem, in viverra leo dapibus a.";
 static const CGFloat kSmallestCellHeight = 40.f;
-static const CGFloat kSmallArbitraryCellWidth = 200.f;
+static const CGFloat kSmallArbitraryCellWidth = 100.f;
 
-@interface ManualLayoutListCellExample1 ()
-
-@end
-
-@implementation ManualLayoutListCellExample1
+@implementation CollectionListCellExampleTypicalUse {
+  NSMutableArray *_content;
+}
 
 @synthesize collectionViewLayout = _collectionViewLayout;
 
@@ -66,8 +64,51 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
   }
 #endif
   // Register cell class.
-  [self.collectionView registerClass:[ManualLayoutListItemCell1 class]
-          forCellWithReuseIdentifier:kManualLayoutListItemCell1ReuseIdentifier];
+  [self.collectionView registerClass:[CollectionViewListCell class]
+          forCellWithReuseIdentifier:kReusableIdentifierItem];
+
+  // Populate content with array of text, details text, and number of lines.
+  _content = [NSMutableArray array];
+  NSDictionary *alignmentValues = @{
+    @"Left" : @(NSTextAlignmentLeft),
+    @"Right" : @(NSTextAlignmentRight),
+    @"Center" : @(NSTextAlignmentCenter),
+    @"Just." : @(NSTextAlignmentJustified),
+    @"Natural" : @(NSTextAlignmentNatural)
+  };
+
+  for (NSString *alignmentKey in alignmentValues) {
+    [_content addObject:@[
+      [NSString stringWithFormat:@"(%@) Single line text", alignmentKey],
+      alignmentValues[alignmentKey],
+      @"",
+      alignmentValues[alignmentKey]
+    ]];
+    [_content addObject:@[
+      @"",
+      alignmentValues[alignmentKey],
+      [NSString stringWithFormat:@"(%@) Single line detail text", alignmentKey],
+      alignmentValues[alignmentKey]
+    ]];
+    [_content addObject:@[
+      [NSString stringWithFormat:@"(%@) Two line text", alignmentKey],
+      alignmentValues[alignmentKey],
+      [NSString stringWithFormat:@"(%@) Here is the detail text", alignmentKey],
+      alignmentValues[alignmentKey]
+    ]];
+    [_content addObject:@[
+      [NSString stringWithFormat:@"(%@) Two line text (truncated)", alignmentKey],
+      alignmentValues[alignmentKey],
+      [NSString stringWithFormat:@"(%@) %@", alignmentKey, kExampleDetailText],
+      alignmentValues[alignmentKey]
+    ]];
+    [_content addObject:@[
+      [NSString stringWithFormat:@"(%@) Three line text (wrapped)", alignmentKey],
+      alignmentValues[alignmentKey],
+      [NSString stringWithFormat:@"(%@) %@", alignmentKey, kExampleDetailText],
+      alignmentValues[alignmentKey]
+    ]];
+  }
 
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(contentSizeCategoryDidChange:)
@@ -84,81 +125,33 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
-  return 100;
+  return [_content count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-  ManualLayoutListItemCell1 *cell =
-  [collectionView dequeueReusableCellWithReuseIdentifier:kManualLayoutListItemCell1ReuseIdentifier
-                                            forIndexPath:indexPath];
-
-  CGFloat cellWidth = CGRectGetWidth(self.collectionView.bounds);
+  CollectionViewListCell *cell =
+      [collectionView dequeueReusableCellWithReuseIdentifier:kReusableIdentifierItem
+                                                forIndexPath:indexPath];
+  [cell applyTypographyScheme:_typographyScheme];
+  cell.mdc_adjustsFontForContentSizeCategory = YES;
+  CGFloat cellWidth = CGRectGetWidth(collectionView.bounds);
 #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
   if (@available(iOS 11.0, *)) {
     cellWidth -=
-    (collectionView.adjustedContentInset.left + collectionView.adjustedContentInset.right);
+        (collectionView.adjustedContentInset.left + collectionView.adjustedContentInset.right);
   }
 #endif
-  cell.cellWidth = cellWidth;
-
-  cell.typographyScheme = _typographyScheme;
-  cell.mdc_adjustsFontForContentSizeCategory = YES;
-
+  [cell setCellWidth:cellWidth];
+  cell.titleLabel.text = _content[indexPath.item][0];
+  cell.titleLabel.textAlignment = [_content[indexPath.item][1] integerValue];
+  cell.detailsTextLabel.text = _content[indexPath.item][2];
+  cell.detailsTextLabel.textAlignment = [_content[indexPath.item][3] integerValue];
   if (indexPath.item % 3 == 0) {
-    UIImageView *leadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-    leadingView.image = [UIImage imageNamed:@"Favorite"];
-    cell.leadingView = leadingView;
+    [cell setImage:[MDCIcons imageFor_ic_info]];
   }
-
-  if (indexPath.item % 2 == 0) {
-    UISwitch *uiSwitch = [[UISwitch alloc] init];
-    cell.trailingView = uiSwitch;
-    if (indexPath.item != 2) {
-      cell.centerTrailingViewVertically = YES;
-    }
-  }
-
-  NSArray *array = @[@"Sed ut perspiciatis unde omnis iste natus error",
-                   @"Sed ut perspiciatis",
-                   @"Sed ut perspiciatis unde omnis iste natus",
-                   @"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium",
-                   @"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium",
-                   @"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
-                   @"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut",
-                   @"Sed ut"
-                   ];
-
-  cell.overlineLabel.text = array[indexPath.item % 8];
-  cell.titleLabel.text = array[(indexPath.item + 1) % 8];
-  cell.detailLabel.text = array[(indexPath.item + 2) % 8];
-  cell.textOffset = 50;
-
-  if (indexPath.item == 1) {
-    cell.overlineLabel.text = nil;
-    cell.titleLabel.text = nil;
-    cell.detailLabel.text = nil;
-  }
-
-  if (indexPath.item % 2 == 0) {
-    cell.automaticallySetTextOffset = YES;
-  }
-
-  if (indexPath.item == 1) {
-    cell.automaticallySetTextOffset = YES;
-    cell.leadingView = nil;
-    cell.trailingView = nil;
-    cell.overlineLabel.text = @"Overline";
-    cell.titleLabel.text = @"Title";
-    cell.detailLabel.text = @"Detail";
-  }
-
-  cell.titleLabel.numberOfLines = 0;
-  cell.detailLabel.numberOfLines = 0;
-
   return cell;
 }
-
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
@@ -180,7 +173,7 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
 #pragma mark - CatalogByConvention
 
 + (NSArray *)catalogBreadcrumbs {
-  return @[ @"Lists", @"Manual Layout Based List 1" ];
+  return @[ @"Lists", @"List Cell Example" ];
 }
 
 + (BOOL)catalogIsPrimaryDemo {
@@ -188,7 +181,7 @@ static const CGFloat kSmallArbitraryCellWidth = 200.f;
 }
 
 + (NSString *)catalogDescription {
-  return @"Manual Layout Based List 1";
+  return @"Material Collection Lists are continuous, vertical indexes of text or images.";
 }
 
 + (BOOL)catalogIsPresentable {
