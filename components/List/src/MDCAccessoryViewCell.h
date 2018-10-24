@@ -48,6 +48,16 @@ __attribute__((objc_subclassing_restricted)) @interface MDCAccessoryViewCell : M
 @property(nonatomic, strong) UIView *trailingAccessoryView;
 
 /**
+ The desired size of the leadingAccessoryView.
+ */
+@property(nonatomic, assign) CGSize *leadingAccessoryViewSize;
+
+/**
+ The desired size of the trailingAccessoryView.
+ */
+@property(nonatomic, assign) CGSize *trailingAccessoryViewSize;
+
+/**
  The UILabel responsible for displaying the title text. By default, `numberOfLines` is set to 0 so
  the label wraps and the self-sizing capabilities of the cell are best utilized.
  */
