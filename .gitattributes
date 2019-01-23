@@ -1,2 +1,4 @@
-snapshot_test_goldens/**/*.png filter=lfs diff=lfs merge=lfs -text
+# Do not add git-lfs attributes to this files. It causes problems with Cocoapods.
+# snapshot_test_goldens/**/*.png filter=lfs diff=lfs merge=lfs -text
+.gitattributes merge=gitattributes
 snapshot_test_goldens/goldens_64/MDCProgressViewCornerRadiusSnapshotTests/testProgress100RTL_11_2@2x.png filter=lfs diff=lfs merge=lfs -text
