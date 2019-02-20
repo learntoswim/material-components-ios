@@ -67,18 +67,20 @@ target "MDCCatalog" do
     'Ripple/UnitTests',
     'schemes/Container/UnitTests',
   ]
+
   pod 'MaterialComponentsSnapshotTests', :path => '../', :testspecs => [
-    'BottomAppBar/tests/snapshot',
-    'BottomNavigation/tests/snapshot',
-    'Buttons/tests/snapshot',
-    'ButtonBar/tests/snapshot',
-    'Cards/tests/snapshot',
-    'Chips/tests/snapshot',
-    'Dialogs/tests/snapshot',
-    'Ripple/tests/snapshot',
-    'Slider/tests/snapshot',
-    'TextFields/tests/snapshot',
+#    'BottomAppBar/SnapshotTests',
+#    'BottomNavigation/SnapshotTests',
+#    'Buttons/SnapshotTests',
+    'ButtonBar/SnapshotTests',
+    'Cards/SnapshotTests',
+#    'Chips/SnapshotTests',
+#    'Dialogs/SnapshotTests',
+#    'Ripple/SnapshotTests',
+#    'Slider/SnapshotTests',
+#    'TextFields/SnapshotTests',
   ]
+
   pod 'CatalogByConvention', "~> 2.5"
   pod 'MaterialCatalog', :path => 'MaterialCatalog/'
 
@@ -104,7 +106,6 @@ target "MDCDragons" do
   pod 'MaterialComponents', :path => '../'
   pod 'MaterialComponentsBeta', :path => '../'
   pod 'MaterialComponentsExamples', :path => '../'
-  pod 'MaterialComponentsSnapshotTests', :path => '../'
   use_frameworks!
 end
 
