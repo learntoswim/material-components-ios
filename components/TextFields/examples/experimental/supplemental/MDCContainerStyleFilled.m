@@ -292,9 +292,6 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)0.2;
   return animation;
 }
 
-- (void)animationDidStart:(CAAnimation *)anim {
-}
-
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
   if (![anim isKindOfClass:[CABasicAnimation class]]) {
     return;

@@ -91,18 +91,18 @@ static const NSUInteger kDefaultVerticalPadding = 20;
   self.scrollViewSubviews = @[
     [self createToggleErrorButton],
     [self createFirstResponderButton],
-    [self createLabelWithText:@"High density filled MDCInputTextField:"],
-    [self createFilledTextFieldWithMinimalDensity],
-    [self createLabelWithText:@"Average density filled MDCInputTextField:"],
-    [self createFilledTextField],
-    [self createLabelWithText:@"Low density filled MDCInputTextField:"],
-    [self createFilledTextFieldWithMaximalDensity],
+//    [self createLabelWithText:@"High density filled MDCInputTextField:"],
+//    [self createFilledTextFieldWithMinimalDensity],
+//    [self createLabelWithText:@"Average density filled MDCInputTextField:"],
+//    [self createFilledTextField],
+//    [self createLabelWithText:@"Low density filled MDCInputTextField:"],
+//    [self createFilledTextFieldWithMaximalDensity],
     [self createLabelWithText:@"High density outlined MDCInputTextField:"],
     [self createOutlinedTextFieldWithMinimalDensity],
     [self createLabelWithText:@"Average density outlined MDCInputTextField:"],
     [self createOutlinedTextField],
-    [self createLabelWithText:@"Low density outlined MDCInputTextField:"],
-    [self createOutlinedTextFieldWithMaximalDensity],
+//    [self createLabelWithText:@"Low density outlined MDCInputTextField:"],
+//    [self createOutlinedTextFieldWithMaximalDensity],
   ];
   for (UIView *view in self.scrollViewSubviews) {
     [self.scrollView addSubview:view];
