@@ -99,8 +99,8 @@ static const NSUInteger kDefaultVerticalPadding = 20;
 //    [self createFilledTextFieldWithMaximalDensity],
     [self createLabelWithText:@"High density outlined MDCInputTextField:"],
     [self createOutlinedTextFieldWithMinimalDensity],
-    [self createLabelWithText:@"Average density outlined MDCInputTextField:"],
-    [self createOutlinedTextField],
+//    [self createLabelWithText:@"Average density outlined MDCInputTextField:"],
+//    [self createOutlinedTextField],
 //    [self createLabelWithText:@"Low density outlined MDCInputTextField:"],
 //    [self createOutlinedTextFieldWithMaximalDensity],
   ];
