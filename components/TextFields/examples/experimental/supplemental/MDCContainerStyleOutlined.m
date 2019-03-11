@@ -21,12 +21,12 @@
 #import <Foundation/Foundation.h>
 
 static const CGFloat kOutlinedContainerStyleCornerRadius = (CGFloat)4.0;
-static const CGFloat kFloatingPlaceholderOutlineSidePadding = (CGFloat)5.0;
+//static const CGFloat kFloatingPlaceholderOutlineSidePadding = (CGFloat)5.0;
 
 static const CGFloat kOutlinedContainerStyleThinOutlineThickness = (CGFloat)1.0;
 static const CGFloat kOutlinedContainerStyleThickOutlineThickness = (CGFloat)2.0;
 
-static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
+static const CGFloat kLayerAnimationDuration = (CGFloat)2.0;
 
 @implementation MDCContainedInputViewColorSchemeOutlined
 @end
@@ -34,6 +34,11 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
 @interface MDCContainerStyleOutlined () <CAAnimationDelegate>
 
 @property(strong, nonatomic) CAShapeLayer *outlinedSublayer;
+@property(strong, nonatomic) CAShapeLayer *mask;
+@property(strong, nonatomic) CAShapeLayer *mask2;
+@property(strong, nonatomic) CAShapeLayer *mask3;
+@property(strong, nonatomic) CAShapeLayer *mask4;
+@property(strong, nonatomic) CAShapeLayer *mask5;
 
 @property(strong, nonatomic, readonly, class) NSString *outlinePathAnimationKey;
 @property(strong, nonatomic, readonly, class) NSString *outlineStrokeColorAnimationKey;
@@ -57,6 +62,24 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
   self.outlinedSublayer.fillColor = [UIColor clearColor].CGColor;
   self.outlinedSublayer.lineWidth =
       [self outlineLineWidthForState:MDCContainedInputViewStateNormal];
+
+  self.mask = [[CAShapeLayer alloc] init];
+
+  self.mask2 = [[CAShapeLayer alloc] init];
+  self.mask2.backgroundColor = [UIColor blackColor].CGColor;
+  [self.mask addSublayer:self.mask2];
+
+  self.mask3 = [[CAShapeLayer alloc] init];
+  self.mask3.backgroundColor = [UIColor blackColor].CGColor;
+  [self.mask addSublayer:self.mask3];
+
+  self.mask4 = [[CAShapeLayer alloc] init];
+  self.mask4.backgroundColor = [UIColor blackColor].CGColor;
+  [self.mask addSublayer:self.mask4];
+
+  self.mask5 = [[CAShapeLayer alloc] init];
+  self.mask5.backgroundColor = [UIColor blackColor].CGColor;
+  [self.mask addSublayer:self.mask5];
 }
 
 - (id<MDCContainedInputViewColorScheming>)defaultColorSchemeForState:
@@ -105,20 +128,20 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
     if (animation == pathAnimation) {
       CGPathRef toValue = (__bridge CGPathRef)animation.toValue;
       NSLog(@"path completed to %@",NSStringFromCGRect([UIBezierPath bezierPathWithCGPath:toValue].bounds));
-      [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
       self.outlinedSublayer.path = toValue;
+      [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
     }
     if (animation == strokeColorAnimation) {
       CGColorRef toValue = (__bridge CGColorRef)animation.toValue;
       NSLog(@"stroke color completed to %@",[[CIColor colorWithCGColor:toValue] stringRepresentation]);
-      [self.outlinedSublayer removeAnimationForKey:self.class.outlineStrokeColorAnimationKey];
       self.outlinedSublayer.strokeColor = toValue;
+      [self.outlinedSublayer removeAnimationForKey:self.class.outlineStrokeColorAnimationKey];
     }
     if (animation == lineWidthAnimation) {
       CGFloat toValue = (CGFloat)[animation.toValue floatValue];
       NSLog(@"line width completed to %@",@(toValue));
-      [self.outlinedSublayer removeAnimationForKey:self.class.outlineLineWidthAnimationKey];
       self.outlinedSublayer.lineWidth = toValue;
+      [self.outlinedSublayer removeAnimationForKey:self.class.outlineLineWidthAnimationKey];
     }
   } else {
     NSLog(@"animation to %@ was cut short",animation.keyPath);
@@ -129,6 +152,7 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
 
 - (void)applyStyleToContainedInputView:(id<MDCContainedInputView>)containedInputView
     withContainedInputViewColorScheming:(id<MDCContainedInputViewColorScheming>)colorScheme {
+  NSLog(@"LAYOUT");
   UIView *uiView = nil;
   if (![containedInputView isKindOfClass:[UIView class]]) {
     [self removeStyleFrom:containedInputView];
@@ -169,6 +193,33 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
 //  NSLog(@"target thick: %@",NSStringFromCGRect(targetThickUnderlineBezier.bounds));
 //  NSLog(@"target thin: %@",NSStringFromCGRect(targetThinUnderlineBezier.bounds));
 
+  self.mask.backgroundColor = [UIColor clearColor].CGColor;
+  self.mask.frame = view.bounds;
+//  [self.outlinedSublayer addSublayer:self.mask];
+  self.outlinedSublayer.mask = self.mask;
+//  UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:placeholderFrame cornerRadius:0];
+//  self.mask2.fillRule = kCAFillRuleEvenOdd;
+  
+  //left
+  self.mask2.frame = CGRectMake(-5, -5, CGRectGetMinX(placeholderFrame)+5, CGRectGetHeight(view.bounds)+10);
+//  self.mask2.backgroundColor = [UIColor redColor].CGColor;
+  //top
+  self.mask3.frame = CGRectMake(CGRectGetMinX(placeholderFrame), CGRectGetMinY(placeholderFrame) - CGRectGetHeight(view.bounds),
+                                CGRectGetWidth(placeholderFrame), CGRectGetHeight(view.bounds));
+//  self.mask3.backgroundColor = [UIColor blueColor].CGColor;
+  //right
+  self.mask4.frame = CGRectMake(CGRectGetMaxX(placeholderFrame), -5, CGRectGetWidth(view.bounds)+5, CGRectGetHeight(view.bounds)+10);
+//  self.mask4.backgroundColor = [UIColor purpleColor].CGColor;
+  //bottom
+  self.mask5.frame = CGRectMake(CGRectGetMinX(placeholderFrame), CGRectGetMaxY(placeholderFrame),
+                                CGRectGetWidth(placeholderFrame), CGRectGetHeight(view.bounds));
+//  self.mask5.backgroundColor = [UIColor yellowColor].CGColor;
+
+  
+//  self.mask.frame = view.bounds;
+//  self.mask.mask = self.mask2;
+//  self.mask2.frame = placeholderFrame;
+//  self.mask.backgroundColor = [UIColor blueColor].CGColor;
   CABasicAnimation *preexistingPathAnimation =
       [self.outlinedSublayer animationForKey:self.class.outlinePathAnimationKey];
   CABasicAnimation *preexistingStrokeColorAnimation =
@@ -176,6 +227,8 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
   CABasicAnimation *preexistingLineWidthAnimation =
       [self.outlinedSublayer animationForKey:self.class.outlineLineWidthAnimationKey];
 
+//  self.outlinedSublayer.strokeStart = 0.5;
+  
   [CATransaction begin];
   {
     if (preexistingPathAnimation) {
@@ -184,6 +237,8 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
         NSLog(@"removing out of date path to: %@",NSStringFromCGRect([UIBezierPath bezierPathWithCGPath:toValue].bounds));
         [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
         self.outlinedSublayer.path = targetOutlineBezier.CGPath;
+//        [self.outlinedSublayer addAnimation:[self pathAnimationTo:targetOutlineBezier]
+//                                     forKey:self.class.outlinePathAnimationKey];
       }
     } else {
       NSLog(@"adding path to: %@",NSStringFromCGRect(targetOutlineBezier.bounds));
@@ -193,10 +248,11 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
     if (preexistingStrokeColorAnimation) {
       CGColorRef toValue = (__bridge CGColorRef)preexistingStrokeColorAnimation.toValue;
       if (!CGColorEqualToColor(toValue, targetStrokeColor)) {
-        NSString *toValueString = [[CIColor colorWithCGColor:toValue] stringRepresentation];
-        NSLog(@"removing out of date stroke color to: %@",toValueString);
+        NSLog(@"removing out of date stroke color to: %@",[[CIColor colorWithCGColor:toValue] stringRepresentation]);
         [self.outlinedSublayer removeAnimationForKey:self.class.outlineStrokeColorAnimationKey];
         self.outlinedSublayer.strokeColor = targetStrokeColor;
+//        [self.outlinedSublayer addAnimation:[self strokeColorAnimationTo:targetStrokeColor]
+//                                     forKey:self.class.outlineStrokeColorAnimationKey];
       }
     } else {
       NSLog(@"adding stroke color to: %@",[[CIColor colorWithCGColor:targetStrokeColor] stringRepresentation]);
@@ -209,6 +265,8 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
         NSLog(@"removing out of date line width to: %@",@(toValue));
         [self.outlinedSublayer removeAnimationForKey:self.class.outlineLineWidthAnimationKey];
         self.outlinedSublayer.lineWidth = targetLineThickness;
+//        [self.outlinedSublayer addAnimation:[self lineWidthAnimationTo:targetLineThickness]
+//                                     forKey:self.class.outlineLineWidthAnimationKey];
       }
     } else {
       NSLog(@"adding line width to: %@",@(targetLineThickness));
@@ -279,27 +337,23 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
   CGPoint startingPoint = CGPointMake(radius, sublayerMinY);
   CGPoint topRightCornerPoint1 = CGPointMake(textFieldWidth - radius, sublayerMinY);
   [path moveToPoint:startingPoint];
+
+//  BOOL isFloatingPlaceholder =
+//      (CGRectGetMinY(placeholderFrame) < 0) && (CGRectGetMaxY(placeholderFrame) > 0);
   
-  BOOL isFloatingPlaceholder =
-      (CGRectGetMinY(placeholderFrame) < 0) && (CGRectGetMaxY(placeholderFrame) > 0);
-  
-  if (isFloatingPlaceholder) {
-    CGFloat leftLineBreak =
-        CGRectGetMinX(placeholderFrame) - kFloatingPlaceholderOutlineSidePadding;
-    CGFloat rightLineBreak =
-        CGRectGetMaxX(placeholderFrame) + kFloatingPlaceholderOutlineSidePadding;
-    [path addLineToPoint:CGPointMake(leftLineBreak, sublayerMinY)];
-    [path moveToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
-    [path addLineToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
-  } else {
-    CGFloat leftLineBreak =
-    CGRectGetMinX(placeholderFrame) - kFloatingPlaceholderOutlineSidePadding;
-    CGFloat rightLineBreak =
-    CGRectGetMaxX(placeholderFrame) + kFloatingPlaceholderOutlineSidePadding;
-    [path addLineToPoint:CGPointMake(leftLineBreak, sublayerMinY)];
-    [path addLineToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
-    [path addLineToPoint:topRightCornerPoint1];
-  }
+//  if (isFloatingPlaceholder) {
+//    CGFloat leftLineBreak =
+//        CGRectGetMinX(placeholderFrame) - kFloatingPlaceholderOutlineSidePadding;
+//    [path addLineToPoint:CGPointMake(leftLineBreak, sublayerMinY)];
+//
+//    CGFloat rightLineBreak =
+//        CGRectGetMaxX(placeholderFrame) + kFloatingPlaceholderOutlineSidePadding;
+//    [path moveToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
+//    [path addLineToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
+//    [path addLineToPoint:topRightCornerPoint1];
+//  } else {
+    [path addLineToPoint:CGPointMake(topRightCornerPoint1.x, topRightCornerPoint1.y)];
+//  }
 
   CGPoint topRightCornerPoint2 = CGPointMake(textFieldWidth, sublayerMinY + radius);
   [MDCContainerStylePathDrawingUtils addTopRightCornerToPath:path
@@ -330,7 +384,7 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
                                                   fromPoint:topLeftCornerPoint1
                                                     toPoint:topLeftCornerPoint2
                                                  withRadius:radius];
-
+  [path addLineToPoint:startingPoint];
   return path;
 }
 
