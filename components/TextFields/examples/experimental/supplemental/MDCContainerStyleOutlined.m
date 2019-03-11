@@ -26,7 +26,7 @@ static const CGFloat kFloatingPlaceholderOutlineSidePadding = (CGFloat)5.0;
 static const CGFloat kOutlinedContainerStyleThinOutlineThickness = (CGFloat)1.0;
 static const CGFloat kOutlinedContainerStyleThickOutlineThickness = (CGFloat)2.0;
 
-static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
+static const CGFloat kLayerAnimationDuration = (CGFloat)1.5;
 
 @implementation MDCContainedInputViewColorSchemeOutlined
 @end
@@ -35,9 +35,11 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
 
 @property(strong, nonatomic) CAShapeLayer *outlinedSublayer;
 
-@property(strong, nonatomic, readonly, class) NSString *outlinePathAnimationKey;
-@property(strong, nonatomic, readonly, class) NSString *outlineStrokeColorAnimationKey;
-@property(strong, nonatomic, readonly, class) NSString *outlineLineWidthAnimationKey;
+//@property(strong, nonatomic, readonly, class) NSString *outlinePathAnimationKey;
+//@property(strong, nonatomic, readonly, class) NSString *outlineStrokeColorAnimationKey;
+//@property(strong, nonatomic, readonly, class) NSString *outlineLineWidthAnimationKey;
+
+
 
 @end
 
@@ -94,20 +96,22 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
 
   CABasicAnimation *animation = (CABasicAnimation *)anim;
 
-  CABasicAnimation *pathAnimation =
-      [self.outlinedSublayer animationForKey:self.class.outlinePathAnimationKey];
+//  CABasicAnimation *pathAnimation =
+//      [self.outlinedSublayer animationForKey:self.class.outlinePathAnimationKey];
   CABasicAnimation *strokeColorAnimation =
       [self.outlinedSublayer animationForKey:self.class.outlineStrokeColorAnimationKey];
   CABasicAnimation *lineWidthAnimation =
       [self.outlinedSublayer animationForKey:self.class.outlineLineWidthAnimationKey];
+  CABasicAnimation *strokeStartAnimation =
+      [self.outlinedSublayer animationForKey:self.class.strokeStartAnimationKey];
 
   if (flag) {
-    if (animation == pathAnimation) {
-      CGPathRef toValue = (__bridge CGPathRef)animation.toValue;
-      NSLog(@"path completed to %@",NSStringFromCGRect([UIBezierPath bezierPathWithCGPath:toValue].bounds));
-      [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
-      self.outlinedSublayer.path = toValue;
-    }
+//    if (animation == pathAnimation) {
+//      CGPathRef toValue = (__bridge CGPathRef)animation.toValue;
+//      NSLog(@"path completed to %@",NSStringFromCGRect([UIBezierPath bezierPathWithCGPath:toValue].bounds));
+//      [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
+//      self.outlinedSublayer.path = toValue;
+//    }
     if (animation == strokeColorAnimation) {
       CGColorRef toValue = (__bridge CGColorRef)animation.toValue;
       NSLog(@"stroke color completed to %@",[[CIColor colorWithCGColor:toValue] stringRepresentation]);
@@ -119,6 +123,12 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
       NSLog(@"line width completed to %@",@(toValue));
       [self.outlinedSublayer removeAnimationForKey:self.class.outlineLineWidthAnimationKey];
       self.outlinedSublayer.lineWidth = toValue;
+    }
+    if (animation == strokeStartAnimation) {
+      CGFloat toValue = (CGFloat)[animation.toValue floatValue];
+      NSLog(@"stroke start completed to %@",@(toValue));
+      [self.outlinedSublayer removeAnimationForKey:self.class.strokeStartAnimationKey];
+      self.outlinedSublayer.strokeStart = toValue;
     }
   } else {
     NSLog(@"animation to %@ was cut short",animation.keyPath);
@@ -163,33 +173,37 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
   BOOL shouldShowThickUnderline = [self shouldShowThickUnderlineWithState:state];
   CGFloat targetLineThickness = shouldShowThickUnderline ? kOutlinedContainerStyleThickOutlineThickness : kOutlinedContainerStyleThinOutlineThickness;
   UIBezierPath *targetOutlineBezier = [self outlinePathWithViewBounds:view.bounds
-                                                     placeholderFrame:placeholderFrame
+                                                     placeholderFrame:CGRectZero
                                               topRowBottomRowDividerY:topRowBottomRowDividerY
                                                             lineWidth:targetLineThickness];
 //  NSLog(@"target thick: %@",NSStringFromCGRect(targetThickUnderlineBezier.bounds));
 //  NSLog(@"target thin: %@",NSStringFromCGRect(targetThinUnderlineBezier.bounds));
-
-  CABasicAnimation *preexistingPathAnimation =
-      [self.outlinedSublayer animationForKey:self.class.outlinePathAnimationKey];
+  self.outlinedSublayer.path = targetOutlineBezier.CGPath;
+//  CABasicAnimation *preexistingPathAnimation =
+//      [self.outlinedSublayer animationForKey:self.class.outlinePathAnimationKey];
   CABasicAnimation *preexistingStrokeColorAnimation =
       [self.outlinedSublayer animationForKey:self.class.outlineStrokeColorAnimationKey];
   CABasicAnimation *preexistingLineWidthAnimation =
       [self.outlinedSublayer animationForKey:self.class.outlineLineWidthAnimationKey];
+  CABasicAnimation *preexistingStrokeStartAnimation =
+      [self.outlinedSublayer animationForKey:self.class.strokeStartAnimationKey];
 
+  CGFloat targetStrokeStart = shouldShowThickUnderline ? 0.3 : 0;
+  
   [CATransaction begin];
   {
-    if (preexistingPathAnimation) {
-      CGPathRef toValue = (__bridge CGPathRef)preexistingPathAnimation.toValue;
-      if (!CGPathEqualToPath(toValue, targetOutlineBezier.CGPath)) {
-        NSLog(@"removing out of date path to: %@",NSStringFromCGRect([UIBezierPath bezierPathWithCGPath:toValue].bounds));
-        [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
-        self.outlinedSublayer.path = targetOutlineBezier.CGPath;
-      }
-    } else {
-      NSLog(@"adding path to: %@",NSStringFromCGRect(targetOutlineBezier.bounds));
-      [self.outlinedSublayer addAnimation:[self pathAnimationTo:targetOutlineBezier]
-                                   forKey:self.class.outlinePathAnimationKey];
-    }
+//    if (preexistingPathAnimation) {
+//      CGPathRef toValue = (__bridge CGPathRef)preexistingPathAnimation.toValue;
+//      if (!CGPathEqualToPath(toValue, targetOutlineBezier.CGPath)) {
+//        NSLog(@"removing out of date path to: %@",NSStringFromCGRect([UIBezierPath bezierPathWithCGPath:toValue].bounds));
+//        [self.outlinedSublayer removeAnimationForKey:self.class.outlinePathAnimationKey];
+//        self.outlinedSublayer.path = targetOutlineBezier.CGPath;
+//      }
+//    } else {
+//      NSLog(@"adding path to: %@",NSStringFromCGRect(targetOutlineBezier.bounds));
+//      [self.outlinedSublayer addAnimation:[self pathAnimationTo:targetOutlineBezier]
+//                                   forKey:self.class.outlinePathAnimationKey];
+//    }
     if (preexistingStrokeColorAnimation) {
       CGColorRef toValue = (__bridge CGColorRef)preexistingStrokeColorAnimation.toValue;
       if (!CGColorEqualToColor(toValue, targetStrokeColor)) {
@@ -215,7 +229,18 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
       [self.outlinedSublayer addAnimation:[self lineWidthAnimationTo:targetLineThickness]
                                    forKey:self.class.outlineLineWidthAnimationKey];
     }
-
+    if (preexistingStrokeStartAnimation) {
+      CGFloat toValue = (CGFloat)[preexistingStrokeStartAnimation.toValue floatValue];
+      if (toValue != targetStrokeStart) {
+        NSLog(@"removing out of date stroke start to : %@",@(toValue));
+        [self.outlinedSublayer removeAnimationForKey:self.class.strokeStartAnimationKey];
+        self.outlinedSublayer.strokeStart = targetStrokeStart;
+      }
+    } else {
+      NSLog(@"adding stroke start to : %@",@(targetStrokeStart));
+      [self.outlinedSublayer addAnimation:[self strokeStartAnimationTo:targetStrokeStart]
+                                   forKey:self.class.strokeStartAnimationKey];
+    }
   }
   [CATransaction commit];
 }
@@ -237,6 +262,12 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
   animation.toValue = @(lineThickness);
   return animation;
 }
+- (CABasicAnimation *)strokeStartAnimationTo:(CGFloat)strokeStart {
+  CABasicAnimation *animation = [self basicAnimationWithKeyPath:@"strokeStart"];
+  animation.toValue = @(strokeStart);
+  return animation;
+}
+
 
 - (CABasicAnimation *)basicAnimationWithKeyPath:(NSString *)keyPath {
   CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:keyPath];
@@ -334,6 +365,7 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
   return path;
 }
 
+
 - (CGFloat)outlineLineWidthForState:(MDCContainedInputViewState)containedInputViewState {
   CGFloat defaultLineWidth = 1;
   switch (containedInputViewState) {
@@ -348,6 +380,10 @@ static const CGFloat kLayerAnimationDuration = (CGFloat)1.2;
       break;
   }
   return defaultLineWidth;
+}
+
++ (NSString *)strokeStartAnimationKey {
+  return @"strokeStartAnimationKey";
 }
 
 +(NSString *)outlinePathAnimationKey {
