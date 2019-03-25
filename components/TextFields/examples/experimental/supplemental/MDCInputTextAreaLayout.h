@@ -26,35 +26,36 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly, class) CGFloat clearButtonSideLength;
 @property(nonatomic, readonly, class) CGFloat clearButtonImageViewSideLength;
 
-@property(nonatomic, assign) BOOL leftViewHidden;
-@property(nonatomic, assign) BOOL rightViewHidden;
 @property(nonatomic, assign) BOOL clearButtonHidden;
-//@property(nonatomic, assign) BOOL floatingLabelHidden;
-//@property(nonatomic, assign) BOOL placeholderLabelHidden;
 
 @property(nonatomic, assign) CGRect floatingLabelFrameFloating;
 @property(nonatomic, assign) CGRect floatingLabelFrameNormal;
-@property(nonatomic, assign) CGRect placeholderLabelFrameNormal;
-@property(nonatomic, assign) CGRect textRect;
-@property(nonatomic, assign) CGRect textRectFloatingLabel;
+@property(nonatomic, assign) CGRect placeholderLabelFrame;
+
+@property(nonatomic, assign) UIEdgeInsets textContainerInsetFloatingLabelNormal;
+@property(nonatomic, assign) UIEdgeInsets textContainerInsetFloatingLabelFloating;
+
+@property(nonatomic, assign) CGSize textContainerSizeFloatingLabelNormal;
+@property(nonatomic, assign) CGSize textContainerSizeFloatingLabelFloating;
+
 @property(nonatomic, assign) CGRect clearButtonFrame;
 @property(nonatomic, assign) CGRect clearButtonFrameFloatingLabel;
-@property(nonatomic, assign) CGRect leftViewFrame;
-@property(nonatomic, assign) CGRect rightViewFrame;
 @property(nonatomic, assign) CGRect leftUnderlineLabelFrame;
 @property(nonatomic, assign) CGRect rightUnderlineLabelFrame;
 
 @property(nonatomic, readonly) CGFloat calculatedHeight;
 @property(nonatomic, assign) CGFloat topRowBottomRowDividerY;
 
-- (instancetype)initWithTextFieldSize:(CGSize)textFieldSize
+- (instancetype)initWithTextAreaSize:(CGSize)textAreaSize
                        containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
                                  text:(NSString *)text
                           placeholder:(NSString *)placeholder
                                  font:(UIFont *)font
                          floatingFont:(UIFont *)floatingFont
                         floatingLabel:(UILabel *)floatingLabel
+                   floatingLabelState:(MDCContainedInputViewFloatingLabelState)floatingLabelState
                 canFloatingLabelFloat:(BOOL)canFloatingLabelFloat
+    intrinsicContentSizeNumberOfLines:(NSInteger)intrinsicContentSizeNumberOfLines
                           clearButton:(UIButton *)clearButton
                       clearButtonMode:(UITextFieldViewMode)clearButtonMode
                    leftUnderlineLabel:(UILabel *)leftUnderlineLabel

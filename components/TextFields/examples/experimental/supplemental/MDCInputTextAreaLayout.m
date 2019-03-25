@@ -17,9 +17,11 @@
 #import "MDCContainedInputView.h"
 #import "MDCInputTextField.h"
 
+#import "MaterialMath.h"
+
 static const CGFloat kLeadingMargin = (CGFloat)12.0;
 static const CGFloat kTrailingMargin = (CGFloat)12.0;
-//static const CGFloat kFloatingLabelXOffsetFromTextArea = (CGFloat)3.0;
+static const CGFloat kFloatingLabelXOffsetFromTextArea = (CGFloat)3.0;
 static const CGFloat kClearButtonTouchTargetSideLength = (CGFloat)30.0;
 static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
 
@@ -30,14 +32,16 @@ static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
 
 #pragma mark Object Lifecycle
 
-- (instancetype)initWithTextFieldSize:(CGSize)textFieldSize
+- (instancetype)initWithTextAreaSize:(CGSize)textAreaSize
                        containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
                                  text:(NSString *)text
                           placeholder:(NSString *)placeholder
                                  font:(UIFont *)font
                          floatingFont:(UIFont *)floatingFont
                         floatingLabel:(UILabel *)floatingLabel
+                   floatingLabelState:(MDCContainedInputViewFloatingLabelState)floatingLabelState
                 canFloatingLabelFloat:(BOOL)canFloatingLabelFloat
+    intrinsicContentSizeNumberOfLines:(NSInteger)intrinsicContentSizeNumberOfLines
                           clearButton:(UIButton *)clearButton
                       clearButtonMode:(UITextFieldViewMode)clearButtonMode
                    leftUnderlineLabel:(UILabel *)leftUnderlineLabel
@@ -51,14 +55,16 @@ static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
                             isEditing:(BOOL)isEditing {
   self = [super init];
   if (self) {
-    [self calculateLayoutWithTextAreaSize:textFieldSize
+    [self calculateLayoutWithTextAreaSize:textAreaSize
                             containerStyle:containerStyle
                                       text:text
                                placeholder:placeholder
                                       font:font
                               floatingFont:floatingFont
                              floatingLabel:floatingLabel
+                        floatingLabelState:floatingLabelState
                      canFloatingLabelFloat:canFloatingLabelFloat
+         intrinsicContentSizeNumberOfLines:intrinsicContentSizeNumberOfLines
                                clearButton:clearButton
                            clearButtonMode:clearButtonMode
                         leftUnderlineLabel:leftUnderlineLabel
@@ -83,7 +89,9 @@ static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
                                     font:(UIFont *)font
                             floatingFont:(UIFont *)floatingFont
                            floatingLabel:(UILabel *)floatingLabel
+                      floatingLabelState:(MDCContainedInputViewFloatingLabelState)floatingLabelState
                    canFloatingLabelFloat:(BOOL)canFloatingLabelFloat
+       intrinsicContentSizeNumberOfLines:(NSInteger)intrinsicContentSizeNumberOfLines
                              clearButton:(UIButton *)clearButton
                          clearButtonMode:(UITextFieldViewMode)clearButtonMode
                       leftUnderlineLabel:(UILabel *)leftUnderlineLabel
@@ -95,62 +103,62 @@ static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
        preferredUnderlineLabelAreaHeight:(CGFloat)preferredUnderlineLabelAreaHeight
                                    isRTL:(BOOL)isRTL
                                isEditing:(BOOL)isEditing {
-//  CGFloat textContainerMinX = isRTL ? kTrailingMargin : kLeadingMargin;
-//  CGFloat textContainerMaxX = isRTL ? size.width - kLeadingMargin : size.width - kTrailingMargin;
-//  CGFloat maxTextWidth = textContainerMaxX - textContainerMinX;
-//  CGRect floatingLabelFrameFloating = [self floatingLabelFrameWithPlaceholder:placeholder
-//                                                                         font:floatingFont
-//                                                            textContainerMinX:textContainerMinX
-//                                                            textContainerMaxX:textContainerMaxX
-//                                                               containerStyle:containerStyle
-//                                                                        isRTL:isRTL];
-//  CGFloat floatingLabelMaxY = CGRectGetMaxY(floatingLabelFrameFloating);
-//  CGFloat initialLineMinYWithFloatingLabel = [containerStyle.densityInformer
-//                                                 contentAreaTopPaddingFloatingLabelWithFloatingLabelMaxY:floatingLabelMaxY];
-//  CGFloat highestPossibleInitialLineMaxY = initialLineMinYWithFloatingLabel + font.lineHeight;
-//  CGFloat bottomPadding = [containerStyle.densityInformer
-//                           contentAreaVerticalPaddingNormalWithFloatingLabelMaxY:floatingLabelMaxY];
-//  CGFloat intrinsicMainContentAreaHeight = highestPossibleInitialLineMaxY + bottomPadding;
-//  CGFloat contentAreaMaxY = 0;
-//  if (preferredMainContentAreaHeight > intrinsicMainContentAreaHeight) {
-//    contentAreaMaxY = preferredMainContentAreaHeight;
-//  } else {
-//    contentAreaMaxY = intrinsicMainContentAreaHeight;
-//  }
-//
-//  CGRect floatingLabelFrameNormal =
-//  [self normalPlaceholderFrameWithFloatingLabelFrame:floatingLabelFrameFloating
-//                                         placeholder:placeholder
-//                                                font:font
-//                                   textContainerMinX:textContainerMinX
-//                                   textContainerMaxX:textContainerMaxX
-//                                           chipsWrap:chipsWrap
-//                                   contentAreaHeight:contentAreaMaxY
-//                                      containerStyle:containerStyle
-//                                               isRTL:isRTL];
-//
-//  CGFloat initialLineMinYNormal =
-//  CGRectGetMidY(floatingLabelFrameNormal) - ((CGFloat)0.5 * chipRowHeight);
-//  if (chipsWrap) {
-//  } else {
-//    CGFloat center = contentAreaMaxY * (CGFloat)0.5;
-//    initialLineMinYNormal = center - (chipRowHeight * (CGFloat)0.5);
-//  }
-//  CGFloat initialLineMinY = initialLineMinYNormal;
+  CGFloat textContainerMinX = isRTL ? kTrailingMargin : kLeadingMargin;
+  CGFloat textContainerMaxX = isRTL ? size.width - kLeadingMargin : size.width - kTrailingMargin;
+  CGFloat maxTextWidth = textContainerMaxX - textContainerMinX;
+  CGRect floatingLabelFrameFloating = [self floatingLabelFrameWithText:floatingLabel.text
+                                                                  font:floatingFont
+                                                     textContainerMinX:textContainerMinX
+                                                     textContainerMaxX:textContainerMaxX
+                                                        containerStyle:containerStyle
+                                                                 isRTL:isRTL];
+  CGFloat floatingLabelMaxY = CGRectGetMaxY(floatingLabelFrameFloating);
+  CGFloat textAreaMinYWithFloatingLabel = [containerStyle.densityInformer
+                                                 contentAreaTopPaddingFloatingLabelWithFloatingLabelMaxY:floatingLabelMaxY];
+  CGFloat textAreaMaxYWithFloatingLabel = intrinsicContentSizeNumberOfLines * font.lineHeight;
+  if (textAreaMaxYWithFloatingLabel == 0) {
+    CGFloat textAreaHeight =
+        [self textSizeWithText:text font:font maxWidth:maxTextWidth allowWrapping:YES].height;
+    textAreaMaxYWithFloatingLabel = textAreaMinYWithFloatingLabel + textAreaHeight;
+  }
+  
+  CGFloat bottomPadding = [containerStyle.densityInformer
+                           contentAreaVerticalPaddingNormalWithFloatingLabelMaxY:floatingLabelMaxY];
+  CGFloat intrinsicMainContentAreaHeight = textAreaMaxYWithFloatingLabel + bottomPadding;
+
+  CGFloat contentAreaMaxY = 0;
+  if (preferredMainContentAreaHeight > intrinsicMainContentAreaHeight) {
+    contentAreaMaxY = preferredMainContentAreaHeight;
+  } else {
+    contentAreaMaxY = intrinsicMainContentAreaHeight;
+  }
+
+  CGRect floatingLabelFrameNormal =
+  [self normalFloatingLabelFrameWithFloatingLabelFrame:floatingLabelFrameFloating
+                                                  text:floatingLabel.text
+                                                  font:font
+                                     textContainerMinX:textContainerMinX
+                                     textContainerMaxX:textContainerMaxX
+                                     contentAreaHeight:contentAreaMaxY
+                                        containerStyle:containerStyle
+                                                 isRTL:isRTL];
+
+//  CGFloat textAreaMinYNormal =
+//  CGRectGetMidY(floatingLabelFrameNormal) - ((CGFloat)0.5 * font.lineHeight);
+//  CGFloat textAreaMinY = textAreaMinYNormal;
 //  if (floatingLabelState == MDCContainedInputViewFloatingLabelStateFloating) {
-//    initialLineMinY = initialLineMinYWithFloatingLabel;
+//    textAreaMinY = textAreaMinYWithFloatingLabel;
 //  }
-//
-//  CGSize textFieldSize = [self textSizeWithText:text font:font maxWidth:maxTextWidth];
-//
+
+
 //  CGSize scrollViewSize = CGSizeMake(size.width, contentAreaMaxY);
-//
+
 //  CGPoint contentOffset = [self scrollViewContentOffsetWithSize:scrollViewSize
 //                                                      chipsWrap:chipsWrap
 //                                                  chipRowHeight:chipRowHeight
 //                                               interChipSpacing:interChipSpacing
 //                                                 textFieldFrame:textFieldFrame
-//                                             initialLineMinY:initialLineMinY
+//                                             textAreaMinY:textAreaMinY
 //                                              textContainerMinX:textContainerMinX
 //                                              textContainerMaxX:textContainerMaxX
 //                                                  bottomPadding:bottomPadding
@@ -158,83 +166,104 @@ static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
 //  CGSize contentSize = [self scrollViewContentSizeWithSize:scrollViewSize
 //                                             contentOffset:contentOffset
 //                                                chipFrames:chipFrames
-//                                                 chipsWrap:chipsWrap
 //                                            textFieldFrame:textFieldFrame];
-//
+
+  self.topRowBottomRowDividerY = contentAreaMaxY;
+  
+  CGFloat leftMargin = isRTL ? kTrailingMargin : kLeadingMargin;
+  CGFloat rightMargin = isRTL ? kLeadingMargin : kTrailingMargin;
+  self.textContainerInsetFloatingLabelNormal =
+      UIEdgeInsetsMake(textAreaMinYWithFloatingLabel, leftMargin, 0, rightMargin);
+  self.textContainerInsetFloatingLabelFloating =
+      UIEdgeInsetsMake(textAreaMinYWithFloatingLabel, leftMargin, 0, rightMargin);
+  self.textContainerSizeFloatingLabelNormal = CGSizeMake(0, 0);
+  self.textContainerSizeFloatingLabelFloating = CGSizeMake(0, 0);
+  
+  
+  
 //  self.contentAreaMaxY = contentAreaMaxY;
-//  self.chipFrames = chipFrames;
-//  self.textFieldFrame = textFieldFrame;
 //  self.scrollViewContentOffset = contentOffset;
 //  self.scrollViewContentSize = contentSize;
 //  self.scrollViewContentViewTouchForwardingViewFrame =
 //  CGRectMake(0, 0, contentSize.width, contentSize.height);
-//  self.floatingLabelFrameFloating = floatingLabelFrameFloating;
-//  self.floatingLabelFrameNormal = floatingLabelFrameNormal;
+  self.floatingLabelFrameFloating = floatingLabelFrameFloating;
+  self.floatingLabelFrameNormal = floatingLabelFrameNormal;
 //  CGRect scrollViewRect = CGRectMake(0, 0, size.width, contentAreaMaxY);
 //  self.maskedScrollViewContainerViewFrame = scrollViewRect;
 //  self.scrollViewFrame = scrollViewRect;
-  
-  
 }
 
-//- (CGRect)normalPlaceholderFrameWithFloatingLabelFrame:(CGRect)floatingLabelFrame
-//                                           placeholder:(NSString *)placeholder
-//                                                  font:(UIFont *)font
-//                                     textContainerMinX:(CGFloat)textContainerMinX
-//                                     textContainerMaxX:(CGFloat)textContainerMaxX
-//                                             chipsWrap:(BOOL)chipsWrap
-//                                     contentAreaHeight:(CGFloat)contentAreaHeight
-//                                        containerStyle:
-//(id<MDCContainedInputViewStyle>)containerStyle
-//                                                 isRTL:(BOOL)isRTL {
-//  CGFloat maxTextWidth = textContainerMaxX - textContainerMinX;
-//  CGSize placeholderSize = [self textSizeWithText:placeholder font:font maxWidth:maxTextWidth];
-//  CGFloat placeholderMinX = textContainerMinX;
-//  if (isRTL) {
-//    placeholderMinX = textContainerMaxX - placeholderSize.width;
-//  }
-//  CGFloat placeholderMinY = 0;
-//  if (chipsWrap) {
-//    placeholderMinY = [containerStyle.densityInformer
-//                       contentAreaVerticalPaddingNormalWithFloatingLabelMaxY:CGRectGetMaxY(floatingLabelFrame)];
-//  } else {
-//    CGFloat center = contentAreaHeight * (CGFloat)0.5;
-//    placeholderMinY = center - (placeholderSize.height * (CGFloat)0.5);
-//  }
-//  return CGRectMake(placeholderMinX, placeholderMinY, placeholderSize.width,
-//                    placeholderSize.height);
+//- (CGFloat)textAreaHeightWithText:(NSString *)text
+//                             font:(UIFont *)font
+//                            width:(CGFloat)width {
+//
 //}
 
-//- (CGRect)floatingLabelFrameWithPlaceholder:(NSString *)placeholder
-//                                       font:(UIFont *)font
-//                          textContainerMinX:(CGFloat)textContainerMinX
-//                          textContainerMaxX:(CGFloat)textContainerMaxX
-//                             containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
-//                                      isRTL:(BOOL)isRTL {
-//  CGFloat maxTextWidth = textContainerMaxX - textContainerMinX - kFloatingLabelXOffset;
-//  CGSize placeholderSize = [self textSizeWithText:placeholder font:font maxWidth:maxTextWidth];
-//  CGFloat placeholderMinY = [containerStyle.densityInformer
-//                             floatingLabelMinYWithFloatingLabelHeight:placeholderSize.height];
-//  CGFloat placeholderMinX = textContainerMinX + kFloatingLabelXOffset;
-//  if (isRTL) {
-//    placeholderMinX = textContainerMaxX - kFloatingLabelXOffset - placeholderSize.width;
-//  }
-//  return CGRectMake(placeholderMinX, placeholderMinY, placeholderSize.width,
-//                    placeholderSize.height);
-//}
-
-
-
-- (CGFloat)topRowSubviewMaxYWithTextAreaMaxY:(CGFloat)textRectMaxY
-                   floatingLabelTextAreaMaxY:(CGFloat)floatingLabelTextAreaMaxY
-                                leftViewMaxY:(CGFloat)leftViewMaxY
-                               rightViewMaxY:(CGFloat)rightViewMaxY {
-  CGFloat max = textRectMaxY;
-  max = MAX(max, floatingLabelTextAreaMaxY);
-  max = MAX(max, leftViewMaxY);
-  max = MAX(max, rightViewMaxY);
-  return max;
+- (CGRect)normalFloatingLabelFrameWithFloatingLabelFrame:(CGRect)floatingLabelFrame
+                                                    text:(NSString *)text
+                                                    font:(UIFont *)font
+                                     textContainerMinX:(CGFloat)textContainerMinX
+                                     textContainerMaxX:(CGFloat)textContainerMaxX
+                                     contentAreaHeight:(CGFloat)contentAreaHeight
+                                        containerStyle:
+(id<MDCContainedInputViewStyle>)containerStyle
+                                                 isRTL:(BOOL)isRTL {
+  CGFloat maxTextWidth = textContainerMaxX - textContainerMinX;
+  CGSize placeholderSize = [self textSizeWithText:text font:font maxWidth:maxTextWidth allowWrapping:NO];
+  CGFloat placeholderMinX = textContainerMinX;
+  if (isRTL) {
+    placeholderMinX = textContainerMaxX - placeholderSize.width;
+  }
+  CGFloat placeholderMinY = 0;
+  placeholderMinY = [containerStyle.densityInformer
+                    contentAreaVerticalPaddingNormalWithFloatingLabelMaxY:CGRectGetMaxY(floatingLabelFrame)];
+  return CGRectMake(placeholderMinX, placeholderMinY, placeholderSize.width,
+                    placeholderSize.height);
 }
+
+- (CGRect)floatingLabelFrameWithText:(NSString *)text
+                                font:(UIFont *)font
+                   textContainerMinX:(CGFloat)textContainerMinX
+                   textContainerMaxX:(CGFloat)textContainerMaxX
+                      containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
+                               isRTL:(BOOL)isRTL {
+  CGFloat maxTextWidth = textContainerMaxX - textContainerMinX - kFloatingLabelXOffsetFromTextArea;
+  CGSize placeholderSize = [self textSizeWithText:text font:font maxWidth:maxTextWidth allowWrapping:NO];
+  CGFloat placeholderMinY = [containerStyle.densityInformer
+                             floatingLabelMinYWithFloatingLabelHeight:placeholderSize.height];
+  CGFloat placeholderMinX = textContainerMinX + kFloatingLabelXOffsetFromTextArea;
+  if (isRTL) {
+    placeholderMinX = textContainerMaxX - kFloatingLabelXOffsetFromTextArea - placeholderSize.width;
+  }
+  return CGRectMake(placeholderMinX, placeholderMinY, placeholderSize.width,
+                    placeholderSize.height);
+}
+
+- (CGSize)textSizeWithText:(NSString *)text
+                      font:(UIFont *)font
+                  maxWidth:(CGFloat)maxWidth
+             allowWrapping:(BOOL)allowWrapping {
+  CGFloat fittingWidth = allowWrapping ? maxWidth : CGFLOAT_MAX;
+  CGSize fittingSize = CGSizeMake(fittingWidth, CGFLOAT_MAX);
+  NSDictionary *attributes = @{NSFontAttributeName : font};
+  CGRect rect = [text boundingRectWithSize:fittingSize
+                                   options:NSStringDrawingUsesLineFragmentOrigin
+                                attributes:attributes
+                                   context:nil];
+  CGFloat maxTextFieldHeight = allowWrapping ? CGFLOAT_MAX : font.lineHeight;
+  CGFloat textFieldWidth = MDCCeil(CGRectGetWidth(rect));
+  CGFloat textFieldHeight = MDCCeil(CGRectGetHeight(rect));
+  if (!allowWrapping && textFieldWidth > maxWidth) {
+    textFieldWidth = maxWidth;
+  }
+  if (textFieldHeight > maxTextFieldHeight) {
+    textFieldHeight = maxTextFieldHeight;
+  }
+  rect.size.width = textFieldWidth;
+  rect.size.height = textFieldHeight;
+  return rect.size;
+}
+
 
 - (CGSize)underlineLabelSizeWithLabel:(UILabel *)label constrainedToWidth:(CGFloat)maxWidth {
   if (maxWidth <= 0 || label.text.length <= 0 || label.hidden) {
@@ -403,21 +432,9 @@ static const CGFloat kClearButtonInnerImageViewSideLength = (CGFloat)18.0;
   if (floatingLabelFrameFloatingMaxY > maxY) {
     maxY = floatingLabelFrameNormalMaxY;
   }
-  CGFloat textRectMaxY = CGRectGetMaxY(self.textRect);
-  if (textRectMaxY > maxY) {
-    maxY = textRectMaxY;
-  }
   CGFloat clearButtonFrameMaxY = CGRectGetMaxY(self.clearButtonFrame);
   if (clearButtonFrameMaxY > maxY) {
     maxY = clearButtonFrameMaxY;
-  }
-  CGFloat leftViewFrameMaxY = CGRectGetMaxY(self.leftViewFrame);
-  if (leftViewFrameMaxY > maxY) {
-    maxY = leftViewFrameMaxY;
-  }
-  CGFloat rightViewFrameMaxY = CGRectGetMaxY(self.rightViewFrame);
-  if (rightViewFrameMaxY > maxY) {
-    maxY = rightViewFrameMaxY;
   }
   CGFloat leftUnderlineLabelFrameMaxY = CGRectGetMaxY(self.leftUnderlineLabelFrame);
   if (leftUnderlineLabelFrameMaxY > maxY) {

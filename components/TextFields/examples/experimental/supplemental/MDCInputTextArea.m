@@ -77,6 +77,7 @@
 }
 
 - (void)commonMDCInputTextAreaInit {
+  self.backgroundColor = [UIColor yellowColor];
   [self initializeProperties];
   [self setUpFloatingLabel];
   [self setUpPlaceholderLabel];
@@ -234,7 +235,7 @@
   UIFont *floatingFont = [self.floatingLabelManager floatingFontWithFont:normalFont
                                                           containerStyle:self.containerStyle];
   [self.floatingLabelManager layOutPlaceholderLabel:self.placeholderLabel
-                                   placeholderFrame:self.layout.textRectFloatingLabel
+                                   placeholderFrame:self.layout.placeholderLabelFrame
                                isPlaceholderVisible:self.isPlaceholderVisible];
   [self.floatingLabelManager layOutFloatingLabel:self.floatingLabel
                                            state:self.floatingLabelState
@@ -251,6 +252,11 @@
   self.clearButton.hidden = self.layout.clearButtonHidden;
   self.leftUnderlineLabel.frame = self.layout.leftUnderlineLabelFrame;
   self.rightUnderlineLabel.frame = self.layout.rightUnderlineLabelFrame;
+  
+  self.textContainerInset = self.layout.textContainerInsetFloatingLabelFloating;
+  NSLog(@"text container size: %@",NSStringFromCGSize(self.textContainer.size));
+  
+  self.scr
   // TODO: Consider hiding views that don't actually fit in the frame
 }
 
@@ -263,21 +269,23 @@
   return clearButtonFrame;
 }
 
-- (MDCInputTextAreaLayout *)calculateLayoutWithTextAreaSize:(CGSize)textFieldSize {
+- (MDCInputTextAreaLayout *)calculateLayoutWithTextAreaSize:(CGSize)textAreaSize {
   UIFont *effectiveFont = [self determineEffectiveFont];
   UIFont *floatingFont = [self.floatingLabelManager floatingFontWithFont:effectiveFont
                                                           containerStyle:self.containerStyle];
   CGFloat normalizedCustomUnderlineLabelDrawPriority =
       [self normalizedCustomUnderlineLabelDrawPriority:self.customUnderlineLabelDrawPriority];
   return [[MDCInputTextAreaLayout alloc]
-                  initWithTextFieldSize:textFieldSize
+                  initWithTextAreaSize:textAreaSize
                          containerStyle:self.containerStyle
                                    text:self.text
                             placeholder:self.placeholder
                                    font:effectiveFont
                            floatingFont:floatingFont
                           floatingLabel:self.floatingLabel
+                     floatingLabelState:self.floatingLabelState
                   canFloatingLabelFloat:self.canFloatingLabelFloat
+      intrinsicContentSizeNumberOfLines:self.intrinsicContentSizeNumberOfLines
                             clearButton:self.clearButton
                         clearButtonMode:self.clearButtonMode
                      leftUnderlineLabel:self.leftUnderlineLabel
@@ -396,22 +404,6 @@
   }
   _isActivated = isActivated;
   [self setNeedsLayout];
-}
-
-- (CGRect)textRectFromLayout:(MDCInputTextAreaLayout *)layout
-          floatingLabelState:(MDCContainedInputViewFloatingLabelState)floatingLabelState {
-  CGRect textRect = layout.textRect;
-  if (floatingLabelState == MDCContainedInputViewFloatingLabelStateFloating) {
-    textRect = layout.textRectFloatingLabel;
-  }
-  return textRect;
-}
-
-- (CGRect)adjustTextAreaFrame:(CGRect)textRect
-    withParentClassTextAreaFrame:(CGRect)parentClassTextAreaFrame {
-  CGFloat systemDefinedHeight = CGRectGetHeight(parentClassTextAreaFrame);
-  CGFloat minY = CGRectGetMidY(textRect) - (systemDefinedHeight * (CGFloat)0.5);
-  return CGRectMake(CGRectGetMinX(textRect), minY, CGRectGetWidth(textRect), systemDefinedHeight);
 }
 
 - (CGRect)containerFrame {
