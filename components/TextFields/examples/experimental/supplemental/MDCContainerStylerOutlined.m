@@ -26,9 +26,22 @@ static const CGFloat kFloatingLabelOutlineSidePadding = (CGFloat)5.0;
 @implementation MDCContainedInputViewColorSchemeOutlined
 @end
 
+
+@interface MDCContainerStylerOutlinedOutline : NSObject
+@property(strong, nonatomic) UIBezierPath *path;
+@property(nonatomic, assign) CGFloat strokeStart;
+@property(nonatomic, assign) CGFloat strokeEnd;
+@end
+
+@implementation MDCContainerStylerOutlinedOutline
+@end
+
+
+
 @interface MDCContainerStylerOutlined ()
 
 @property(strong, nonatomic) CAShapeLayer *outlinedSublayer;
+@property(strong, nonatomic) BOOL isFloatingLabelFloating;
 
 @end
 
@@ -109,7 +122,12 @@ static const CGFloat kFloatingLabelOutlineSidePadding = (CGFloat)5.0;
     topRowBottomRowDividerY:(CGFloat)topRowBottomRowDividerY
     isFloatingLabelFloating:(BOOL)isFloatingLabelFloating
            outlineLineWidth:(CGFloat)outlineLineWidth {
-  UIBezierPath *path = [self outlinePathWithViewBounds:view.bounds
+  
+  BOOL hasFloatingLabelBeenFloating = self.isFloatingLabelFloating;
+  
+  
+  
+  MDCContainerStylerOutlinedOutline *outline = [self outlinePathWithViewBounds:view.bounds
                                       placeholderFrame:placeholderFrame
                                topRowBottomRowDividerY:topRowBottomRowDividerY
                                              lineWidth:outlineLineWidth
@@ -120,6 +138,77 @@ static const CGFloat kFloatingLabelOutlineSidePadding = (CGFloat)5.0;
     [view.layer insertSublayer:self.outlinedSublayer atIndex:0];
   }
 }
+
+- (MDCContainerStylerOutlinedOutline *)outlinePathWithViewBounds:(CGRect)viewBounds
+                           placeholderFrame:(CGRect)placeholderFrame
+                    topRowBottomRowDividerY:(CGFloat)topRowBottomRowDividerY
+                                  lineWidth:(CGFloat)lineWidth
+                    isFloatingLabelFloating:(BOOL)isFloatingLabelFloating {
+  
+  MDCContainerStylerOutlinedOutline *outline = [[MDCContainerStylerOutlinedOutline alloc] init];
+  
+  UIBezierPath *path = [[UIBezierPath alloc] init];
+  CGFloat radius = kOutlinedContainerStylerCornerRadius;
+  CGFloat textFieldWidth = CGRectGetWidth(viewBounds);
+  CGFloat sublayerMinY = 0;
+  CGFloat sublayerMaxY = topRowBottomRowDividerY;
+  
+  CGFloat length = 0;
+  CGFloat floatingLabelBreakLength = 0;
+  CGPoint topRightCornerPoint1 = CGPointMake(textFieldWidth - radius, sublayerMinY);
+  if (isFloatingLabelFloating) {
+    CGFloat placeholderMidX = CGRectGetMidX(placeholderFrame);
+    CGPoint startingPoint = CGPointMake(placeholderMidX, sublayerMinY);
+    [path moveToPoint:startingPoint];
+    CGFloat leftLineBreak = CGRectGetMinX(placeholderFrame) - kFloatingLabelOutlineSidePadding;
+    CGFloat rightLineBreak = CGRectGetMaxX(placeholderFrame) + kFloatingLabelOutlineSidePadding;
+    floatingLabelBreakLength = rightLineBreak - leftLineBreak;
+    [path addLineToPoint:CGPointMake(leftLineBreak, sublayerMinY)];
+    [path moveToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
+    [path addLineToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
+    
+    
+  } else {
+    CGPoint startingPoint = CGPointMake(radius, sublayerMinY);
+    [path moveToPoint:startingPoint];
+    [path addLineToPoint:topRightCornerPoint1];
+  }
+  
+  CGPoint topRightCornerPoint2 = CGPointMake(textFieldWidth, sublayerMinY + radius);
+  [MDCContainerStylerPathDrawingUtils addTopRightCornerToPath:path
+                                                    fromPoint:topRightCornerPoint1
+                                                      toPoint:topRightCornerPoint2
+                                                   withRadius:radius];
+  
+  CGPoint bottomRightCornerPoint1 = CGPointMake(textFieldWidth, sublayerMaxY - radius);
+  CGPoint bottomRightCornerPoint2 = CGPointMake(textFieldWidth - radius, sublayerMaxY);
+  [path addLineToPoint:bottomRightCornerPoint1];
+  [MDCContainerStylerPathDrawingUtils addBottomRightCornerToPath:path
+                                                       fromPoint:bottomRightCornerPoint1
+                                                         toPoint:bottomRightCornerPoint2
+                                                      withRadius:radius];
+  
+  CGPoint bottomLeftCornerPoint1 = CGPointMake(radius, sublayerMaxY);
+  CGPoint bottomLeftCornerPoint2 = CGPointMake(0, sublayerMaxY - radius);
+  [path addLineToPoint:bottomLeftCornerPoint1];
+  [MDCContainerStylerPathDrawingUtils addBottomLeftCornerToPath:path
+                                                      fromPoint:bottomLeftCornerPoint1
+                                                        toPoint:bottomLeftCornerPoint2
+                                                     withRadius:radius];
+  
+  CGPoint topLeftCornerPoint1 = CGPointMake(0, sublayerMinY + radius);
+  CGPoint topLeftCornerPoint2 = CGPointMake(radius, sublayerMinY);
+  [path addLineToPoint:topLeftCornerPoint1];
+  [MDCContainerStylerPathDrawingUtils addTopLeftCornerToPath:path
+                                                   fromPoint:topLeftCornerPoint1
+                                                     toPoint:topLeftCornerPoint2
+                                                  withRadius:radius];
+  
+  outline.path = path;
+  return outline;
+}
+
+
 
 - (UIBezierPath *)outlinePathWithViewBounds:(CGRect)viewBounds
                            placeholderFrame:(CGRect)placeholderFrame
@@ -132,16 +221,21 @@ static const CGFloat kFloatingLabelOutlineSidePadding = (CGFloat)5.0;
   CGFloat sublayerMinY = 0;
   CGFloat sublayerMaxY = topRowBottomRowDividerY;
 
-  CGPoint startingPoint = CGPointMake(radius, sublayerMinY);
   CGPoint topRightCornerPoint1 = CGPointMake(textFieldWidth - radius, sublayerMinY);
-  [path moveToPoint:startingPoint];
   if (isFloatingLabelFloating) {
+    CGFloat placeholderMidX = CGRectGetMidX(placeholderFrame);
+    CGPoint startingPoint = CGPointMake(placeholderMidX, sublayerMinY);
+    [path moveToPoint:startingPoint];
     CGFloat leftLineBreak = CGRectGetMinX(placeholderFrame) - kFloatingLabelOutlineSidePadding;
     CGFloat rightLineBreak = CGRectGetMaxX(placeholderFrame) + kFloatingLabelOutlineSidePadding;
     [path addLineToPoint:CGPointMake(leftLineBreak, sublayerMinY)];
     [path moveToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
     [path addLineToPoint:CGPointMake(rightLineBreak, sublayerMinY)];
+
+
   } else {
+    CGPoint startingPoint = CGPointMake(radius, sublayerMinY);
+    [path moveToPoint:startingPoint];
     [path addLineToPoint:topRightCornerPoint1];
   }
 
@@ -199,6 +293,11 @@ static const CGFloat kFloatingLabelOutlineSidePadding = (CGFloat)5.0;
     return _positioningDelegate;
   }
   return [[MDCContainerStylerOutlinedPositioningDelegate alloc] init];
+}
+
+- (CGFloat)cornerLength {
+  CGFloat circumference = M_PI * kOutlinedContainerStylerCornerRadius * 2;
+  return circumference / 4.0;
 }
 
 @end
