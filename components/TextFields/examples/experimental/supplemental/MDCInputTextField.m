@@ -17,13 +17,13 @@
 #import <Foundation/Foundation.h>
 
 #import <MDFInternationalization/MDFInternationalization.h>
-#import "MaterialTypography.h"
 
+#import "MaterialMath.h"
+#import "MaterialTypography.h"
 #import "MDCContainerStylerPathDrawingUtils.h"
 #import "MDCInputTextFieldLayout.h"
-#import "MaterialMath.h"
 
-@interface MDCInputTextField ()
+@interface MDCInputTextField () <MDCContainedInputView>
 
 @property(strong, nonatomic) UIButton *clearButton;
 @property(strong, nonatomic) UIImageView *clearButtonImageView;
