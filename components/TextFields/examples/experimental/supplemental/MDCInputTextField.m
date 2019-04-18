@@ -812,4 +812,20 @@
   return colorScheme;
 }
 
+- (void)setTextColor:(UIColor *)textColor forState:(MDCContainedInputViewState)state {
+    id<MDCContainedInputViewColorScheming> colorScheme = [self containedInputViewColorSchemingForState:state];
+}
+- (void)setUnderlineLabelColor:(UIColor *)underlineLabelColor forState:(MDCContainedInputViewState)state {
+    id<MDCContainedInputViewColorScheming> colorScheme = [self containedInputViewColorSchemingForState:state];
+}
+- (void)setFloatingLabelColor:(UIColor *)floatingLabelColor forState:(MDCContainedInputViewState)state {
+    id<MDCContainedInputViewColorScheming> colorScheme = [self containedInputViewColorSchemingForState:state];
+}
+- (void)setPlaceholderColor:(UIColor *)placeholderColor forState:(MDCContainedInputViewState)state {
+    id<MDCContainedInputViewColorScheming> colorScheme = [self containedInputViewColorSchemingForState:state];
+}
+- (void)setClearButtonTintColor:(UIColor *)clearButtonTintColor forState:(MDCContainedInputViewState)state {
+    id<MDCContainedInputViewColorScheming> colorScheme = [self containedInputViewColorSchemingForState:state];
+}
+
 @end

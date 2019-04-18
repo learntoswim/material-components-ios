@@ -89,4 +89,11 @@
 @property(nonatomic, setter=mdc_setAdjustsFontForContentSizeCategory:)
     BOOL mdc_adjustsFontForContentSizeCategory;
 
+
+- (void)setTextColor:(__nonnull UIColor *)textColor forState:(MDCContainedInputViewState)state;
+- (void)setUnderlineLabelColor:(__nonnull UIColor *)underlineLabelColor forState:(MDCContainedInputViewState)state;
+- (void)setFloatingLabelColor:(__nonnull UIColor *)floatingLabelColor forState:(MDCContainedInputViewState)state;
+- (void)setPlaceholderColor:(__nonnull UIColor *)placeholderColor forState:(MDCContainedInputViewState)state;
+- (void)setClearButtonTintColor:(__nonnull UIColor *)clearButtonTintColor forState:(MDCContainedInputViewState)state;
+
 @end
