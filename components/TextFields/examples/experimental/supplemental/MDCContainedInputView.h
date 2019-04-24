@@ -29,10 +29,6 @@ typedef NS_OPTIONS(NSInteger, MDCContainedInputViewState) {
    */
   MDCContainedInputViewStateFocused = 1 << 1,
   /**
-   This state most closely resembles the @c selected UIControlState.
-   */
-  MDCContainedInputViewStateActivated = 1 << 2,
-  /**
    The error state.
    */
   MDCContainedInputViewStateErrored = 1 << 3,

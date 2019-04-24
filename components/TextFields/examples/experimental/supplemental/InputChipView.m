@@ -287,11 +287,6 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
   [self setContainedInputViewColorScheming:focusedColorScheme
                                   forState:MDCContainedInputViewStateFocused];
 
-  id<MDCContainedInputViewColorScheming> activatedColorScheme =
-      [containerStyler defaultColorSchemeForState:MDCContainedInputViewStateActivated];
-  [self setContainedInputViewColorScheming:activatedColorScheme
-                                  forState:MDCContainedInputViewStateActivated];
-
   id<MDCContainedInputViewColorScheming> erroredColorScheme =
       [containerStyler defaultColorSchemeForState:MDCContainedInputViewStateErrored];
   [self setContainedInputViewColorScheming:erroredColorScheme
@@ -538,11 +533,7 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
       if (isEditing) {
         return MDCContainedInputViewStateFocused;
       } else {
-        if (isSelected || isActivated) {
-          return MDCContainedInputViewStateActivated;
-        } else {
-          return MDCContainedInputViewStateNormal;
-        }
+        return MDCContainedInputViewStateNormal;
       }
     }
   } else {
