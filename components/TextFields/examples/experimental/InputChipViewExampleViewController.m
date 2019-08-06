@@ -99,10 +99,10 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
     [self createFilledNonWrappingInputChipView],
     [self createLabelWithText:@"Wrapping filled InputChipView:"],
     [self createFilledWrappingInputChipView],
-    //    [self createLabelWithText:@"Outlined InputChipView:"],
-    //    [self createOutlinedNonWrappingInputChipView],
-    //    [self createLabelWithText:@"Wrapping outlined InputChipView:"],
-    //    [self createOutlinedWrappingInputChipView],
+    [self createLabelWithText:@"Outlined InputChipView:"],
+    [self createOutlinedNonWrappingInputChipView],
+    [self createLabelWithText:@"Wrapping outlined InputChipView:"],
+    [self createOutlinedWrappingInputChipView],
   ];
   for (UIView *view in self.scrollViewSubviews) {
     [self.scrollView addSubview:view];
@@ -203,7 +203,8 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
   MDCOutlinedInputChipView *inputChipView = [self createOutlinedNonWrappingInputChipView];
   inputChipView.label.text = @"Outlined wrapping";
   inputChipView.chipsWrap = YES;
-  inputChipView.preferredContainerHeight = 150;
+  inputChipView.preferredNumberOfVisibleRows = 8;
+//  inputChipView.preferredContainerHeight = 150;
   [inputChipView sizeToFit];
   inputChipView.mdc_adjustsFontForContentSizeCategory = YES;
   return inputChipView;
