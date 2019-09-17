@@ -24,3 +24,26 @@ MDCContainedInputViewState MDCContainedInputViewStateWithUIControlState(
     return MDCContainedInputViewStateNormal;
   }
 }
+
+UIFont *MDCContainedInputViewDefaultFont() {
+  UIFont *font = MDCContainedInputViewUITextFieldPrototype().font;
+  if (!font) {
+    static dispatch_once_t onceToken;
+    static UIFont *backupSystemFont;
+    dispatch_once(&onceToken, ^{
+      backupSystemFont = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    });
+    font = backupSystemFont;
+  }
+  return font;
+}
+
+UITextField *MDCContainedInputViewUITextFieldPrototype() {
+  static dispatch_once_t onceToken;
+  static UITextField *textField;
+  dispatch_once(&onceToken, ^{
+    textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    textField.text = @"Text";
+  });
+  return textField;
+}

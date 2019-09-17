@@ -44,12 +44,28 @@
 
 @implementation MDCBaseInputChipViewTextField
 
-- (UIFont *)font {
-  return [super font] ?: [self uiTextFieldDefaultFont];
+- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
+  if (self) {
+    [self commonMDCBaseInputChipViewTextFieldInit];
+  }
+  return self;
 }
 
-- (void)setFont:(UIFont *)font {
-  [super setFont:font];
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    [self commonMDCBaseInputChipViewTextFieldInit];
+  }
+  return self;
+}
+
+- (void)commonMDCBaseInputChipViewTextFieldInit {
+  self.font = MDCContainedInputViewDefaultFont();
+}
+
+- (UIFont *)font {
+  return [super font] ?: MDCContainedInputViewDefaultFont();
 }
 
 - (void)deleteBackward {
@@ -77,6 +93,17 @@
   return didBecomeFirstResponder;
 }
 
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+  CGRect rect = [super editingRectForBounds:bounds];
+  return rect;
+}
+
+- (CGRect)textRectForBounds:(CGRect)bounds {
+  CGRect rect = [super textRectForBounds:bounds];
+  NSLog(@"%@ within %@", NSStringFromCGRect(rect), NSStringFromCGRect(bounds));
+  return rect;
+}
+
 - (CGRect)placeholderRectForBounds:(CGRect)bounds {
   return CGRectZero;
 }
@@ -91,17 +118,6 @@
 
 - (CGRect)rightViewRectForBounds:(CGRect)bounds {
   return CGRectZero;
-}
-
-- (UIFont *)uiTextFieldDefaultFont {
-  static dispatch_once_t onceToken;
-  static UIFont *font;
-  dispatch_once(&onceToken, ^{
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-    textField.text = @"Text";
-    font = textField.font;
-  });
-  return font;
 }
 
 @end
@@ -128,9 +144,6 @@
 @property(strong, nonatomic) UITouch *lastTouch;
 @property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
 @property(nonatomic, assign) CGPoint lastTouchInitialLocation;
-
-//@property(strong, nonatomic) UILabel *leftAssistiveLabel;
-//@property(strong, nonatomic) UILabel *rightAssistiveLabel;
 
 @property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 
@@ -759,15 +772,6 @@
 
 - (UIFont *)floatingFont {
   return [self.containerStyle floatingFontWithFont:self.normalFont];
-}
-
-- (UIFont *)uiTextFieldDefaultFont {
-  static dispatch_once_t onceToken;
-  static UIFont *font;
-  dispatch_once(&onceToken, ^{
-    font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-  });
-  return font;
 }
 
 #pragma mark Dynamic Type

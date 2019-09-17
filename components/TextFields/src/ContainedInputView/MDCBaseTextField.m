@@ -77,7 +77,7 @@
 #pragma mark View Setup
 
 - (void)initializeProperties {
-  self.font = [self uiTextFieldDefaultFont];
+  self.font = MDCContainedInputViewDefaultFont();
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   self.labelState = [self determineCurrentLabelState];
@@ -180,7 +180,7 @@
 - (CGFloat)clearButtonSideLength {
   static dispatch_once_t onceToken;
   static CGRect systemClearButtonRect;
-  UITextField *textField = self.textFieldPrototype;
+  UITextField *textField = MDCContainedInputViewUITextFieldPrototype();
   dispatch_once(&onceToken, ^{
     systemClearButtonRect = [textField clearButtonRectForBounds:textField.bounds];
   });
@@ -493,7 +493,7 @@
 #pragma mark Fonts
 
 - (UIFont *)font {
-  return [super font] ?: [self uiTextFieldDefaultFont];
+  return [super font] ?: MDCContainedInputViewDefaultFont();
 }
 
 - (UIFont *)normalFont {
@@ -502,21 +502,6 @@
 
 - (UIFont *)floatingFont {
   return [self.containerStyle floatingFontWithFont:self.normalFont];
-}
-
-- (UIFont *)uiTextFieldDefaultFont {
-  UIFont *backupSystemFont = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-  return self.textFieldPrototype.font ?: backupSystemFont;
-}
-
-- (UITextField *)textFieldPrototype {
-  static dispatch_once_t onceToken;
-  static UITextField *textField;
-  dispatch_once(&onceToken, ^{
-    textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-    textField.text = @"Text";
-  });
-  return textField;
 }
 
 - (void)mdc_setAdjustsFontForContentSizeCategory:(BOOL)adjusts {

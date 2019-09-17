@@ -61,10 +61,15 @@
   self.textContainerInset = UIEdgeInsetsZero;
   self.layoutMargins = UIEdgeInsetsZero;
   self.textContainer.lineFragmentPadding = 0;
+  self.font = MDCContainedInputViewDefaultFont();
+}
+
+- (void)setFont:(UIFont *)font {
+  [super setFont:font];
 }
 
 - (UIFont *)font {
-  return [super font] ?: [self uiTextViewDefaultFont];
+  return [super font] ?: MDCContainedInputViewDefaultFont();
 }
 
 - (BOOL)resignFirstResponder {
@@ -82,17 +87,6 @@
   [self.inputChipViewTextViewDelegate
       inputChipViewTextViewDidBecomeFirstResponder:didBecomeFirstResponder];
   return didBecomeFirstResponder;
-}
-
-- (UIFont *)uiTextViewDefaultFont {
-  static dispatch_once_t onceToken;
-  static UIFont *font;
-  dispatch_once(&onceToken, ^{
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-    textView.text = @"Text";
-    font = textView.font;
-  });
-  return font;
 }
 
 @end
@@ -568,15 +562,6 @@
 
 - (UIFont *)floatingFont {
   return [self.containerStyle floatingFontWithFont:self.normalFont];
-}
-
-- (UIFont *)uiTextViewDefaultFont {
-  static dispatch_once_t onceToken;
-  static UIFont *font;
-  dispatch_once(&onceToken, ^{
-    font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-  });
-  return font;
 }
 
 #pragma mark Dynamic Type

@@ -38,3 +38,7 @@ typedef NS_OPTIONS(NSInteger, MDCContainedInputViewState) {
 
 MDCContainedInputViewState MDCContainedInputViewStateWithUIControlState(
     UIControlState controlState);
+
+UIFont *MDCContainedInputViewDefaultFont(void);
+
+UITextField *MDCContainedInputViewUITextFieldPrototype(void);
