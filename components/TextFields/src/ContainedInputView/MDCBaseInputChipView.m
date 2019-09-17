@@ -880,7 +880,24 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.15;
   return colorViewModel;
 }
 
-- (void)setLabelColor:(nonnull UIColor *)labelColor forState:(UIControlState)state {
+- (void)setNormalLabelColor:(nonnull UIColor *)labelColor forState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  colorViewModel.normalLabelColor = labelColor;
+  [self setNeedsLayout];
+}
+
+- (UIColor *)normalLabelColorForState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  return colorViewModel.normalLabelColor;
+}
+
+- (void)setFloatingLabelColor:(nonnull UIColor *)labelColor forState:(UIControlState)state {
   MDCContainedInputViewState containedInputViewState =
       MDCContainedInputViewStateWithUIControlState(state);
   MDCContainedInputViewColorViewModel *colorViewModel =
@@ -889,7 +906,7 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.15;
   [self setNeedsLayout];
 }
 
-- (UIColor *)labelColorForState:(UIControlState)state {
+- (UIColor *)floatingLabelColorForState:(UIControlState)state {
   MDCContainedInputViewState containedInputViewState =
       MDCContainedInputViewStateWithUIControlState(state);
   MDCContainedInputViewColorViewModel *colorViewModel =
@@ -912,6 +929,24 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.15;
   MDCContainedInputViewColorViewModel *colorViewModel =
       [self containedInputViewColorViewModelForState:containedInputViewState];
   return colorViewModel.textColor;
+}
+
+- (void)setAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
+                      forState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  colorViewModel.assistiveLabelColor = assistiveLabelColor;
+  [self setNeedsLayout];
+}
+
+- (UIColor *)assistiveLabelColorForState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  return colorViewModel.assistiveLabelColor;
 }
 
 @end
