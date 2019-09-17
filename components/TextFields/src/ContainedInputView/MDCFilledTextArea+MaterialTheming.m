@@ -1,0 +1,129 @@
+// Copyright 2019-present the Material Components for iOS authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#import "MDCFilledTextArea+MaterialTheming.h"
+
+#import <Foundation/Foundation.h>
+
+#import "private/MDCBaseTextField+ContainedInputView.h"
+#import "private/MDCContainedInputView.h"
+#import "private/MDCContainedInputViewStyleFilled.h"
+
+@implementation MDCFilledTextArea (MaterialTheming)
+
+- (void)applyThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
+  [self applyTypographyScheme:[self typographySchemeWithContainerScheme:containerScheme]];
+  [self applyDefaultColorScheme:[self colorSchemeWithContainerScheme:containerScheme]];
+}
+
+- (void)applyErrorThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
+  [self applyTypographyScheme:[self typographySchemeWithContainerScheme:containerScheme]];
+  [self applyErrorColorScheme:[self colorSchemeWithContainerScheme:containerScheme]];
+}
+
+- (id<MDCColorScheming>)colorSchemeWithContainerScheme:
+    (nonnull id<MDCContainerScheming>)containerScheme {
+  id<MDCColorScheming> mdcColorScheme = containerScheme.colorScheme;
+  if (!mdcColorScheme) {
+    mdcColorScheme =
+        [[MDCSemanticColorScheme alloc] initWithDefaults:MDCColorSchemeDefaultsMaterial201804];
+  }
+  return mdcColorScheme;
+}
+
+- (id<MDCTypographyScheming>)typographySchemeWithContainerScheme:
+    (nonnull id<MDCContainerScheming>)containerScheme {
+  id<MDCTypographyScheming> mdcTypographyScheme = containerScheme.typographyScheme;
+  if (!mdcTypographyScheme) {
+    mdcTypographyScheme =
+        [[MDCTypographyScheme alloc] initWithDefaults:MDCTypographySchemeDefaultsMaterial201902];
+  }
+  return mdcTypographyScheme;
+}
+
+- (void)applyTypographyScheme:(id<MDCTypographyScheming>)mdcTypographyScheming {
+  self.textView.font = mdcTypographyScheming.subtitle1;
+  self.leadingAssistiveLabel.font = mdcTypographyScheming.caption;
+  self.trailingAssistiveLabel.font = mdcTypographyScheming.caption;
+}
+
+- (void)applyDefaultColorScheme:(id<MDCColorScheming>)colorScheme {
+  UIColor *textColor = colorScheme.onSurfaceColor;
+  UIColor *assistiveLabelColor = [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.60];
+  UIColor *labelColor = [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.60];
+  UIColor *labelColorDisabled = [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.10];
+  UIColor *labelColorFocused = colorScheme.primaryColor;
+
+  UIColor *thinUnderlineFillColor = colorScheme.onBackgroundColor;
+  UIColor *thickUnderlineFillColor = colorScheme.primaryColor;
+
+  UIColor *filledSublayerFillColor =
+      [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.15];
+
+  [self setFloatingLabelColor:labelColor forState:UIControlStateNormal];
+  [self setFloatingLabelColor:labelColorFocused forState:MDCTextControlStateEditing];
+  [self setFloatingLabelColor:labelColorDisabled forState:UIControlStateDisabled];
+  [self setNormalLabelColor:labelColor forState:UIControlStateNormal];
+  [self setNormalLabelColor:labelColorFocused forState:MDCTextControlStateEditing];
+  [self setNormalLabelColor:labelColorDisabled forState:UIControlStateDisabled];
+  [self setTextColor:textColor forState:UIControlStateNormal];
+  [self setTextColor:textColor forState:MDCTextControlStateEditing];
+  [self setTextColor:textColor forState:UIControlStateDisabled];
+  [self setUnderlineColor:thinUnderlineFillColor forState:UIControlStateNormal];
+  [self setUnderlineColor:thickUnderlineFillColor forState:MDCTextControlStateEditing];
+  [self setUnderlineColor:thinUnderlineFillColor forState:UIControlStateDisabled];
+  [self setFilledBackgroundColor:filledSublayerFillColor forState:UIControlStateNormal];
+  [self setFilledBackgroundColor:filledSublayerFillColor forState:MDCTextControlStateEditing];
+  [self setFilledBackgroundColor:filledSublayerFillColor forState:UIControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColor forState:UIControlStateNormal];
+  [self setAssistiveLabelColor:assistiveLabelColor forState:MDCTextControlStateEditing];
+  [self setAssistiveLabelColor:assistiveLabelColor forState:UIControlStateDisabled];
+  self.tintColor = colorScheme.primaryColor;
+}
+
+- (void)applyErrorColorScheme:(id<MDCColorScheming>)colorScheme {
+  UIColor *textColor = colorScheme.errorColor;
+  UIColor *assistiveLabelColor = [colorScheme.errorColor colorWithAlphaComponent:(CGFloat)0.60];
+  UIColor *labelColor = colorScheme.errorColor;
+  UIColor *labelColorDisabled = [colorScheme.errorColor colorWithAlphaComponent:(CGFloat)0.60];
+  UIColor *labelColorFocused = colorScheme.errorColor;
+
+  UIColor *thinUnderlineFillColor = colorScheme.errorColor;
+  UIColor *thickUnderlineFillColor = colorScheme.errorColor;
+
+  UIColor *filledSublayerFillColor =
+      [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.15];
+
+  [self setNormalLabelColor:labelColor forState:UIControlStateNormal];
+  [self setNormalLabelColor:labelColorFocused forState:MDCTextControlStateEditing];
+  [self setNormalLabelColor:labelColorDisabled forState:UIControlStateDisabled];
+  [self setFloatingLabelColor:labelColor forState:UIControlStateNormal];
+  [self setFloatingLabelColor:labelColorFocused forState:MDCTextControlStateEditing];
+  [self setFloatingLabelColor:labelColorDisabled forState:UIControlStateDisabled];
+  [self setTextColor:textColor forState:UIControlStateNormal];
+  [self setTextColor:textColor forState:MDCTextControlStateEditing];
+  [self setTextColor:textColor forState:UIControlStateDisabled];
+  [self setUnderlineColor:thinUnderlineFillColor forState:UIControlStateNormal];
+  [self setUnderlineColor:thickUnderlineFillColor forState:MDCTextControlStateEditing];
+  [self setUnderlineColor:thinUnderlineFillColor forState:UIControlStateDisabled];
+  [self setFilledBackgroundColor:filledSublayerFillColor forState:UIControlStateNormal];
+  [self setFilledBackgroundColor:filledSublayerFillColor forState:MDCTextControlStateEditing];
+  [self setFilledBackgroundColor:filledSublayerFillColor forState:UIControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColor forState:UIControlStateNormal];
+  [self setAssistiveLabelColor:assistiveLabelColor forState:MDCTextControlStateEditing];
+  [self setAssistiveLabelColor:assistiveLabelColor forState:UIControlStateDisabled];
+  self.tintColor = colorScheme.errorColor;
+}
+
+@end

@@ -35,7 +35,6 @@
 @property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 @property(nonatomic, assign) MDCContainedInputViewState containedInputViewState;
 @property(nonatomic, assign) MDCContainedInputViewLabelState labelState;
-@property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCContainedInputViewColorViewModel *> *colorViewModels;
@@ -84,7 +83,6 @@
   self.labelState = [self determineCurrentLabelState];
   self.containedInputViewState = [self determineCurrentContainedInputViewState];
   self.containerStyle = [[MDCContainedInputViewStyleBase alloc] init];
-  self.animationDuration = 0.15;
   self.colorViewModels = [[NSMutableDictionary alloc] init];
 }
 
@@ -275,11 +273,6 @@
 
 #pragma mark Custom Accessors
 
-- (void)setAnimationDuration:(NSTimeInterval)animationDuration {
-  _animationDuration = animationDuration;
-  self.containerStyle.animationDuration = animationDuration;
-}
-
 - (NSString *)labelText {
   return self.label.text;
 }
@@ -424,7 +417,6 @@
     [oldStyle removeStyleFrom:self];
   }
   _containerStyle = containerStyle;
-  _containerStyle.animationDuration = self.animationDuration;
   [_containerStyle applyStyleToContainedInputView:self];
 }
 

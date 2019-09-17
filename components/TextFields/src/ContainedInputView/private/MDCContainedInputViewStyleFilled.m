@@ -43,7 +43,6 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 @end
 
 @implementation MDCContainedInputViewStyleFilled
-@synthesize animationDuration = _animationDuration;
 
 - (instancetype)init {
   self = [super init];
@@ -85,14 +84,6 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 }
 
 #pragma mark Accessors
-
-- (void)setAnimationDuration:(NSTimeInterval)animationDuration {
-  _animationDuration = animationDuration;
-}
-
-- (NSTimeInterval)animationDuration {
-  return _animationDuration;
-}
 
 - (UIColor *)underlineColorForState:(MDCContainedInputViewState)state {
   return self.underlineColors[@(state)];
@@ -287,7 +278,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
 - (CABasicAnimation *)basicAnimationWithKeyPath:(NSString *)keyPath {
   CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:keyPath];
-  animation.duration = self.animationDuration;
+  animation.duration = kMDCContainedInputViewDefaultAnimationDuration;
   animation.timingFunction =
       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
   animation.repeatCount = 0;

@@ -24,46 +24,47 @@
 @implementation MDCBaseTextArea (MaterialTheming)
 
 - (void)applyThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
-  [self applyTypographySchemeWith:containerScheme];
-  [self applyColorSchemeWith:containerScheme];
+  [self applyTypographyScheme:[self typographySchemeWithContainerScheme:containerScheme]];
+  [self applyDefaultColorTheme:[self colorSchemeWithContainerScheme:containerScheme]];
 }
 
-- (void)applyTypographySchemeWith:(id<MDCContainerScheming>)containerScheme {
-  id<MDCTypographyScheming> mdcTypographyScheming = containerScheme.typographyScheme;
-  if (!mdcTypographyScheming) {
-    mdcTypographyScheming =
-        [[MDCTypographyScheme alloc] initWithDefaults:MDCTypographySchemeDefaultsMaterial201804];
-  }
-  [self applyMDCTypographyScheming:mdcTypographyScheming];
+- (void)applyErrorThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
+  [self applyTypographyScheme:[self typographySchemeWithContainerScheme:containerScheme]];
+  [self applyErrorColorTheme:[self colorSchemeWithContainerScheme:containerScheme]];
 }
 
-- (void)applyColorSchemeWith:(id<MDCContainerScheming>)containerScheme {
+- (id<MDCColorScheming>)colorSchemeWithContainerScheme:
+    (nonnull id<MDCContainerScheming>)containerScheme {
   id<MDCColorScheming> mdcColorScheme = containerScheme.colorScheme;
   if (!mdcColorScheme) {
     mdcColorScheme =
         [[MDCSemanticColorScheme alloc] initWithDefaults:MDCColorSchemeDefaultsMaterial201804];
   }
-  [self applyMDCColorScheming:mdcColorScheme];
+  return mdcColorScheme;
 }
 
-- (void)applyMDCColorScheming:(id<MDCColorScheming>)mdcColorScheming {
+- (id<MDCTypographyScheming>)typographySchemeWithContainerScheme:
+    (nonnull id<MDCContainerScheming>)containerScheme {
+  id<MDCTypographyScheming> mdcTypographyScheme = containerScheme.typographyScheme;
+  if (!mdcTypographyScheme) {
+    mdcTypographyScheme =
+        [[MDCTypographyScheme alloc] initWithDefaults:MDCTypographySchemeDefaultsMaterial201902];
+  }
+  return mdcTypographyScheme;
 }
 
-- (void)applyMDCTypographyScheming:(id<MDCTypographyScheming>)mdcTypographyScheming {
+- (void)applyTypographyScheme:(id<MDCTypographyScheming>)mdcTypographyScheming {
   self.textView.font = mdcTypographyScheming.subtitle1;
   self.leadingAssistiveLabel.font = mdcTypographyScheming.caption;
   self.trailingAssistiveLabel.font = mdcTypographyScheming.caption;
 }
 
-- (void)applyOutlinedThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
-  MDCContainedInputViewStyleOutlined *outlinedStyle =
-      [[MDCContainedInputViewStyleOutlined alloc] init];
-  self.containerStyle = outlinedStyle;
+- (void)applyDefaultColorTheme:(id<MDCColorScheming>)mdcColorScheming {
+  // TODO: Implement
 }
 
-- (void)applyFilledThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
-  // TODO: Remove this method
-  self.containerStyle = [[MDCContainedInputViewStyleOutlined alloc] init];
+- (void)applyErrorColorTheme:(id<MDCColorScheming>)mdcColorScheming {
+  // TODO: Implement
 }
 
 @end

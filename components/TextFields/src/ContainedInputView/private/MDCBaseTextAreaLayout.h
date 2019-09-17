@@ -14,6 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MDCContainedInputAssistiveLabelView.h"
 #import "MDCContainedInputView.h"
 
 @interface MDCBaseTextAreaLayout : NSObject
@@ -25,9 +26,9 @@
 
 @property(nonatomic, assign) CGRect textViewFrame;
 
-@property(nonatomic, assign) CGRect assistiveLabelFrame;
-@property(nonatomic, assign) CGRect leftAssistiveLabelFrame;
-@property(nonatomic, assign) CGRect rightAssistiveLabelFrame;
+@property(nonatomic, assign) CGRect assistiveLabelViewFrame;
+@property(nonatomic, strong, nonnull)
+    MDCContainedInputAssistiveLabelViewLayout *assistiveLabelViewLayout;
 
 @property(nonatomic, assign) CGRect maskedScrollViewContainerViewFrame;
 @property(nonatomic, assign) CGRect scrollViewFrame;
@@ -38,19 +39,19 @@
 @property(nonatomic, readonly) CGFloat calculatedHeight;
 @property(nonatomic, readonly) CGFloat containerHeight;
 
-@property(nonatomic, strong) NSArray<NSNumber *> *verticalGradientLocations;
-@property(nonatomic, strong) NSArray<NSNumber *> *horizontalGradientLocations;
+@property(nonatomic, strong, nonnull) NSArray<NSNumber *> *verticalGradientLocations;
+@property(nonatomic, strong, nonnull) NSArray<NSNumber *> *horizontalGradientLocations;
 
-- (instancetype)initWithSize:(CGSize)size
-                      containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
-                                text:(NSString *)text
-                                font:(UIFont *)font
-                        floatingFont:(UIFont *)floatingFont
-                               label:(UILabel *)label
+- (nonnull instancetype)initWithSize:(CGSize)size
+                      containerStyle:(nonnull id<MDCContainedInputViewStyle>)containerStyle
+                                text:(nullable NSString *)text
+                                font:(nonnull UIFont *)font
+                        floatingFont:(nonnull UIFont *)floatingFont
+                               label:(nonnull UILabel *)label
                           labelState:(MDCContainedInputViewLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
-                  leftAssistiveLabel:(UILabel *)leftAssistiveLabel
-                 rightAssistiveLabel:(UILabel *)rightAssistiveLabel
+                  leftAssistiveLabel:(nonnull UILabel *)leftAssistiveLabel
+                 rightAssistiveLabel:(nonnull UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority

@@ -33,7 +33,6 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 @end
 
 @implementation MDCContainedInputViewStyleOutlined
-@synthesize animationDuration = _animationDuration;
 
 - (instancetype)init {
   self = [super init];
@@ -72,14 +71,6 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 }
 
 #pragma mark Accessors
-
-- (void)setAnimationDuration:(NSTimeInterval)animationDuration {
-  _animationDuration = animationDuration;
-}
-
-- (NSTimeInterval)animationDuration {
-  return _animationDuration;
-}
 
 - (UIColor *)outlineColorForState:(MDCContainedInputViewState)state {
   return self.outlineColors[@(state)];

@@ -20,8 +20,7 @@
 
 static const CGFloat kEstimatedCursorWidth = (CGFloat)2.0;
 
-static const CGFloat kLeadingMargin = (CGFloat)8.0;
-static const CGFloat kTrailingMargin = (CGFloat)8.0;
+static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
 static const CGFloat kGradientBlurLength = 6;
 
@@ -86,7 +85,7 @@ static const CGFloat kGradientBlurLength = 6;
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
-    customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
+    customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
             preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
@@ -99,8 +98,9 @@ static const CGFloat kGradientBlurLength = 6;
                                                              density:0
                                             preferredContainerHeight:preferredContainerHeight];
 
-  CGFloat globalTextMinX = isRTL ? kTrailingMargin : kLeadingMargin;
-  CGFloat globalTextMaxX = isRTL ? size.width - kLeadingMargin : size.width - kTrailingMargin;
+  CGFloat globalTextMinX = isRTL ? kHorizontalPadding : kHorizontalPadding;
+  CGFloat globalTextMaxX =
+      isRTL ? size.width - kHorizontalPadding : size.width - kHorizontalPadding;
   CGRect floatingLabelFrame =
       [self floatingLabelFrameWithText:label.text
                                floatingFont:floatingFont
@@ -111,7 +111,6 @@ static const CGFloat kGradientBlurLength = 6;
   CGFloat floatingLabelMaxY = CGRectGetMaxY(floatingLabelFrame);
 
   CGFloat bottomPadding = positioningReference.paddingBetweenTextAndBottom;
-  CGFloat contentAreaMaxY = positioningReference.containerHeight;
 
   CGRect normalLabelFrame =
       [self normalLabelFrameWithLabelText:label.text
@@ -130,9 +129,10 @@ static const CGFloat kGradientBlurLength = 6;
     textViewMinY = textViewMinYWithFloatingLabel;
   }
 
-  CGSize scrollViewSize = CGSizeMake(size.width, contentAreaMaxY);
+  CGSize scrollViewSize = CGSizeMake(size.width, positioningReference.containerHeight);
 
-  CGFloat textViewHeight = contentAreaMaxY - bottomPadding - textViewMinYWithFloatingLabel;
+  CGFloat textViewHeight =
+      positioningReference.containerHeight - bottomPadding - textViewMinYWithFloatingLabel;
   CGRect textViewFrame = CGRectMake(globalTextMinX, textViewMinYWithFloatingLabel,
                                     globalTextMaxX - globalTextMinX, textViewHeight);
 
@@ -147,7 +147,20 @@ static const CGFloat kGradientBlurLength = 6;
                                              contentOffset:contentOffset
                                              textViewFrame:textViewFrame];
 
-  self.containerHeight = contentAreaMaxY;
+  CGFloat assistiveLabelVerticalPadding = positioningReference.paddingAroundAssistiveLabels;
+  self.assistiveLabelViewLayout = [[MDCContainedInputAssistiveLabelViewLayout alloc]
+                         initWithWidth:size.width
+                    leftAssistiveLabel:leftAssistiveLabel
+                   rightAssistiveLabel:rightAssistiveLabel
+            assistiveLabelDrawPriority:assistiveLabelDrawPriority
+      customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
+                     horizontalPadding:kHorizontalPadding
+                       verticalPadding:assistiveLabelVerticalPadding
+                                 isRTL:isRTL];
+  self.assistiveLabelViewFrame = CGRectMake(0, positioningReference.containerHeight, size.width,
+                                            self.assistiveLabelViewLayout.calculatedHeight);
+
+  self.containerHeight = positioningReference.containerHeight;
   self.textViewFrame = textViewFrame;
   self.scrollViewContentOffset = contentOffset;
   self.scrollViewContentSize = contentSize;
@@ -157,32 +170,32 @@ static const CGFloat kGradientBlurLength = 6;
   self.normalLabelFrame = normalLabelFrame;
   self.globalTextMinX = globalTextMinX;
   self.globalTextMaxX = globalTextMaxX;
-  CGRect scrollViewRect = CGRectMake(0, 0, size.width, contentAreaMaxY);
+  CGRect scrollViewRect = CGRectMake(0, 0, size.width, positioningReference.containerHeight);
   self.maskedScrollViewContainerViewFrame = scrollViewRect;
   self.scrollViewFrame = scrollViewRect;
 
-  self.horizontalGradientLocations =
-      [self determineHorizontalGradientLocationsWithGlobalTextMinX:globalTextMinX
-                                                    globalTextMaxX:globalTextMaxX
-                                                         viewWidth:size.width
-                                                        viewHeight:contentAreaMaxY];
-  self.verticalGradientLocations =
-      [self determineVerticalGradientLocationsWithGlobalTextMinX:globalTextMinX
-                                                  globalTextMaxX:globalTextMaxX
-                                                       viewWidth:size.width
-                                                      viewHeight:contentAreaMaxY
-                                               floatingLabelMaxY:floatingLabelMaxY
-                                                   bottomPadding:bottomPadding
-                                            positioningReference:positioningReference];
+  self.horizontalGradientLocations = [self
+      determineHorizontalGradientLocationsWithGlobalTextMinX:globalTextMinX
+                                              globalTextMaxX:globalTextMaxX
+                                                   viewWidth:size.width
+                                                  viewHeight:positioningReference.containerHeight];
+  self.verticalGradientLocations = [self
+      determineVerticalGradientLocationsWithGlobalTextMinX:globalTextMinX
+                                            globalTextMaxX:globalTextMaxX
+                                                 viewWidth:size.width
+                                                viewHeight:positioningReference.containerHeight
+                                         floatingLabelMaxY:floatingLabelMaxY
+                                             bottomPadding:bottomPadding
+                                      positioningReference:positioningReference];
   return;
 }
 
 - (CGFloat)calculatedHeight {
   CGFloat maxY = self.containerHeight;
-  //  CGFloat assistiveLabelViewMaxY = CGRectGetMaxY(self.assistiveLabelViewFrame);
-  //  if (assistiveLabelViewMaxY > maxY) {
-  //    maxY = assistiveLabelViewMaxY;
-  //  }
+  CGFloat assistiveLabelViewMaxY = CGRectGetMaxY(self.assistiveLabelViewFrame);
+  if (assistiveLabelViewMaxY > maxY) {
+    maxY = assistiveLabelViewMaxY;
+  }
   return maxY;
 }
 

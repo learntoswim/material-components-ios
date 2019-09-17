@@ -21,6 +21,11 @@
 #import "MaterialButtons+Theming.h"
 #import "MaterialColorScheme.h"
 
+#import "MDCFilledTextArea+MaterialTheming.h"
+#import "MDCFilledTextArea.h"
+#import "MDCOutlinedTextArea+MaterialTheming.h"
+#import "MDCOutlinedTextArea.h"
+
 static const CGFloat kSideMargin = (CGFloat)20.0;
 
 @interface TextAreaExampleViewController () <UITextViewDelegate>
@@ -85,6 +90,7 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
   self.scrollViewSubviews = @[
     [self createToggleErrorButton], [self createResignFirstResponderButton],
     [self createLabelWithText:@"Filled TextArea:"], [self createFilledTextArea],
+    [self createLabelWithText:@"Outlined TextArea:"], [self createOutlinedTextArea],
     //    [self createLabelWithText:@"Outlined TextArea:"],
     //    [self createOutlinedTextArea],
   ];
@@ -170,9 +176,8 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
   return label;
 }
 
-- (MDCBaseTextArea *)createOutlinedTextArea {
-  MDCBaseTextArea *textArea = [[MDCBaseTextArea alloc] init];
-  [textArea applyOutlinedThemeWithScheme:self.containerScheme];
+- (MDCOutlinedTextArea *)createOutlinedTextArea {
+  MDCOutlinedTextArea *textArea = [[MDCOutlinedTextArea alloc] init];
   textArea.textView.delegate = self;
   textArea.label.text = @"Stuff";
   textArea.preferredContainerHeight = 150;
@@ -180,10 +185,9 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
   return textArea;
 }
 
-- (MDCBaseTextArea *)createFilledTextArea {
-  MDCBaseTextArea *textArea = [[MDCBaseTextArea alloc] init];
+- (MDCFilledTextArea *)createFilledTextArea {
+  MDCFilledTextArea *textArea = [[MDCFilledTextArea alloc] init];
   textArea.mdc_adjustsFontForContentSizeCategory = YES;
-  [textArea applyFilledThemeWithScheme:self.containerScheme];
   textArea.textView.delegate = self;
   textArea.label.text = @"Stuff";
   textArea.preferredNumberOfVisibleRows = 4;
@@ -212,30 +216,25 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
       enumerateObjectsUsingBlock:^(MDCBaseTextArea *textArea, NSUInteger idx, BOOL *stop) {
         BOOL isEven = idx % 2 == 0;
         if (self.isErrored) {
-          // TODO: Make TextArea respond to error theme selector
-          //      if ([textArea respondsToSelector:@selector(applyErrorThemeWithScheme:)]) {
-          //        [textArea applyErrorThemeWithScheme:self.containerScheme];
-          //      }
+          if ([textArea respondsToSelector:@selector(applyErrorThemeWithScheme:)]) {
+            [textArea applyErrorThemeWithScheme:self.containerScheme];
+          }
           if (isEven) {
-            // TODO: Make TextArea expose assistive labels
-
-            //            textArea.leadingAssistiveLabel.text = @"Suspendisse quam elit, mattis sit
-            //            amet justo "
-            //                                                  @"vel, venenatis lobortis massa.
-            //                                                  Donec metus "
-            //                                                  @"dolor.";
+            textArea.leadingAssistiveLabel.text = @"Suspendisse quam elit, mattis sit amet justo "
+                                                  @"vel, venenatis lobortis massa. Donec metus "
+                                                  @"dolor.";
           } else {
-            //            textArea.leadingAssistiveLabel.text = @"This is an error.";
+            textArea.leadingAssistiveLabel.text = @"This is an error.";
           }
         } else {
-          //          if ([textArea respondsToSelector:@selector(applyThemeWithScheme:)]) {
-          //            [textArea applyThemeWithScheme:self.containerScheme];
-          //          }
-          //          if (isEven) {
-          //            textArea.leadingAssistiveLabel.text = @"This is helper text.";
-          //          } else {
-          //            textArea.leadingAssistiveLabel.text = nil;
-          //          }
+          if ([textArea respondsToSelector:@selector(applyThemeWithScheme:)]) {
+            [textArea applyThemeWithScheme:self.containerScheme];
+          }
+          if (isEven) {
+            textArea.leadingAssistiveLabel.text = @"This is helper text.";
+          } else {
+            textArea.leadingAssistiveLabel.text = nil;
+          }
         }
       }];
   [self.view setNeedsLayout];

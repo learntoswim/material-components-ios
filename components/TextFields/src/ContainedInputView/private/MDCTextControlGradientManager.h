@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "MDCContainedInputViewLabelState.h"
 
-@interface MDCContainedInputViewLabelAnimation : NSObject
+//#import <CoreGraphics/CoreGraphics.h>
+//#import <QuartzCore/QuartzCore.h>
 
-+ (void)layOutLabel:(nonnull UILabel *)floatingLabel
-                 state:(MDCContainedInputViewLabelState)labelState
-      normalLabelFrame:(CGRect)normalLabelFrame
-    floatingLabelFrame:(CGRect)floatingLabelFrame
-            normalFont:(nonnull UIFont *)normalFont
-          floatingFont:(nonnull UIFont *)floatingFont;
+@interface MDCTextControlGradientManager : NSObject
+
+@property(strong, nonatomic) CAGradientLayer *horizontalGradient;
+@property(strong, nonatomic) CAGradientLayer *verticalGradient;
+
+- (CALayer *)combinedGradientMaskLayer;
+
 @end

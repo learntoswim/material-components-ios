@@ -27,6 +27,7 @@
 #import "private/MDCContainedInputViewColorViewModel.h"
 #import "private/MDCContainedInputViewLabelAnimation.h"
 #import "private/MDCContainedInputViewStyleBase.h"
+#import "private/MDCTextControlGradientManager.h"
 
 @class MDCBaseInputChipViewTextField;
 @protocol MDCBaseInputChipViewTextFieldDelegate <NSObject>
@@ -105,7 +106,7 @@
 
 @end
 
-static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
+static const CGFloat kChipAnimationDuration = (CGFloat)0.15;
 
 @interface MDCBaseInputChipView () <MDCContainedInputView,
                                     MDCBaseInputChipViewTextFieldDelegate,
@@ -130,9 +131,6 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
 @property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
 @property(nonatomic, assign) CGPoint lastTouchInitialLocation;
 
-@property(strong, nonatomic) CAGradientLayer *horizontalGradient;
-@property(strong, nonatomic) CAGradientLayer *verticalGradient;
-
 //@property(strong, nonatomic) UILabel *leftAssistiveLabel;
 //@property(strong, nonatomic) UILabel *rightAssistiveLabel;
 
@@ -143,6 +141,8 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
 
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCContainedInputViewColorViewModel *> *colorViewModels;
+
+@property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
 
 @end
 
@@ -158,7 +158,7 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    [self commonInputChipViewInit];
+    [self commonMDCBaseInputChipViewInit];
   }
   return self;
 }
@@ -166,17 +166,17 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    [self commonInputChipViewInit];
+    [self commonMDCBaseInputChipViewInit];
   }
   return self;
 }
 
-- (void)commonInputChipViewInit {
+- (void)commonMDCBaseInputChipViewInit {
   [self addObservers];
   [self initializeProperties];
   [self createSubviews];
   [self setUpChipRowHeight];
-  [self setUpGradientLayers];
+  [self setUpGradientManager];
   [self setUpColorViewModels];
   [self setUpAssistiveLabels];
   [self setUpContainerStyle];
@@ -283,21 +283,8 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
   [self addSubview:self.assistiveLabelView];
 }
 
-- (void)setUpGradientLayers {
-  UIColor *outer = (id)UIColor.clearColor.CGColor;
-  UIColor *inner = (id)UIColor.blackColor.CGColor;
-  NSArray *colors = @[ outer, outer, inner, inner, outer, outer ];
-  self.horizontalGradient = [CAGradientLayer layer];
-  self.horizontalGradient.frame = self.bounds;
-  self.horizontalGradient.colors = colors;
-  self.horizontalGradient.startPoint = CGPointMake(0.0, 0.5);
-  self.horizontalGradient.endPoint = CGPointMake(1.0, 0.5);
-
-  self.verticalGradient = [CAGradientLayer layer];
-  self.verticalGradient.frame = self.bounds;
-  self.verticalGradient.colors = colors;
-  self.verticalGradient.startPoint = CGPointMake(0.5, 0.0);
-  self.verticalGradient.endPoint = CGPointMake(0.5, 1.0);
+- (void)setUpGradientManager {
+  self.gradientManager = [[MDCTextControlGradientManager alloc] init];
 }
 
 #pragma mark UIResponder Overrides
@@ -540,36 +527,11 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
 
 - (void)layOutGradientLayers {
   CGRect gradientLayerFrame = self.layout.maskedScrollViewContainerViewFrame;
-  self.horizontalGradient.frame = gradientLayerFrame;
-  self.verticalGradient.frame = gradientLayerFrame;
-  self.horizontalGradient.locations = self.layout.horizontalGradientLocations;
-  self.verticalGradient.locations = self.layout.verticalGradientLocations;
-  CALayer *scrollViewBorderGradient = [self layerCombiningHorizontalGradient:self.horizontalGradient
-                                                        withVerticalGradient:self.verticalGradient];
-  self.maskedScrollViewContainerView.layer.mask = scrollViewBorderGradient;
-}
-
-- (CALayer *)layerCombiningHorizontalGradient:(CAGradientLayer *)horizontalGradient
-                         withVerticalGradient:(CAGradientLayer *)verticalGradient {
-  horizontalGradient.mask = verticalGradient;
-  UIImage *image = [self createImageWithLayer:horizontalGradient];
-  CALayer *layer = [self createLayerWithImage:image];
-  return layer;
-}
-
-- (UIImage *)createImageWithLayer:(CALayer *)layer {
-  UIGraphicsBeginImageContext(layer.frame.size);
-  [layer renderInContext:UIGraphicsGetCurrentContext()];
-  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-  return image;
-}
-
-- (CALayer *)createLayerWithImage:(UIImage *)image {
-  CALayer *layer = [[CALayer alloc] init];
-  layer.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-  layer.contents = (__bridge id _Nullable)(image.CGImage);
-  return layer;
+  self.gradientManager.horizontalGradient.frame = gradientLayerFrame;
+  self.gradientManager.verticalGradient.frame = gradientLayerFrame;
+  self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
+  self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
+  self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
 - (NSArray<UIView *> *)chipsToAdd {
@@ -599,7 +561,7 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
 
 - (void)performChipRemovalOnCompletion:(void (^)(void))completion {
   if (self.chipsToRemove.count > 0) {
-    [UIView animateWithDuration:0  // kChipAnimationDuration
+    [UIView animateWithDuration:0
         animations:^{
           for (UIView *chip in self.chipsToRemove) {
             chip.alpha = 0;
@@ -645,7 +607,7 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.25;
     chip.alpha = 0;
   }
   if (chipsToAdd.count > 0) {
-    [UIView animateWithDuration:0  // kChipAnimationDuration
+    [UIView animateWithDuration:0
         animations:^{
           for (UIView *chip in chipsToAdd) {
             chip.alpha = 1;

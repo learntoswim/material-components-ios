@@ -16,17 +16,9 @@
 #import "MaterialAnimationTiming.h"
 #import "MaterialMath.h"
 
-static const CGFloat kMDCContainedInputViewLabelAnimatorDefaultAnimationDuration = (CGFloat)0.15;
+#import "MDCContainedInputView.h"
 
 @implementation MDCContainedInputViewLabelAnimation
-
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    self.animationDuration = 0.2;
-  }
-  return self;
-}
 
 + (void)layOutLabel:(nonnull UILabel *)label
                  state:(MDCContainedInputViewLabelState)labelState
@@ -58,7 +50,7 @@ static const CGFloat kMDCContainedInputViewLabelAnimatorDefaultAnimationDuration
   CAMediaTimingFunction *timingFunction =
       [CAMediaTimingFunction mdc_functionWithType:MDCAnimationTimingFunctionStandard];
   [UIView mdc_animateWithTimingFunction:timingFunction
-                               duration:kMDCContainedInputViewLabelAnimatorDefaultAnimationDuration
+                               duration:kMDCContainedInputViewDefaultAnimationDuration
                                   delay:0
                                 options:UIViewAnimationOptionTransitionNone
                              animations:^{
@@ -80,10 +72,6 @@ static const CGFloat kMDCContainedInputViewLabelAnimatorDefaultAnimationDuration
                                      finalRect.size.height / sourceRect.size.height);
 
   return transform;
-}
-
-+ (NSString *)placeholderLabelOpacityAnimationKey {
-  return @"placeholderLabelOpacityAnimationKey";
 }
 
 @end

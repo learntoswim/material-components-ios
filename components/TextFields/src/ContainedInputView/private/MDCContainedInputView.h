@@ -23,6 +23,8 @@
 #import "MDCContainerStyleVerticalPositioningReference.h"
 #import "MDCTextControlLabelBehavior.h"
 
+static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0.15;
+
 @protocol MDCContainedInputViewStyle;
 
 @protocol MDCContainedInputView <NSObject>
@@ -126,10 +128,6 @@
 
 @protocol MDCContainedInputViewStyle <NSObject>
 
-/**
- Animation duration.
- */
-@property(nonatomic, assign) NSTimeInterval animationDuration;
 /**
  This method allows objects conforming to MDCContainedInputViewStyle to apply themselves to objects
  conforming to MDCContainedInputView with a set of colors represented by an object conforming to

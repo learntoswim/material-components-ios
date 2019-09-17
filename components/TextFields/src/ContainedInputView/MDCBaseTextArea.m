@@ -22,9 +22,11 @@
 #import "MaterialTypography.h"
 #import "private/MDCBaseTextArea+MDCContainedInputView.h"
 #import "private/MDCBaseTextAreaLayout.h"
+#import "private/MDCContainedInputAssistiveLabelView.h"
 #import "private/MDCContainedInputView.h"
 #import "private/MDCContainedInputViewLabelAnimation.h"
 #import "private/MDCContainedInputViewStyleBase.h"
+#import "private/MDCTextControlGradientManager.h"
 
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
@@ -101,9 +103,7 @@
 
 #pragma mark MDCContainedInputView properties
 @property(strong, nonatomic) UILabel *label;
-
-@property(strong, nonatomic) UILabel *leftAssistiveLabel;
-@property(strong, nonatomic) UILabel *rightAssistiveLabel;
+@property(nonatomic, strong) MDCContainedInputAssistiveLabelView *assistiveLabelView;
 
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
 @property(strong, nonatomic) UIScrollView *scrollView;
@@ -115,9 +115,6 @@
 @property(strong, nonatomic) UITouch *lastTouch;
 @property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
 @property(nonatomic, assign) CGPoint lastTouchInitialLocation;
-
-@property(strong, nonatomic) CAGradientLayer *horizontalGradient;
-@property(strong, nonatomic) CAGradientLayer *verticalGradient;
 
 //@property(strong, nonatomic) UIButton *clearButton;
 //@property(strong, nonatomic) UIImageView *clearButtonImageView;
@@ -133,6 +130,8 @@
 
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCContainedInputViewColorViewModel *> *colorViewModels;
+
+@property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
 
 @end
 
@@ -165,7 +164,6 @@
   [self addObservers];
   [self initializeProperties];
   [self createSubviews];
-  [self setUpGradientLayers];
   [self setUpColorViewModels];
   [self setUpAssistiveLabels];
   [self setUpContainerStyle];
@@ -199,10 +197,7 @@
 }
 
 - (void)initializeProperties {
-  [self setUpLayoutDirection];
-}
-
-- (void)setUpLayoutDirection {
+  self.gradientManager = [[MDCTextControlGradientManager alloc] init];
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
 }
 
@@ -246,31 +241,13 @@
 }
 
 - (void)setUpAssistiveLabels {
-  //  CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * 0.75);
-  //  UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
-  //  self.leftAssistiveLabel = [[UILabel alloc] init];
-  //  self.leftAssistiveLabel.font = assistiveFont;
-  //  self.rightAssistiveLabel = [[UILabel alloc] init];
-  //  self.rightAssistiveLabel.font = assistiveFont;
-  //  [self addSubview:self.leftAssistiveLabel];
-  //  [self addSubview:self.rightAssistiveLabel];
-}
-
-- (void)setUpGradientLayers {
-  UIColor *outer = (id)UIColor.clearColor.CGColor;
-  UIColor *inner = (id)UIColor.blackColor.CGColor;
-  NSArray *colors = @[ outer, outer, inner, inner, outer, outer ];
-  self.horizontalGradient = [CAGradientLayer layer];
-  self.horizontalGradient.frame = self.bounds;
-  self.horizontalGradient.colors = colors;
-  self.horizontalGradient.startPoint = CGPointMake(0.0, 0.5);
-  self.horizontalGradient.endPoint = CGPointMake(1.0, 0.5);
-
-  self.verticalGradient = [CAGradientLayer layer];
-  self.verticalGradient.frame = self.bounds;
-  self.verticalGradient.colors = colors;
-  self.verticalGradient.startPoint = CGPointMake(0.5, 0.0);
-  self.verticalGradient.endPoint = CGPointMake(0.5, 1.0);
+  self.assistiveLabelDrawPriority = MDCContainedInputViewAssistiveLabelDrawPriorityTrailing;
+  self.assistiveLabelView = [[MDCContainedInputAssistiveLabelView alloc] init];
+  CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
+  UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
+  self.assistiveLabelView.leftAssistiveLabel.font = assistiveFont;
+  self.assistiveLabelView.rightAssistiveLabel.font = assistiveFont;
+  [self addSubview:self.assistiveLabelView];
 }
 
 #pragma mark UIResponder Overrides
@@ -321,7 +298,7 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
-  [self setUpLayoutDirection];
+  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
@@ -351,7 +328,6 @@
   //  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
 
   CGPoint offset = self.lastTouchInitialContentOffset;
-  //  if (self.chipsWrap) {
   CGFloat height = CGRectGetHeight(self.frame);
   offset.y -= offsetFromStart.y;
   if (offset.y < 0) {
@@ -360,17 +336,6 @@
   if (offset.y + height > self.scrollView.contentSize.height) {
     offset.y = self.scrollView.contentSize.height - height;
   }
-  self.scrollView.contentOffset = offset;
-  //  } else {
-  //    CGFloat width = CGRectGetWidth(self.frame);
-  //    offset.x -= offsetFromStart.x;
-  //    if (offset.x < 0) {
-  //      offset.x = 0;
-  //    }
-  //    if (offset.x + width > self.scrollView.contentSize.width) {
-  //      offset.x = self.scrollView.contentSize.width - width;
-  //    }
-  //  }
   self.scrollView.contentOffset = offset;
 
   return result;
@@ -411,8 +376,8 @@
                                                label:self.label
                                           labelState:self.labelState
                                        labelBehavior:self.labelBehavior
-                                  leftAssistiveLabel:self.leftAssistiveLabel
-                                 rightAssistiveLabel:self.rightAssistiveLabel
+                                  leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
+                                 rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
                           assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
                     customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
                             preferredContainerHeight:self.preferredContainerHeight
@@ -427,7 +392,8 @@
   MDCContainedInputViewColorViewModel *colorViewModel =
       [self containedInputViewColorViewModelForState:self.containedInputViewState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
-  self.layout = [self calculateLayoutWithSize:self.bounds.size];
+  CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX);
+  self.layout = [self calculateLayoutWithSize:fittingSize];
 }
 
 - (MDCContainedInputViewState)determineCurrentContainedInputViewState {
@@ -466,6 +432,9 @@
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
   [self.scrollView setNeedsLayout];
+  self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
+  self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
+  [self.assistiveLabelView setNeedsLayout];
   //  NSLog(@"inset: %@",NSStringFromUIEdgeInsets(self.scrollView.contentInset));
   //  NSLog(@"offset: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
   //  NSLog(@"size: %@\n\n",NSStringFromCGSize(self.scrollView.contentSize));
@@ -479,36 +448,11 @@
 
 - (void)layOutGradientLayers {
   CGRect gradientLayerFrame = self.layout.maskedScrollViewContainerViewFrame;
-  self.horizontalGradient.frame = gradientLayerFrame;
-  self.verticalGradient.frame = gradientLayerFrame;
-  self.horizontalGradient.locations = self.layout.horizontalGradientLocations;
-  self.verticalGradient.locations = self.layout.verticalGradientLocations;
-  CALayer *scrollViewBorderGradient = [self layerCombiningHorizontalGradient:self.horizontalGradient
-                                                        withVerticalGradient:self.verticalGradient];
-  self.maskedScrollViewContainerView.layer.mask = scrollViewBorderGradient;
-}
-
-- (CALayer *)layerCombiningHorizontalGradient:(CAGradientLayer *)horizontalGradient
-                         withVerticalGradient:(CAGradientLayer *)verticalGradient {
-  horizontalGradient.mask = verticalGradient;
-  UIImage *image = [self createImageWithLayer:horizontalGradient];
-  CALayer *layer = [self createLayerWithImage:image];
-  return layer;
-}
-
-- (UIImage *)createImageWithLayer:(CALayer *)layer {
-  UIGraphicsBeginImageContext(layer.frame.size);
-  [layer renderInContext:UIGraphicsGetCurrentContext()];
-  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-  return image;
-}
-
-- (CALayer *)createLayerWithImage:(UIImage *)image {
-  CALayer *layer = [[CALayer alloc] init];
-  layer.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-  layer.contents = (__bridge id _Nullable)(image.CGImage);
-  return layer;
+  self.gradientManager.horizontalGradient.frame = gradientLayerFrame;
+  self.gradientManager.verticalGradient.frame = gradientLayerFrame;
+  self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
+  self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
+  self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
 #pragma mark Notification Listener Methods
@@ -586,17 +530,17 @@
 
 - (UILabel *)leadingAssistiveLabel {
   if ([self isRTL]) {
-    return self.rightAssistiveLabel;
+    return self.assistiveLabelView.rightAssistiveLabel;
   } else {
-    return self.leftAssistiveLabel;
+    return self.assistiveLabelView.leftAssistiveLabel;
   }
 }
 
 - (UILabel *)trailingAssistiveLabel {
   if ([self isRTL]) {
-    return self.leftAssistiveLabel;
+    return self.assistiveLabelView.leftAssistiveLabel;
   } else {
-    return self.rightAssistiveLabel;
+    return self.assistiveLabelView.rightAssistiveLabel;
   }
 }
 
@@ -729,6 +673,77 @@
         [[MDCContainedInputViewColorViewModel alloc] initWithState:containedInputViewState];
   }
   return colorViewModel;
+}
+
+#pragma mark Color Accessors
+
+- (void)setNormalLabelColor:(nonnull UIColor *)labelColor forState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  colorViewModel.normalLabelColor = labelColor;
+  [self setNeedsLayout];
+}
+
+- (UIColor *)normalLabelColorForState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  return colorViewModel.normalLabelColor;
+}
+
+- (void)setFloatingLabelColor:(nonnull UIColor *)labelColor forState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  colorViewModel.floatingLabelColor = labelColor;
+  [self setNeedsLayout];
+}
+
+- (UIColor *)floatingLabelColorForState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  return colorViewModel.floatingLabelColor;
+}
+
+- (void)setTextColor:(nonnull UIColor *)labelColor forState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  colorViewModel.textColor = labelColor;
+  [self setNeedsLayout];
+}
+
+- (UIColor *)textColorForState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  return colorViewModel.textColor;
+}
+
+- (void)setAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
+                      forState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  colorViewModel.assistiveLabelColor = assistiveLabelColor;
+  [self setNeedsLayout];
+}
+
+- (UIColor *)assistiveLabelColorForState:(UIControlState)state {
+  MDCContainedInputViewState containedInputViewState =
+      MDCContainedInputViewStateWithUIControlState(state);
+  MDCContainedInputViewColorViewModel *colorViewModel =
+      [self containedInputViewColorViewModelForState:containedInputViewState];
+  return colorViewModel.assistiveLabelColor;
 }
 
 @end

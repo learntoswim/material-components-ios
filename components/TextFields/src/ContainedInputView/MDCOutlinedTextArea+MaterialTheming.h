@@ -12,16 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "MDCContainedInputViewLabelState.h"
 
-@interface MDCContainedInputViewLabelAnimation : NSObject
+#import "MDCOutlinedTextArea.h"
+#import "MaterialContainerScheme.h"
 
-+ (void)layOutLabel:(nonnull UILabel *)floatingLabel
-                 state:(MDCContainedInputViewLabelState)labelState
-      normalLabelFrame:(CGRect)normalLabelFrame
-    floatingLabelFrame:(CGRect)floatingLabelFrame
-            normalFont:(nonnull UIFont *)normalFont
-          floatingFont:(nonnull UIFont *)floatingFont;
+/**
+ This category is used to style MDCOutlinedTextArea instances with an MDCContainerScheme.
+ */
+@interface MDCOutlinedTextArea (MaterialTheming)
+
+/**
+ Applies a container scheme's subsystem-specific schemes to the receiver.
+
+ @param scheme A container scheme instance.
+ */
+- (void)applyThemeWithScheme:(nonnull id<MDCContainerScheming>)scheme;
+
+/**
+ Applies a container scheme's subsystem-specific schemes to the receiver in a manner best suited to
+ convey an error state.
+
+ @param scheme A container scheme instance.
+ */
+- (void)applyErrorThemeWithScheme:(nonnull id<MDCContainerScheming>)scheme;
+
 @end

@@ -23,15 +23,6 @@
 static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
 
 @implementation MDCContainedInputViewStyleBase
-@synthesize animationDuration = _animationDuration;
-
-- (void)setAnimationDuration:(NSTimeInterval)animationDuration {
-  _animationDuration = animationDuration;
-}
-
-- (NSTimeInterval)animationDuration {
-  return _animationDuration;
-}
 
 - (UIFont *)floatingFontWithFont:(UIFont *)font {
   CGFloat scaleFactor = kBaseFloatingLabelScaleFactor;
