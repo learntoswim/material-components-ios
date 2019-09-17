@@ -320,7 +320,7 @@ static const CGFloat kGradientBlurLength = 6;
           row++;
           chipMaxX = globalChipRowMaxX;
           chipMidY = initialChipRowMinY + (row * (chipRowHeight + interChipSpacing)) +
-          ((CGFloat)0.5 * chipRowHeight);
+                     ((CGFloat)0.5 * chipRowHeight);
           chipMinY = chipMidY - ((CGFloat)0.5 * chipHeight);
           chipMinX = MDCFloor(chipMaxX - chipWidth);
           chipFrame = CGRectMake(chipMinX, chipMinY, chipWidth, chipHeight);
@@ -366,7 +366,7 @@ static const CGFloat kGradientBlurLength = 6;
           row++;
           chipMinX = globalChipRowMinX;
           chipMidY = initialChipRowMinY + (row * (chipRowHeight + interChipSpacing)) +
-          ((CGFloat)0.5 * chipRowHeight);
+                     ((CGFloat)0.5 * chipRowHeight);
           chipMinY = chipMidY - ((CGFloat)0.5 * chipHeight);
           chipFrame = CGRectMake(chipMinX, chipMinY, chipWidth, chipHeight);
           chipMaxX = CGRectGetMaxX(chipFrame);
@@ -502,7 +502,7 @@ static const CGFloat kGradientBlurLength = 6;
                                       interChipSpacing:interChipSpacing];
           NSInteger nextRow = currentRow + 1;
           CGFloat nextRowMinY =
-          initialChipRowMinY + ((CGFloat)(nextRow) * (chipRowHeight + interChipSpacing));
+              initialChipRowMinY + ((CGFloat)(nextRow) * (chipRowHeight + interChipSpacing));
           textFieldMidY = nextRowMinY + ((CGFloat)0.5 * chipRowHeight);
           textFieldMinY = textFieldMidY - ((CGFloat)0.5 * textFieldSize.height);
           textFieldMaxX = globalChipRowMaxX;
@@ -615,7 +615,7 @@ static const CGFloat kGradientBlurLength = 6;
   } else {
     CGFloat textFieldMinX = CGRectGetMinX(textFieldFrame);
     CGFloat textFieldMaxX = CGRectGetMaxX(textFieldFrame);
-    
+
     if (textFieldMaxX > globalChipRowMaxX) {
       CGFloat difference = textFieldMaxX - globalChipRowMaxX;
       contentOffset = CGPointMake(difference, 0);
