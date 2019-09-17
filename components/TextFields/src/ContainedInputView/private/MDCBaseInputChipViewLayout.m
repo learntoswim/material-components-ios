@@ -178,8 +178,7 @@ static const CGFloat kGradientBlurLength = 6;
                                              initialChipRowMinY:initialChipRowMinY
                                               globalChipRowMinX:globalChipRowMinX
                                               globalChipRowMaxX:globalChipRowMaxX
-                                                  bottomPadding:bottomPadding
-                                                          isRTL:isRTL];
+                                                  bottomPadding:bottomPadding];
   CGSize contentSize = [self scrollViewContentSizeWithSize:scrollViewSize
                                              contentOffset:contentOffset
                                                 chipFrames:chipFrames
@@ -493,9 +492,9 @@ static const CGFloat kGradientBlurLength = 6;
         CGFloat lastChipMidY = CGRectGetMidY(lastChipFrame);
         textFieldMidY = lastChipMidY;
         textFieldMinY = textFieldMidY - ((CGFloat)0.5 * textFieldSize.height);
-        textFieldMinX = CGRectGetMaxX(lastChipFrame) + interChipSpacing;
-        textFieldMaxX = textFieldMinX + textFieldSize.width;
-        BOOL textFieldShouldMoveToNextRow = textFieldMaxX > globalChipRowMaxX;
+        textFieldMaxX = CGRectGetMinX(lastChipFrame) - interChipSpacing;
+        textFieldMinX = textFieldMaxX - textFieldSize.width;
+        BOOL textFieldShouldMoveToNextRow = textFieldMinX < globalChipRowMinX;
         if (textFieldShouldMoveToNextRow) {
           NSInteger currentRow = [self chipRowWithRect:lastChipFrame
                                     initialChipRowMinY:initialChipRowMinY
@@ -506,32 +505,34 @@ static const CGFloat kGradientBlurLength = 6;
           initialChipRowMinY + ((CGFloat)(nextRow) * (chipRowHeight + interChipSpacing));
           textFieldMidY = nextRowMinY + ((CGFloat)0.5 * chipRowHeight);
           textFieldMinY = textFieldMidY - ((CGFloat)0.5 * textFieldSize.height);
-          textFieldMinX = globalChipRowMinX;
-          textFieldMaxX = textFieldMinX + textFieldSize.width;
-          BOOL textFieldIsStillTooBig = textFieldMaxX > globalChipRowMaxX;
+          textFieldMaxX = globalChipRowMaxX;
+          textFieldMinX = textFieldMaxX - textFieldSize.width;
+          BOOL textFieldIsStillTooBig = textFieldMaxX < globalChipRowMinX;
           if (textFieldIsStillTooBig) {
-            CGFloat difference = textFieldMaxX - globalChipRowMaxX;
+            CGFloat difference = globalChipRowMinX - textFieldMinX;
             textFieldSize.width = textFieldSize.width - difference;
           }
         }
         return CGRectMake(textFieldMinX, textFieldMinY, textFieldSize.width, textFieldSize.height);
       } else {
-        textFieldMinX = globalChipRowMinX;
+        textFieldMaxX = globalChipRowMaxX;
+        textFieldMinX = textFieldMaxX - textFieldSize.width;
         textFieldMidY = initialChipRowMinY + ((CGFloat)0.5 * chipRowHeight);
         textFieldMinY = textFieldMidY - ((CGFloat)0.5 * textFieldSize.height);
         return CGRectMake(textFieldMinX, textFieldMinY, textFieldSize.width, textFieldSize.height);
       }
       return CGRectMake(textFieldMinX, textFieldMinY, textFieldSize.width, textFieldSize.height);
     } else {
-      CGFloat textFieldMinX = 0;
+      CGFloat textFieldMaxX = 0;
       if (chipFrames.count > 0) {
         CGRect lastFrame = [[chipFrames lastObject] CGRectValue];
-        textFieldMinX = MDCCeil(CGRectGetMaxX(lastFrame)) + interChipSpacing;
+        textFieldMaxX = MDCFloor(CGRectGetMinX(lastFrame)) - interChipSpacing;
       } else {
-        textFieldMinX = globalChipRowMinX;
+        textFieldMaxX = globalChipRowMaxX;
       }
       CGFloat textFieldCenterY = initialChipRowMinY + ((CGFloat)0.5 * chipRowHeight);
       CGFloat textFieldMinY = textFieldCenterY - ((CGFloat)0.5 * textFieldSize.height);
+      CGFloat textFieldMinX = textFieldMaxX - textFieldSize.width;
       return CGRectMake(textFieldMinX, textFieldMinY, textFieldSize.width, textFieldSize.height);
     }
   } else {
@@ -598,36 +599,29 @@ static const CGFloat kGradientBlurLength = 6;
                         initialChipRowMinY:(CGFloat)initialChipRowMinY
                          globalChipRowMinX:(CGFloat)globalChipRowMinX
                          globalChipRowMaxX:(CGFloat)globalChipRowMaxX
-                             bottomPadding:(CGFloat)bottomPadding
-                                     isRTL:(BOOL)isRTL {
+                             bottomPadding:(CGFloat)bottomPadding {
   CGPoint contentOffset = CGPointZero;
-  if (isRTL) {
-    if (chipsWrap) {
-    } else {
+  if (chipsWrap) {
+    NSInteger row = [self chipRowWithRect:textFieldFrame
+                       initialChipRowMinY:initialChipRowMinY
+                            chipRowHeight:chipRowHeight
+                         interChipSpacing:interChipSpacing];
+    CGFloat lastRowMaxY = initialChipRowMinY + ((row + 1) * (chipRowHeight + interChipSpacing));
+    CGFloat boundsMaxY = size.height;
+    if (lastRowMaxY > boundsMaxY) {
+      CGFloat difference = lastRowMaxY - boundsMaxY;
+      contentOffset = CGPointMake(0, (difference + bottomPadding));
     }
   } else {
-    if (chipsWrap) {
-      NSInteger row = [self chipRowWithRect:textFieldFrame
-                         initialChipRowMinY:initialChipRowMinY
-                              chipRowHeight:chipRowHeight
-                           interChipSpacing:interChipSpacing];
-      CGFloat lastRowMaxY = initialChipRowMinY + ((row + 1) * (chipRowHeight + interChipSpacing));
-      CGFloat boundsMaxY = size.height;
-      if (lastRowMaxY > boundsMaxY) {
-        CGFloat difference = lastRowMaxY - boundsMaxY;
-        contentOffset = CGPointMake(0, (difference + bottomPadding));
-      }
-    } else {
-      CGFloat textFieldMinX = CGRectGetMinX(textFieldFrame);
-      CGFloat textFieldMaxX = CGRectGetMaxX(textFieldFrame);
-
-      if (textFieldMaxX > globalChipRowMaxX) {
-        CGFloat difference = textFieldMaxX - globalChipRowMaxX;
-        contentOffset = CGPointMake(difference, 0);
-      } else if (textFieldMinX < globalChipRowMinX) {
-        CGFloat difference = globalChipRowMinX - textFieldMinX;
-        contentOffset = CGPointMake((-1 * difference), 0);
-      }
+    CGFloat textFieldMinX = CGRectGetMinX(textFieldFrame);
+    CGFloat textFieldMaxX = CGRectGetMaxX(textFieldFrame);
+    
+    if (textFieldMaxX > globalChipRowMaxX) {
+      CGFloat difference = textFieldMaxX - globalChipRowMaxX;
+      contentOffset = CGPointMake(difference, 0);
+    } else if (textFieldMinX < globalChipRowMinX) {
+      CGFloat difference = globalChipRowMinX - textFieldMinX;
+      contentOffset = CGPointMake((-1 * difference), 0);
     }
   }
   return contentOffset;

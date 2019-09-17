@@ -106,8 +106,6 @@
 
 @end
 
-static const CGFloat kChipAnimationDuration = (CGFloat)0.15;
-
 @interface MDCBaseInputChipView () <MDCContainedInputView,
                                     MDCBaseInputChipViewTextFieldDelegate,
                                     UIGestureRecognizerDelegate>
@@ -582,7 +580,7 @@ static const CGFloat kChipAnimationDuration = (CGFloat)0.15;
 }
 
 - (void)performChipPositioningOnCompletion:(void (^)(void))completion {
-  [UIView animateWithDuration:kChipAnimationDuration
+  [UIView animateWithDuration:0
       animations:^{
         for (NSUInteger idx = 0; idx < self.mutableChips.count; idx++) {
           UIView *chip = self.mutableChips[idx];
