@@ -178,6 +178,7 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
 
 - (MDCOutlinedTextArea *)createOutlinedTextArea {
   MDCOutlinedTextArea *textArea = [[MDCOutlinedTextArea alloc] init];
+  [textArea applyThemeWithScheme:self.containerScheme];
   textArea.textView.delegate = self;
   textArea.label.text = @"Stuff";
   textArea.preferredContainerHeight = 150;
@@ -187,6 +188,7 @@ static const CGFloat kSideMargin = (CGFloat)20.0;
 
 - (MDCFilledTextArea *)createFilledTextArea {
   MDCFilledTextArea *textArea = [[MDCFilledTextArea alloc] init];
+  [textArea applyThemeWithScheme:self.containerScheme];
   //  textArea.mdc_adjustsFontForContentSizeCategory = YES;
   textArea.textView.delegate = self;
   textArea.label.text = @"Stuff";
