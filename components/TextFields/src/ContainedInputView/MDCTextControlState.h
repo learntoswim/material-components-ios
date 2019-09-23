@@ -15,30 +15,27 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "../UIControlState+TextControl.h"
-
 /**
- A set of Contained Input View states outlined in the Material guidelines. These states overlap with
- and extend UIControlState.
+ A set of mutually exclusive readonly states that text controls can inhabit. The value of a text
+ control's MDCTextControlState is internally determined by whether or it it's editing and whether or
+ not it's enabled.
  */
-typedef NS_OPTIONS(NSInteger, MDCContainedInputViewState) {
+typedef NS_ENUM(NSInteger, MDCTextControlState) {
   /**
-   The default state of the contained input view.
+   The default state of the contained input view, when it is resting and not editing.
    */
-  MDCContainedInputViewStateNormal = 1 << 0,
+  MDCTextControlStateNormal,
   /**
    The state the view is in during normal editing.
    */
-  MDCContainedInputViewStateFocused = 1 << 1,
+  MDCTextControlStateEditing,
   /**
    The disabled state.
    */
-  MDCContainedInputViewStateDisabled = 1 << 2,
+  MDCTextControlStateDisabled,
 };
-
-MDCContainedInputViewState MDCContainedInputViewStateWithUIControlState(
-    UIControlState controlState);
 
 UIFont *MDCContainedInputViewDefaultFont(void);
 
 UITextField *MDCContainedInputViewUITextFieldPrototype(void);
+

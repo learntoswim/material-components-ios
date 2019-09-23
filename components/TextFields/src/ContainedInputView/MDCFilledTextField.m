@@ -49,31 +49,23 @@
 #pragma mark Stateful Color APIs
 
 - (void)setFilledBackgroundColor:(nonnull UIColor *)filledBackgroundColor
-                        forState:(UIControlState)state {
-  MDCContainedInputViewState containedInputViewState =
-      MDCContainedInputViewStateWithUIControlState(state);
+                        forState:(MDCTextControlState)state {
   [self.filledStyle setFilledBackgroundColor:filledBackgroundColor
-                                    forState:containedInputViewState];
+                                    forState:state];
   [self setNeedsLayout];
 }
 
-- (nonnull UIColor *)filledBackgroundColorForState:(UIControlState)state {
-  MDCContainedInputViewState containedInputViewState =
-      MDCContainedInputViewStateWithUIControlState(state);
-  return [self.filledStyle underlineColorForState:containedInputViewState];
+- (nonnull UIColor *)filledBackgroundColorForState:(MDCTextControlState)state {
+  return [self.filledStyle underlineColorForState:state];
 }
 
-- (void)setUnderlineColor:(nonnull UIColor *)underlineColor forState:(UIControlState)state {
-  MDCContainedInputViewState containedInputViewState =
-      MDCContainedInputViewStateWithUIControlState(state);
-  [self.filledStyle setUnderlineColor:underlineColor forState:containedInputViewState];
+- (void)setUnderlineColor:(nonnull UIColor *)underlineColor forState:(MDCTextControlState)state {
+  [self.filledStyle setUnderlineColor:underlineColor forState:state];
   [self setNeedsLayout];
 }
 
-- (nonnull UIColor *)underlineColorForState:(UIControlState)state {
-  MDCContainedInputViewState containedInputViewState =
-      MDCContainedInputViewStateWithUIControlState(state);
-  return [self.filledStyle underlineColorForState:containedInputViewState];
+- (nonnull UIColor *)underlineColorForState:(MDCTextControlState)state {
+  return [self.filledStyle underlineColorForState:state];
 }
 
 - (MDCContainedInputViewStyleFilled *)filledStyle {

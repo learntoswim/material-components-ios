@@ -50,33 +50,33 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
 - (void)setUpOutlineColors {
   self.outlineColors = [NSMutableDictionary new];
-  self.outlineColors[@(MDCContainedInputViewStateNormal)] = [UIColor blackColor];
-  self.outlineColors[@(MDCContainedInputViewStateFocused)] = [UIColor blackColor];
-  self.outlineColors[@(MDCContainedInputViewStateDisabled)] =
+  self.outlineColors[@(MDCTextControlStateNormal)] = [UIColor blackColor];
+  self.outlineColors[@(MDCTextControlStateEditing)] = [UIColor blackColor];
+  self.outlineColors[@(MDCTextControlStateDisabled)] =
       [[UIColor blackColor] colorWithAlphaComponent:(CGFloat)0.60];
 }
 
 - (void)setUpOutlineLineWidths {
   self.outlineLineWidths = [NSMutableDictionary new];
-  self.outlineLineWidths[@(MDCContainedInputViewStateNormal)] = @(1);
-  self.outlineLineWidths[@(MDCContainedInputViewStateFocused)] = @(2);
-  self.outlineLineWidths[@(MDCContainedInputViewStateDisabled)] = @(1);
+  self.outlineLineWidths[@(MDCTextControlStateNormal)] = @(1);
+  self.outlineLineWidths[@(MDCTextControlStateEditing)] = @(2);
+  self.outlineLineWidths[@(MDCTextControlStateDisabled)] = @(1);
 }
 
 - (void)setUpOutlineSublayer {
   self.outlinedSublayer = [[CAShapeLayer alloc] init];
   self.outlinedSublayer.fillColor = [UIColor clearColor].CGColor;
   self.outlinedSublayer.lineWidth =
-      (CGFloat)[self.outlineLineWidths[@(MDCContainedInputViewStateNormal)] doubleValue];
+      (CGFloat)[self.outlineLineWidths[@(MDCTextControlStateNormal)] doubleValue];
 }
 
 #pragma mark Accessors
 
-- (UIColor *)outlineColorForState:(MDCContainedInputViewState)state {
+- (UIColor *)outlineColorForState:(MDCTextControlState)state {
   return self.outlineColors[@(state)];
 }
 
-- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCContainedInputViewState)state {
+- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCTextControlState)state {
   self.outlineColors[@(state)] = outlineColor;
 }
 
@@ -90,7 +90,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
       containedInputView.labelState == MDCContainedInputViewLabelStateFloating;
   CGFloat containerHeight = CGRectGetMaxY(containedInputView.containerFrame);
   CGFloat lineWidth =
-      (CGFloat)self.outlineLineWidths[@(containedInputView.containedInputViewState)].doubleValue;
+      (CGFloat)self.outlineLineWidths[@(containedInputView.textControlState)].doubleValue;
   UIView *uiView = (UIView *)containedInputView;
   [self applyStyleTo:uiView
                    labelFrame:labelFrame
@@ -98,7 +98,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
       isFloatingLabelFloating:isFloatingLabelFloating
              outlineLineWidth:lineWidth];
   self.outlinedSublayer.strokeColor =
-      ((UIColor *)self.outlineColors[@(containedInputView.containedInputViewState)]).CGColor;
+      ((UIColor *)self.outlineColors[@(containedInputView.textControlState)]).CGColor;
 }
 
 - (UIFont *)floatingFontWithFont:(UIFont *)font {

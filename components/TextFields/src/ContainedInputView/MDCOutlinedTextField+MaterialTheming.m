@@ -91,21 +91,21 @@
   self.tintColor = colorScheme.primaryColor;
   self.placeholderColor = normalLabelColorNormal;
 
-  [self setFloatingLabelColor:floatingLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setFloatingLabelColor:floatingLabelColorDisabled forState:UIControlStateDisabled];
-  [self setNormalLabelColor:normalLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setNormalLabelColor:normalLabelColorNormal forState:MDCTextControlStateNormal];
   [self setNormalLabelColor:normalLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setNormalLabelColor:normalLabelColorDisabled forState:UIControlStateDisabled];
-  [self setTextColor:textColorNormal forState:UIControlStateNormal];
+  [self setNormalLabelColor:normalLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setTextColor:textColorNormal forState:MDCTextControlStateNormal];
   [self setTextColor:textColorEditing forState:MDCTextControlStateEditing];
-  [self setTextColor:textColorDisabled forState:UIControlStateDisabled];
-  [self setOutlineColor:outlineColorNormal forState:UIControlStateNormal];
+  [self setTextColor:textColorDisabled forState:MDCTextControlStateDisabled];
+  [self setOutlineColor:outlineColorNormal forState:MDCTextControlStateNormal];
   [self setOutlineColor:outlineColorEditing forState:MDCTextControlStateEditing];
-  [self setOutlineColor:outlineColorDisabled forState:UIControlStateDisabled];
-  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:UIControlStateNormal];
+  [self setOutlineColor:outlineColorDisabled forState:MDCTextControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:MDCTextControlStateNormal];
   [self setAssistiveLabelColor:assistiveLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:UIControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:MDCTextControlStateDisabled];
 }
 
 - (void)applyErrorColorScheme:(id<MDCColorScheming>)colorScheme {
@@ -138,21 +138,21 @@
   self.tintColor = colorScheme.primaryColor;
   self.placeholderColor = normalLabelColorNormal;
 
-  [self setFloatingLabelColor:floatingLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setFloatingLabelColor:floatingLabelColorDisabled forState:UIControlStateDisabled];
-  [self setNormalLabelColor:normalLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setNormalLabelColor:normalLabelColorNormal forState:MDCTextControlStateNormal];
   [self setNormalLabelColor:normalLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setNormalLabelColor:normalLabelColorDisabled forState:UIControlStateDisabled];
-  [self setTextColor:textColorNormal forState:UIControlStateNormal];
+  [self setNormalLabelColor:normalLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setTextColor:textColorNormal forState:MDCTextControlStateNormal];
   [self setTextColor:textColorEditing forState:MDCTextControlStateEditing];
-  [self setTextColor:textColorDisabled forState:UIControlStateDisabled];
-  [self setOutlineColor:outlineColorNormal forState:UIControlStateNormal];
+  [self setTextColor:textColorDisabled forState:MDCTextControlStateDisabled];
+  [self setOutlineColor:outlineColorNormal forState:MDCTextControlStateNormal];
   [self setOutlineColor:outlineColorEditing forState:MDCTextControlStateEditing];
-  [self setOutlineColor:outlineColorDisabled forState:UIControlStateDisabled];
-  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:UIControlStateNormal];
+  [self setOutlineColor:outlineColorDisabled forState:MDCTextControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:MDCTextControlStateNormal];
   [self setAssistiveLabelColor:assistiveLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:UIControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:MDCTextControlStateDisabled];
 }
 
 @end

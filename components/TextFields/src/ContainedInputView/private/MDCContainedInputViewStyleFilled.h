@@ -19,10 +19,10 @@
 #import "MDCTextControlLabelBehavior.h"
 
 @interface MDCContainedInputViewStyleFilled : NSObject <MDCContainedInputViewStyle>
-- (nonnull UIColor *)underlineColorForState:(MDCContainedInputViewState)state;
+- (nonnull UIColor *)underlineColorForState:(MDCTextControlState)state;
 - (void)setUnderlineColor:(nonnull UIColor *)underlineColor
-                 forState:(MDCContainedInputViewState)state;
-- (nonnull UIColor *)filledBackgroundColorForState:(MDCContainedInputViewState)state;
+                 forState:(MDCTextControlState)state;
+- (nonnull UIColor *)filledBackgroundColorForState:(MDCTextControlState)state;
 - (void)setFilledBackgroundColor:(nonnull UIColor *)filledBackgroundColor
-                        forState:(MDCContainedInputViewState)state;
+                        forState:(MDCTextControlState)state;
 @end

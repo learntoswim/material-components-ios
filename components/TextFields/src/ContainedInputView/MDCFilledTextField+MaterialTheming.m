@@ -98,25 +98,25 @@
   self.tintColor = colorScheme.primaryColor;
   self.placeholderColor = normalLabelColorNormal;
 
-  [self setFloatingLabelColor:floatingLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setFloatingLabelColor:floatingLabelColorDisabled forState:UIControlStateDisabled];
-  [self setNormalLabelColor:normalLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setNormalLabelColor:normalLabelColorNormal forState:MDCTextControlStateNormal];
   [self setNormalLabelColor:normalLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setNormalLabelColor:normalLabelColorDisabled forState:UIControlStateDisabled];
-  [self setTextColor:textColorNormal forState:UIControlStateNormal];
+  [self setNormalLabelColor:normalLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setTextColor:textColorNormal forState:MDCTextControlStateNormal];
   [self setTextColor:textColorEditing forState:MDCTextControlStateEditing];
-  [self setTextColor:textColorDisabled forState:UIControlStateDisabled];
-  [self setUnderlineColor:underlineColorNormal forState:UIControlStateNormal];
+  [self setTextColor:textColorDisabled forState:MDCTextControlStateDisabled];
+  [self setUnderlineColor:underlineColorNormal forState:MDCTextControlStateNormal];
   [self setUnderlineColor:underlineColorEditing forState:MDCTextControlStateEditing];
-  [self setUnderlineColor:underlineColorDisabled forState:UIControlStateDisabled];
-  [self setFilledBackgroundColor:filledSublayerFillColorNormal forState:UIControlStateNormal];
+  [self setUnderlineColor:underlineColorDisabled forState:MDCTextControlStateDisabled];
+  [self setFilledBackgroundColor:filledSublayerFillColorNormal forState:MDCTextControlStateNormal];
   [self setFilledBackgroundColor:filledSublayerFillColorEditing
                         forState:MDCTextControlStateEditing];
-  [self setFilledBackgroundColor:filledSublayerFillColorDisabled forState:UIControlStateDisabled];
-  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:UIControlStateNormal];
+  [self setFilledBackgroundColor:filledSublayerFillColorDisabled forState:MDCTextControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:MDCTextControlStateNormal];
   [self setAssistiveLabelColor:assistiveLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:UIControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:MDCTextControlStateDisabled];
 }
 
 - (void)applyErrorColorScheme:(id<MDCColorScheming>)colorScheme {
@@ -155,25 +155,25 @@
   self.tintColor = colorScheme.primaryColor;
   self.placeholderColor = normalLabelColorNormal;
 
-  [self setFloatingLabelColor:floatingLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setFloatingLabelColor:floatingLabelColorDisabled forState:UIControlStateDisabled];
-  [self setNormalLabelColor:normalLabelColorNormal forState:UIControlStateNormal];
+  [self setFloatingLabelColor:floatingLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setNormalLabelColor:normalLabelColorNormal forState:MDCTextControlStateNormal];
   [self setNormalLabelColor:normalLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setNormalLabelColor:normalLabelColorDisabled forState:UIControlStateDisabled];
-  [self setTextColor:textColorNormal forState:UIControlStateNormal];
+  [self setNormalLabelColor:normalLabelColorDisabled forState:MDCTextControlStateDisabled];
+  [self setTextColor:textColorNormal forState:MDCTextControlStateNormal];
   [self setTextColor:textColorEditing forState:MDCTextControlStateEditing];
-  [self setTextColor:textColorDisabled forState:UIControlStateDisabled];
-  [self setUnderlineColor:underlineColorNormal forState:UIControlStateNormal];
+  [self setTextColor:textColorDisabled forState:MDCTextControlStateDisabled];
+  [self setUnderlineColor:underlineColorNormal forState:MDCTextControlStateNormal];
   [self setUnderlineColor:underlineColorEditing forState:MDCTextControlStateEditing];
-  [self setUnderlineColor:underlineColorDisabled forState:UIControlStateDisabled];
-  [self setFilledBackgroundColor:filledSublayerFillColorNormal forState:UIControlStateNormal];
+  [self setUnderlineColor:underlineColorDisabled forState:MDCTextControlStateDisabled];
+  [self setFilledBackgroundColor:filledSublayerFillColorNormal forState:MDCTextControlStateNormal];
   [self setFilledBackgroundColor:filledSublayerFillColorEditing
                         forState:MDCTextControlStateEditing];
-  [self setFilledBackgroundColor:filledSublayerFillColorDisabled forState:UIControlStateDisabled];
-  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:UIControlStateNormal];
+  [self setFilledBackgroundColor:filledSublayerFillColorDisabled forState:MDCTextControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorNormal forState:MDCTextControlStateNormal];
   [self setAssistiveLabelColor:assistiveLabelColorEditing forState:MDCTextControlStateEditing];
-  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:UIControlStateDisabled];
+  [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:MDCTextControlStateDisabled];
 }
 
 @end

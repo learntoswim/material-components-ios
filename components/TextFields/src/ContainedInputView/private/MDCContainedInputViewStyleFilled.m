@@ -61,17 +61,17 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 - (void)setUpUnderlineColors {
   self.underlineColors = [NSMutableDictionary new];
   UIColor *underlineColor = [UIColor blackColor];
-  self.underlineColors[@(MDCContainedInputViewStateNormal)] = underlineColor;
-  self.underlineColors[@(MDCContainedInputViewStateFocused)] = underlineColor;
-  self.underlineColors[@(MDCContainedInputViewStateDisabled)] = underlineColor;
+  self.underlineColors[@(MDCTextControlStateNormal)] = underlineColor;
+  self.underlineColors[@(MDCTextControlStateEditing)] = underlineColor;
+  self.underlineColors[@(MDCTextControlStateDisabled)] = underlineColor;
 }
 
 - (void)setUpFilledBackgroundColors {
   self.filledBackgroundColors = [NSMutableDictionary new];
   UIColor *filledBackgroundColor = [[UIColor blackColor] colorWithAlphaComponent:(CGFloat)0.1];
-  self.filledBackgroundColors[@(MDCContainedInputViewStateNormal)] = filledBackgroundColor;
-  self.filledBackgroundColors[@(MDCContainedInputViewStateFocused)] = filledBackgroundColor;
-  self.filledBackgroundColors[@(MDCContainedInputViewStateDisabled)] = filledBackgroundColor;
+  self.filledBackgroundColors[@(MDCTextControlStateNormal)] = filledBackgroundColor;
+  self.filledBackgroundColors[@(MDCTextControlStateEditing)] = filledBackgroundColor;
+  self.filledBackgroundColors[@(MDCTextControlStateDisabled)] = filledBackgroundColor;
 }
 
 - (void)setUpSublayers {
@@ -85,21 +85,21 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
 #pragma mark Accessors
 
-- (UIColor *)underlineColorForState:(MDCContainedInputViewState)state {
+- (UIColor *)underlineColorForState:(MDCTextControlState)state {
   return self.underlineColors[@(state)];
 }
 
 - (void)setUnderlineColor:(nonnull UIColor *)underlineColor
-                 forState:(MDCContainedInputViewState)state {
+                 forState:(MDCTextControlState)state {
   self.underlineColors[@(state)] = underlineColor;
 }
 
-- (UIColor *)filledBackgroundColorForState:(MDCContainedInputViewState)state {
+- (UIColor *)filledBackgroundColorForState:(MDCTextControlState)state {
   return self.filledBackgroundColors[@(state)];
 }
 
 - (void)setFilledBackgroundColor:(nonnull UIColor *)filledBackgroundColor
-                        forState:(MDCContainedInputViewState)state {
+                        forState:(MDCTextControlState)state {
   self.filledBackgroundColors[@(state)] = filledBackgroundColor;
 }
 
@@ -110,7 +110,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   }
   UIView *uiView = (UIView *)containedInputView;
   [self applyStyleToView:uiView
-                   state:containedInputView.containedInputViewState
+                   state:containedInputView.textControlState
           containerFrame:containedInputView.containerFrame];
 }
 
@@ -121,7 +121,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 }
 
 - (void)applyStyleToView:(UIView *)view
-                   state:(MDCContainedInputViewState)state
+                   state:(MDCTextControlState)state
           containerFrame:(CGRect)containerFrame {
   self.filledSublayer.fillColor = [self.filledBackgroundColors[@(state)] CGColor];
   self.thinUnderlineLayer.fillColor = [self.underlineColors[@(state)] CGColor];
@@ -325,14 +325,14 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   }
 }
 
-- (BOOL)shouldShowThickUnderlineWithState:(MDCContainedInputViewState)state {
+- (BOOL)shouldShowThickUnderlineWithState:(MDCTextControlState)state {
   BOOL shouldShow = NO;
   switch (state) {
-    case MDCContainedInputViewStateFocused:
+    case MDCTextControlStateEditing:
       shouldShow = YES;
       break;
-    case MDCContainedInputViewStateNormal:
-    case MDCContainedInputViewStateDisabled:
+    case MDCTextControlStateNormal:
+    case MDCTextControlStateDisabled:
     default:
       break;
   }

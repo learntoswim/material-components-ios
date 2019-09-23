@@ -12,18 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewState.h"
+#import "MDCTextControlState.h"
 
-MDCContainedInputViewState MDCContainedInputViewStateWithUIControlState(
-    UIControlState controlState) {
-  if ((controlState & UIControlStateDisabled) == UIControlStateDisabled) {
-    return MDCContainedInputViewStateDisabled;
-  } else if ((controlState & MDCTextControlStateEditing) == MDCTextControlStateEditing) {
-    return MDCContainedInputViewStateFocused;
-  } else {
-    return MDCContainedInputViewStateNormal;
-  }
-}
 
 UIFont *MDCContainedInputViewDefaultFont() {
   UIFont *font = MDCContainedInputViewUITextFieldPrototype().font;
@@ -47,3 +37,4 @@ UITextField *MDCContainedInputViewUITextFieldPrototype() {
   });
   return textField;
 }
+

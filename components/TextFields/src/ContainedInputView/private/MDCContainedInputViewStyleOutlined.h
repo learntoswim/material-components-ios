@@ -18,6 +18,6 @@
 #import "MDCContainedInputViewStyleBase.h"
 
 @interface MDCContainedInputViewStyleOutlined : NSObject <MDCContainedInputViewStyle>
-- (nonnull UIColor *)outlineColorForState:(MDCContainedInputViewState)state;
-- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCContainedInputViewState)state;
+- (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;
+- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCTextControlState)state;
 @end

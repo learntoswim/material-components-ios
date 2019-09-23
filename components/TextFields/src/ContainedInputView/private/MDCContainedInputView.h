@@ -19,7 +19,7 @@
 #import "MDCContainedInputViewColorViewModel.h"
 #import "MDCContainedInputViewLabelAnimation.h"
 #import "MDCContainedInputViewLabelState.h"
-#import "MDCContainedInputViewState.h"
+#import "MDCTextControlState.h"
 #import "MDCContainerStyleVerticalPositioningReference.h"
 #import "MDCTextControlLabelBehavior.h"
 
@@ -36,9 +36,9 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 @property(nonatomic, strong, nonnull) id<MDCContainedInputViewStyle> containerStyle;
 
 /**
- Describes the current @c MDCContainedInputViewState of the view.
+ Describes the current @c MDCtextControlState of the view.
  */
-@property(nonatomic, assign, readonly) MDCContainedInputViewState containedInputViewState;
+@property(nonatomic, assign, readonly) MDCTextControlState textControlState;
 
 /**
  Describes the current @c MDCContainedInputViewLabelState of the contained input view. This
@@ -99,14 +99,14 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
  This method returns a color scheme for a given state.
  */
 - (nonnull MDCContainedInputViewColorViewModel *)containedInputViewColorViewModelForState:
-    (MDCContainedInputViewState)containedInputViewState;
+    (MDCTextControlState)textControlState;
 
 /**
  This method sets a color scheme for a given state.
  */
 - (void)setContainedInputViewColorViewModel:
             (nonnull MDCContainedInputViewColorViewModel *)containedInputViewColorViewModel
-                                   forState:(MDCContainedInputViewState)textFieldState;
+                                   forState:(MDCTextControlState)textFieldState;
 
 /**
  Returns the rect surrounding the main content, i.e. the area that the container should be drawn

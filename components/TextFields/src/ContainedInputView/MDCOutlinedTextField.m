@@ -48,18 +48,15 @@
 
 #pragma mark Stateful Color APIs
 
-- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(UIControlState)state {
-  MDCContainedInputViewState containedInputViewState =
-      MDCContainedInputViewStateWithUIControlState(state);
-  [self.outlinedStyle setOutlineColor:outlineColor forState:containedInputViewState];
+- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCTextControlState)state {
+  [self.outlinedStyle setOutlineColor:outlineColor forState:state];
   [self setNeedsLayout];
 }
 
-- (nonnull UIColor *)outlineColorForState:(UIControlState)state {
-  MDCContainedInputViewState containedInputViewState =
-      MDCContainedInputViewStateWithUIControlState(state);
-  return [self.outlinedStyle outlineColorForState:containedInputViewState];
+- (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state {
+  return [self.outlinedStyle outlineColorForState:state];
 }
+
 
 - (MDCContainedInputViewStyleOutlined *)outlinedStyle {
   MDCContainedInputViewStyleOutlined *outlinedStyle = nil;

@@ -25,15 +25,14 @@ __attribute__((objc_subclassing_restricted)) @interface MDCOutlinedInputChipView
 /**
  Sets the outline color for a given state.
  @param outlineColor The UIColor for the given state.
- @param state The UIControlState. The accepted values are UIControlStateNormal,
- UIControlStateDisabled, and MDCTextControlStateEditing, which is a custom MDC
- UIControlState value.
+ @param state The MDCTextControlState.
  */
-- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(UIControlState)state;
+- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCTextControlState)state;
 /**
  Returns the outline color for a given state.
- @param state The UIControlState.
+ @param state The MDCTextControlState.
  */
-- (nonnull UIColor *)outlineColorForState:(UIControlState)state;
+- (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;
+
 
 @end

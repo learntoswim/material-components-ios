@@ -24,31 +24,27 @@ __attribute__((objc_subclassing_restricted)) @interface MDCFilledTextArea : MDCB
 /**
  Sets the filled background color for a given state.
  @param filledBackgroundColor The UIColor for the given state.
- @param state The UIControlState. The accepted values are UIControlStateNormal,
- UIControlStateDisabled, and MDCTextControlStateEditing, which is a custom MDC
- UIControlState value.
+ @param state The MDCTextControlState.
  */
 - (void)setFilledBackgroundColor:(nonnull UIColor *)filledBackgroundColor
-                        forState:(UIControlState)state;
+                        forState:(MDCTextControlState)state;
 /**
  Returns the filled background color for a given state.
- @param state The UIControlState.
+ @param state The MDCTextControlState.
  */
-- (nonnull UIColor *)filledBackgroundColorForState:(UIControlState)state;
+- (nonnull UIColor *)filledBackgroundColorForState:(MDCTextControlState)state;
 
 /**
  Sets the underline color for a given state.
  @param underlineColor The UIColor for the given state.
- @param state The UIControlState. The accepted values are UIControlStateNormal,
- UIControlStateDisabled, and MDCTextControlStateEditing, which is a custom MDC
- UIControlState value.
+ @param state The MDCTextControlState.
  */
-- (void)setUnderlineColor:(nonnull UIColor *)underlineColor forState:(UIControlState)state;
+- (void)setUnderlineColor:(nonnull UIColor *)underlineColor forState:(MDCTextControlState)state;
 
 /**
  Returns the underline color for a given state.
- @param state The UIControlState.
+ @param state The MDCTextControlState.
  */
-- (nonnull UIColor *)underlineColorForState:(UIControlState)state;
+- (nonnull UIColor *)underlineColorForState:(MDCTextControlState)state;
 
 @end
