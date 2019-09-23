@@ -178,12 +178,14 @@ static const CGFloat kGradientBlurLength = 6;
                                              initialChipRowMinY:initialChipRowMinY
                                               globalChipRowMinX:globalChipRowMinX
                                               globalChipRowMaxX:globalChipRowMaxX
-                                                  bottomPadding:bottomPadding];
+                                                  bottomPadding:bottomPadding
+                                                          isRTL:isRTL];
   CGSize contentSize = [self scrollViewContentSizeWithSize:scrollViewSize
                                              contentOffset:contentOffset
                                                 chipFrames:chipFrames
                                                  chipsWrap:chipsWrap
-                                            textFieldFrame:textFieldFrame];
+                                            textFieldFrame:textFieldFrame
+                                                     isRTL:isRTL];
 
   CGFloat assistiveLabelVerticalPadding = positioningReference.paddingAroundAssistiveLabels;
   self.assistiveLabelViewLayout = [[MDCContainedInputAssistiveLabelViewLayout alloc]
@@ -224,27 +226,6 @@ static const CGFloat kGradientBlurLength = 6;
       [self determineVerticalGradientLocationsWithViewHeight:positioningReference.containerHeight
                                             topFadeStartingY:topFadeStartingY
                                          bottomFadeStartingY:bottomPadding];
-
-  //  if (isRTL) {
-  //    NSMutableArray<NSValue *> *rtlChips =
-  //        [[NSMutableArray alloc] initWithCapacity:chipFrames.count];
-  //    for (NSValue *chipFrame in chipFrames) {
-  //      CGRect frame = [chipFrame CGRectValue];
-  //      frame = MDFRectFlippedHorizontally(frame, size.width);
-  //      [rtlChips addObject:[NSValue valueWithCGRect:frame]];
-  //    }
-  //    self.chipFrames = [rtlChips copy];
-  //    self.textFieldFrame = MDFRectFlippedHorizontally(textFieldFrame, size.width);
-  //    self.scrollViewContentViewTouchForwardingViewFrame =
-  //        MDFRectFlippedHorizontally(self.scrollViewContentViewTouchForwardingViewFrame,
-  //        size.width);
-  //    self.labelFrameFloating = MDFRectFlippedHorizontally(labelFrameFloating,
-  //    size.width); self.labelFrameNormal =
-  //    MDFRectFlippedHorizontally(labelFrameNormal, size.width);
-  //    self.maskedScrollViewContainerViewFrame =
-  //        MDFRectFlippedHorizontally(self.maskedScrollViewContainerViewFrame, size.width);
-  //    self.scrollViewFrame = MDFRectFlippedHorizontally(scrollViewRect, size.width);
-  //  }
 }
 
 - (CGFloat)calculatedHeight {
@@ -417,58 +398,42 @@ static const CGFloat kGradientBlurLength = 6;
   return rect.size;
 }
 
-- (CGSize)scrollViewContentSizeWithSize:(CGSize)size
+- (CGSize)scrollViewContentSizeWithSize:(CGSize)scrollViewSize
                           contentOffset:(CGPoint)contentOffset
                              chipFrames:(NSArray<NSValue *> *)chipFrames
                               chipsWrap:(BOOL)chipsWrap
-                         textFieldFrame:(CGRect)textFieldFrame {
-  if (chipsWrap) {
-    if (contentOffset.y > 0) {
-      size.height += contentOffset.y;
+                         textFieldFrame:(CGRect)textFieldFrame
+                                  isRTL:(BOOL)isRTL {
+  CGSize contentSize = scrollViewSize;
+  if (isRTL) {
+    if (chipsWrap) {
+      if (contentOffset.y > 0) {
+        contentSize.height += contentOffset.y;
+      }
+      return contentSize;
+    } else {
+      NSLog(@"co: %@",@(contentOffset.x));
+      if (contentOffset.x < 0) {
+        contentSize.width += (contentOffset.x * -1);
+        NSLog(@"size.width: %@",@(contentSize.width));
+      }
+      return contentSize;
     }
-    return size;
   } else {
-    if (contentOffset.x > 0) {
-      size.width += contentOffset.x;
+    if (chipsWrap) {
+      if (contentOffset.y > 0) {
+        contentSize.height += contentOffset.y;
+      }
+      return contentSize;
+    } else {
+      NSLog(@"co: %@",@(contentOffset.x));
+      if (contentOffset.x > 0) {
+        contentSize.width += contentOffset.x;
+        NSLog(@"size.width: %@",@(contentSize.width));
+      }
+      return contentSize;
     }
-    return size;
   }
-  //  CGFloat totalMinX = 0;
-  //  CGFloat totalMaxX = 0;
-  //  CGFloat totalMinY = 0;
-  //  CGFloat totalMaxY = 0;
-  //  NSValue *textFieldFrameValue = [NSValue valueWithCGRect:textFieldFrame];
-  //  NSArray *allFrames = [chipFrames arrayByAddingObject:textFieldFrameValue];
-  //  for (NSUInteger index = 0; index < allFrames.count; index++) {
-  //    NSValue *frameValue = allFrames[index];
-  //    CGRect frame = frameValue.CGRectValue;
-  //    if (index == 0) {
-  //      totalMinX = CGRectGetMinX(frame);
-  //      totalMaxX = CGRectGetMaxX(frame);
-  //      totalMinY = CGRectGetMinY(frame);
-  //      totalMaxY = CGRectGetMaxY(frame);
-  //    } else {
-  //      CGFloat minX = CGRectGetMinX(frame);
-  //      CGFloat maxX = CGRectGetMaxX(frame);
-  //      CGFloat minY = CGRectGetMinY(frame);
-  //      CGFloat maxY = CGRectGetMaxY(frame);
-  //      if (minX < totalMinX) {
-  //        totalMinX = minX;
-  //      }
-  //      if (minY < totalMinY) {
-  //        totalMinY = minY;
-  //      }
-  //      if (maxX > totalMaxX) {
-  //        totalMaxX = maxX;
-  //      }
-  //      if (maxY > totalMaxY) {
-  //        totalMaxY = maxY;
-  //      }
-  //    }
-  //  }
-  //  CGFloat width = totalMaxX - totalMinX;
-  //  CGFloat height = totalMaxY - totalMinY;
-  //  return CGSizeMake(width, height);
 }
 
 - (CGRect)textFieldFrameWithSize:(CGSize)size
@@ -599,7 +564,8 @@ static const CGFloat kGradientBlurLength = 6;
                         initialChipRowMinY:(CGFloat)initialChipRowMinY
                          globalChipRowMinX:(CGFloat)globalChipRowMinX
                          globalChipRowMaxX:(CGFloat)globalChipRowMaxX
-                             bottomPadding:(CGFloat)bottomPadding {
+                             bottomPadding:(CGFloat)bottomPadding
+                                     isRTL:(BOOL)isRTL {
   CGPoint contentOffset = CGPointZero;
   if (chipsWrap) {
     NSInteger row = [self chipRowWithRect:textFieldFrame
@@ -615,13 +581,30 @@ static const CGFloat kGradientBlurLength = 6;
   } else {
     CGFloat textFieldMinX = CGRectGetMinX(textFieldFrame);
     CGFloat textFieldMaxX = CGRectGetMaxX(textFieldFrame);
-
-    if (textFieldMaxX > globalChipRowMaxX) {
-      CGFloat difference = textFieldMaxX - globalChipRowMaxX;
-      contentOffset = CGPointMake(difference, 0);
-    } else if (textFieldMinX < globalChipRowMinX) {
-      CGFloat difference = globalChipRowMinX - textFieldMinX;
-      contentOffset = CGPointMake((-1 * difference), 0);
+    if (isRTL) {
+      if (textFieldMaxX > globalChipRowMaxX) {
+        NSLog(@"if %@ > %@",@(textFieldMaxX),@(globalChipRowMaxX));
+        CGFloat difference = textFieldMaxX - globalChipRowMaxX;
+        contentOffset = CGPointMake(difference, 0);
+        NSLog(@"%@",@(contentOffset.x));
+      } else if (textFieldMinX < globalChipRowMinX) {
+        NSLog(@"else if %@ < %@",@(textFieldMinX),@(globalChipRowMinX));
+        CGFloat difference = globalChipRowMinX - textFieldMinX;
+        contentOffset = CGPointMake((-1 * difference), 0);
+        NSLog(@"%@",@(contentOffset.x));
+      }
+    } else {
+      if (textFieldMaxX > globalChipRowMaxX) {
+        NSLog(@"if %@ > %@",@(textFieldMaxX),@(globalChipRowMaxX));
+        CGFloat difference = textFieldMaxX - globalChipRowMaxX;
+        contentOffset = CGPointMake(difference, 0);
+        NSLog(@"%@",@(contentOffset.x));
+      } else if (textFieldMinX < globalChipRowMinX) {
+        NSLog(@"else if %@ < %@",@(textFieldMinX),@(globalChipRowMinX));
+        CGFloat difference = globalChipRowMinX - textFieldMinX;
+        contentOffset = CGPointMake((-1 * difference), 0);
+        NSLog(@"%@",@(contentOffset.x));
+      }
     }
   }
   return contentOffset;

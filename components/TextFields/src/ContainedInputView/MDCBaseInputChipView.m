@@ -100,7 +100,6 @@
 
 - (CGRect)textRectForBounds:(CGRect)bounds {
   CGRect rect = [super textRectForBounds:bounds];
-  NSLog(@"%@ within %@", NSStringFromCGRect(rect), NSStringFromCGRect(bounds));
   return rect;
 }
 
@@ -124,7 +123,8 @@
 
 @interface MDCBaseInputChipView () <MDCContainedInputView,
                                     MDCBaseInputChipViewTextFieldDelegate,
-                                    UIGestureRecognizerDelegate>
+                                    UIGestureRecognizerDelegate,
+                                    UIScrollViewDelegate>
 
 #pragma mark MDCContainedInputView properties
 @property(strong, nonatomic) UILabel *label;
@@ -262,6 +262,9 @@
 
   self.scrollView = [[UIScrollView alloc] init];
   self.scrollView.bounces = NO;
+  self.scrollView.delegate = self;
+  self.scrollView.scrollsToTop = NO;
+//  self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
   [self.maskedScrollViewContainerView addSubview:self.scrollView];
 
   self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
@@ -361,7 +364,9 @@
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
   BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
+  NSLog(@"self.scrollView.contentOffset = %@",NSStringFromCGPoint(self.scrollView.contentOffset));
   self.lastTouchInitialContentOffset = self.scrollView.contentOffset;
+  NSLog(@"self.lastTouchInitialContentOffset = %@",NSStringFromCGPoint(self.lastTouchInitialContentOffset));
   self.lastTouchInitialLocation = [touch locationInView:self];
   //  NSLog(@"begin tracking: %@, radius: %@, pointInside: %@",@(result), @(touch.majorRadius),
   //  NSStringFromCGPoint([touch locationInView:self]));
@@ -373,42 +378,59 @@
 
   CGPoint location = [touch locationInView:self];
   CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  //  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
+//  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
 
-  CGPoint offset = self.lastTouchInitialContentOffset;
+  CGPoint newContentOffset = self.lastTouchInitialContentOffset;
   if (self.chipsWrap) {
     CGFloat height = CGRectGetHeight(self.frame);
-    offset.y -= offsetFromStart.y;
-    if (offset.y < 0) {
-      offset.y = 0;
+    newContentOffset.y -= offsetFromStart.y;
+    if (newContentOffset.y < 0) {
+      newContentOffset.y = 0;
     }
-    if (offset.y + height > self.scrollView.contentSize.height) {
-      offset.y = self.scrollView.contentSize.height - height;
+    if (newContentOffset.y + height > self.scrollView.contentSize.height) {
+      newContentOffset.y = self.scrollView.contentSize.height - height;
     }
-    self.scrollView.contentOffset = offset;
+//    self.scrollView.contentOffset = newContentOffset;
   } else {
-    CGFloat width = CGRectGetWidth(self.frame);
-    offset.x -= offsetFromStart.x;
-    if (offset.x < 0) {
-      offset.x = 0;
+    if (self.isRTL) {
+      CGFloat width = CGRectGetWidth(self.frame);
+      newContentOffset.x -= offsetFromStart.x;
+//      NSLog(@"offset.x = %@",@(newContentOffset.x));
+      CGFloat maxOffset = 0;
+      if (newContentOffset.x > maxOffset) {
+//        NSLog(@"max offset: %@",@(maxOffset));
+        newContentOffset.x = maxOffset;
+      }
+      CGFloat minOffset = -1.0 * (self.scrollView.contentSize.width - width);
+      if (newContentOffset.x < minOffset) {
+//        NSLog(@"min offset: %@",@(minOffset));
+        newContentOffset.x = minOffset;
+      }
+    } else {
+      CGFloat width = CGRectGetWidth(self.frame);
+      newContentOffset.x -= offsetFromStart.x;
+//      NSLog(@"offset.x = %@",@(newContentOffset.x));
+      CGFloat minOffset = 0;
+      if (newContentOffset.x < minOffset) {
+//        NSLog(@"min offset: %@",@(minOffset));
+        newContentOffset.x = minOffset;
+      }
+      CGFloat maxOffset = self.scrollView.contentSize.width - width;
+      if (newContentOffset.x > maxOffset) {
+//        NSLog(@"max offset: %@",@(maxOffset));
+        newContentOffset.x = maxOffset;
+      }
     }
-    if (offset.x + width > self.scrollView.contentSize.width) {
-      offset.x = self.scrollView.contentSize.width - width;
-    }
+//    NSLog(@"set content offset");
   }
-  self.scrollView.contentOffset = offset;
+  self.scrollView.contentOffset = newContentOffset;
 
   return result;
 }
 
 - (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
   [super endTrackingWithTouch:touch withEvent:event];
-
-  CGPoint location = [touch locationInView:self];
-  CGPoint offset = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  CGPoint absoluteOffset = [self absoluteOffsetOfOffset:offset];
-  BOOL isProbablyTap = absoluteOffset.x < 15 && absoluteOffset.y < 15;
-  if (isProbablyTap) {
+  if ([self isTouchMostLikelyTap:touch]) {
     if (!self.isFirstResponder) {
       [self becomeFirstResponder];
     }
@@ -421,8 +443,11 @@
   //  NSStringFromCGPoint([touch locationInView:self]));
 }
 
-- (void)cancelTrackingWithEvent:(UIEvent *)event {
-  [super cancelTrackingWithEvent:event];
+- (BOOL)isTouchMostLikelyTap:(UITouch *)touch {
+  CGPoint location = [touch locationInView:self];
+  CGPoint offset = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
+  CGPoint absoluteOffset = [self absoluteOffsetOfOffset:offset];
+  return absoluteOffset.x < 15 && absoluteOffset.y < 15;
 }
 
 #pragma mark Layout
@@ -514,8 +539,11 @@
   self.scrollViewContentViewTouchForwardingView.frame =
       self.layout.scrollViewContentViewTouchForwardingViewFrame;
   self.textField.frame = self.layout.textFieldFrame;
-  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
+//  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+  self.scrollView.contentOffset= self.layout.scrollViewContentOffset;
+  
+  NSLog(@"post layout subviews: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
   [self animateChipLayoutChangesWithChips:self.mutableChips
                                chipFrames:self.layout.chipFrames
                             chipsToRemove:self.chipsToRemove
@@ -755,7 +783,9 @@
 #pragma mark User Interaction
 
 - (void)enforceCalculatedScrollViewContentOffset {
-  [self.scrollView setContentOffset:self.layout.scrollViewContentOffset animated:NO];
+  NSLog(@"enforce!!!!");
+  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+//  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
 }
 
 #pragma mark Internationalization
@@ -949,6 +979,10 @@
   MDCContainedInputViewColorViewModel *colorViewModel =
       [self containedInputViewColorViewModelForState:containedInputViewState];
   return colorViewModel.assistiveLabelColor;
+}
+
+-(void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+  NSLog(@"scrollViewDidScrollToTop");
 }
 
 @end

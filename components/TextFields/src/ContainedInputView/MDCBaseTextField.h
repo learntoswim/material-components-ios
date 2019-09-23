@@ -15,6 +15,7 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCTextControlLabelBehavior.h"
+#import "MDCTextControlState.h"
 
 /**
  A UITextField subclass that attempts to do the following:

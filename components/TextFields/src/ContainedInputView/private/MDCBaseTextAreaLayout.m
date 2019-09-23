@@ -257,13 +257,13 @@ static const CGFloat kGradientBlurLength = 6;
   return rect.size;
 }
 
-- (CGSize)scrollViewContentSizeWithSize:(CGSize)size
+- (CGSize)scrollViewContentSizeWithSize:(CGSize)scrollViewSize
                           contentOffset:(CGPoint)contentOffset
                           textViewFrame:(CGRect)textViewFrame {
   if (contentOffset.y > 0) {
-    size.height += contentOffset.y;
+    scrollViewSize.height += contentOffset.y;
   }
-  return size;
+  return scrollViewSize;
 }
 
 - (CGPoint)scrollViewContentOffsetWithSize:(CGSize)size
@@ -274,15 +274,15 @@ static const CGFloat kGradientBlurLength = 6;
                              bottomPadding:(CGFloat)bottomPadding
                                      isRTL:(BOOL)isRTL {
   CGPoint contentOffset = CGPointZero;
-  if (isRTL) {
-  } else {
-    CGFloat textViewMaxY = CGRectGetMaxY(textViewFrame);
-    CGFloat boundsMaxY = size.height;
-    if (textViewMaxY > boundsMaxY) {
-      CGFloat difference = textViewMaxY - boundsMaxY;
-      contentOffset = CGPointMake(0, (difference + bottomPadding));
-    }
-  }
+//  if (isRTL) {
+//  } else {
+//    CGFloat textViewMaxY = CGRectGetMaxY(textViewFrame);
+//    CGFloat boundsMaxY = size.height;
+//    if (textViewMaxY > boundsMaxY) {
+//      CGFloat difference = textViewMaxY - boundsMaxY;
+//      contentOffset = CGPointMake(0, (difference + bottomPadding));
+//    }
+//  }
   return contentOffset;
 }
 

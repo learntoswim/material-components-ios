@@ -208,6 +208,8 @@
 
   self.inputChipViewTextView = [[MDCBaseTextAreaTextView alloc] init];
   self.inputChipViewTextView.inputChipViewTextViewDelegate = self;
+  self.inputChipViewTextView.showsVerticalScrollIndicator = NO;
+  self.inputChipViewTextView.showsHorizontalScrollIndicator = NO;
   [self.scrollView addSubview:self.inputChipViewTextView];
 
   self.label = [[UILabel alloc] init];
@@ -545,7 +547,7 @@
 #pragma mark User Interaction
 
 - (void)enforceCalculatedScrollViewContentOffset {
-  [self.scrollView setContentOffset:self.layout.scrollViewContentOffset animated:NO];
+  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
 }
 
 #pragma mark Internationalization
