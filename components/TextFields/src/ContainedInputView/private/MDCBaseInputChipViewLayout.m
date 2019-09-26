@@ -412,10 +412,10 @@ static const CGFloat kGradientBlurLength = 6;
       }
       return contentSize;
     } else {
-      NSLog(@"co: %@",@(contentOffset.x));
+      NSLog(@"co: %@", @(contentOffset.x));
       if (contentOffset.x < 0) {
         contentSize.width += (contentOffset.x * -1);
-        NSLog(@"size.width: %@",@(contentSize.width));
+        NSLog(@"size.width: %@", @(contentSize.width));
       }
       return contentSize;
     }
@@ -426,10 +426,10 @@ static const CGFloat kGradientBlurLength = 6;
       }
       return contentSize;
     } else {
-      NSLog(@"co: %@",@(contentOffset.x));
+      NSLog(@"co: %@", @(contentOffset.x));
       if (contentOffset.x > 0) {
         contentSize.width += contentOffset.x;
-        NSLog(@"size.width: %@",@(contentSize.width));
+        NSLog(@"size.width: %@", @(contentSize.width));
       }
       return contentSize;
     }
@@ -583,27 +583,27 @@ static const CGFloat kGradientBlurLength = 6;
     CGFloat textFieldMaxX = CGRectGetMaxX(textFieldFrame);
     if (isRTL) {
       if (textFieldMaxX > globalChipRowMaxX) {
-        NSLog(@"if %@ > %@",@(textFieldMaxX),@(globalChipRowMaxX));
+        NSLog(@"if %@ > %@", @(textFieldMaxX), @(globalChipRowMaxX));
         CGFloat difference = textFieldMaxX - globalChipRowMaxX;
         contentOffset = CGPointMake(difference, 0);
-        NSLog(@"%@",@(contentOffset.x));
+        NSLog(@"%@", @(contentOffset.x));
       } else if (textFieldMinX < globalChipRowMinX) {
-        NSLog(@"else if %@ < %@",@(textFieldMinX),@(globalChipRowMinX));
+        NSLog(@"else if %@ < %@", @(textFieldMinX), @(globalChipRowMinX));
         CGFloat difference = globalChipRowMinX - textFieldMinX;
         contentOffset = CGPointMake((-1 * difference), 0);
-        NSLog(@"%@",@(contentOffset.x));
+        NSLog(@"%@", @(contentOffset.x));
       }
     } else {
       if (textFieldMaxX > globalChipRowMaxX) {
-        NSLog(@"if %@ > %@",@(textFieldMaxX),@(globalChipRowMaxX));
+        NSLog(@"if %@ > %@", @(textFieldMaxX), @(globalChipRowMaxX));
         CGFloat difference = textFieldMaxX - globalChipRowMaxX;
         contentOffset = CGPointMake(difference, 0);
-        NSLog(@"%@",@(contentOffset.x));
+        NSLog(@"%@", @(contentOffset.x));
       } else if (textFieldMinX < globalChipRowMinX) {
-        NSLog(@"else if %@ < %@",@(textFieldMinX),@(globalChipRowMinX));
+        NSLog(@"else if %@ < %@", @(textFieldMinX), @(globalChipRowMinX));
         CGFloat difference = globalChipRowMinX - textFieldMinX;
         contentOffset = CGPointMake((-1 * difference), 0);
-        NSLog(@"%@",@(contentOffset.x));
+        NSLog(@"%@", @(contentOffset.x));
       }
     }
   }

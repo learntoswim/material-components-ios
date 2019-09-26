@@ -274,15 +274,15 @@ static const CGFloat kGradientBlurLength = 6;
                              bottomPadding:(CGFloat)bottomPadding
                                      isRTL:(BOOL)isRTL {
   CGPoint contentOffset = CGPointZero;
-//  if (isRTL) {
-//  } else {
-//    CGFloat textViewMaxY = CGRectGetMaxY(textViewFrame);
-//    CGFloat boundsMaxY = size.height;
-//    if (textViewMaxY > boundsMaxY) {
-//      CGFloat difference = textViewMaxY - boundsMaxY;
-//      contentOffset = CGPointMake(0, (difference + bottomPadding));
-//    }
-//  }
+  //  if (isRTL) {
+  //  } else {
+  //    CGFloat textViewMaxY = CGRectGetMaxY(textViewFrame);
+  //    CGFloat boundsMaxY = size.height;
+  //    if (textViewMaxY > boundsMaxY) {
+  //      CGFloat difference = textViewMaxY - boundsMaxY;
+  //      contentOffset = CGPointMake(0, (difference + bottomPadding));
+  //    }
+  //  }
   return contentOffset;
 }
 

@@ -25,9 +25,9 @@
 #import "private/MDCContainedInputAssistiveLabelView.h"
 #import "private/MDCContainedInputView.h"
 #import "private/MDCTextControlColorViewModel.h"
+#import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-#import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlTextFieldPrototypes.h"
 
 @class MDCBaseInputChipViewTextField;
@@ -201,8 +201,7 @@
   self.colorViewModels[@(MDCTextControlStateEditing)] =
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateEditing];
   self.colorViewModels[@(MDCTextControlStateDisabled)] =
-      [[MDCTextControlColorViewModel alloc]
-          initWithState:MDCTextControlStateDisabled];
+      [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateDisabled];
 }
 
 - (void)setUpContainerStyle {
@@ -265,7 +264,7 @@
   self.scrollView.bounces = NO;
   self.scrollView.delegate = self;
   self.scrollView.scrollsToTop = NO;
-//  self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+  //  self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
   [self.maskedScrollViewContainerView addSubview:self.scrollView];
 
   self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
@@ -365,9 +364,10 @@
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
   BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
-  NSLog(@"self.scrollView.contentOffset = %@",NSStringFromCGPoint(self.scrollView.contentOffset));
+  NSLog(@"self.scrollView.contentOffset = %@", NSStringFromCGPoint(self.scrollView.contentOffset));
   self.lastTouchInitialContentOffset = self.scrollView.contentOffset;
-  NSLog(@"self.lastTouchInitialContentOffset = %@",NSStringFromCGPoint(self.lastTouchInitialContentOffset));
+  NSLog(@"self.lastTouchInitialContentOffset = %@",
+        NSStringFromCGPoint(self.lastTouchInitialContentOffset));
   self.lastTouchInitialLocation = [touch locationInView:self];
   //  NSLog(@"begin tracking: %@, radius: %@, pointInside: %@",@(result), @(touch.majorRadius),
   //  NSStringFromCGPoint([touch locationInView:self]));
@@ -379,7 +379,7 @@
 
   CGPoint location = [touch locationInView:self];
   CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-//  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
+  //  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
 
   CGPoint newContentOffset = self.lastTouchInitialContentOffset;
   if (self.chipsWrap) {
@@ -391,38 +391,38 @@
     if (newContentOffset.y + height > self.scrollView.contentSize.height) {
       newContentOffset.y = self.scrollView.contentSize.height - height;
     }
-//    self.scrollView.contentOffset = newContentOffset;
+    //    self.scrollView.contentOffset = newContentOffset;
   } else {
     if (self.isRTL) {
       CGFloat width = CGRectGetWidth(self.frame);
       newContentOffset.x -= offsetFromStart.x;
-//      NSLog(@"offset.x = %@",@(newContentOffset.x));
+      //      NSLog(@"offset.x = %@",@(newContentOffset.x));
       CGFloat maxOffset = 0;
       if (newContentOffset.x > maxOffset) {
-//        NSLog(@"max offset: %@",@(maxOffset));
+        //        NSLog(@"max offset: %@",@(maxOffset));
         newContentOffset.x = maxOffset;
       }
       CGFloat minOffset = -1.0 * (self.scrollView.contentSize.width - width);
       if (newContentOffset.x < minOffset) {
-//        NSLog(@"min offset: %@",@(minOffset));
+        //        NSLog(@"min offset: %@",@(minOffset));
         newContentOffset.x = minOffset;
       }
     } else {
       CGFloat width = CGRectGetWidth(self.frame);
       newContentOffset.x -= offsetFromStart.x;
-//      NSLog(@"offset.x = %@",@(newContentOffset.x));
+      //      NSLog(@"offset.x = %@",@(newContentOffset.x));
       CGFloat minOffset = 0;
       if (newContentOffset.x < minOffset) {
-//        NSLog(@"min offset: %@",@(minOffset));
+        //        NSLog(@"min offset: %@",@(minOffset));
         newContentOffset.x = minOffset;
       }
       CGFloat maxOffset = self.scrollView.contentSize.width - width;
       if (newContentOffset.x > maxOffset) {
-//        NSLog(@"max offset: %@",@(maxOffset));
+        //        NSLog(@"max offset: %@",@(maxOffset));
         newContentOffset.x = maxOffset;
       }
     }
-//    NSLog(@"set content offset");
+    //    NSLog(@"set content offset");
   }
   self.scrollView.contentOffset = newContentOffset;
 
@@ -505,13 +505,11 @@
 }
 
 - (MDCTextControlState)determineCurrentTextControlState {
-  return [self
-      textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextField.enabled)
-                                 isEditing:self.inputChipViewTextField.isEditing];
+  return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextField.enabled)
+                                   isEditing:self.inputChipViewTextField.isEditing];
 }
 
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled
-                                                         isEditing:(BOOL)isEditing {
+- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
   if (isEnabled) {
     if (isEditing) {
       return MDCTextControlStateEditing;
@@ -525,11 +523,11 @@
 
 - (void)postLayoutSubviews {
   [MDCTextControlLabelAnimation layOutLabel:self.label
-                                             state:self.labelState
-                                  normalLabelFrame:self.layout.labelFrameNormal
-                                floatingLabelFrame:self.layout.labelFrameFloating
-                                        normalFont:self.normalFont
-                                      floatingFont:self.floatingFont];
+                                      state:self.labelState
+                           normalLabelFrame:self.layout.labelFrameNormal
+                         floatingLabelFrame:self.layout.labelFrameFloating
+                                 normalFont:self.normalFont
+                               floatingFont:self.floatingFont];
   [self.containerStyle applyStyleToContainedInputView:self];
 
   //  self.leftAssistiveLabel.frame = self.layout.leftAssistiveLabelFrame;
@@ -541,10 +539,10 @@
       self.layout.scrollViewContentViewTouchForwardingViewFrame;
   self.textField.frame = self.layout.textFieldFrame;
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
-//  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-  self.scrollView.contentOffset= self.layout.scrollViewContentOffset;
-  
-  NSLog(@"post layout subviews: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
+  //  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+
+  NSLog(@"post layout subviews: %@", NSStringFromCGPoint(self.scrollView.contentOffset));
   [self animateChipLayoutChangesWithChips:self.mutableChips
                                chipFrames:self.layout.chipFrames
                             chipsToRemove:self.chipsToRemove
@@ -786,7 +784,7 @@
 - (void)enforceCalculatedScrollViewContentOffset {
   NSLog(@"enforce!!!!");
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-//  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+  //  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
 }
 
 #pragma mark Internationalization
@@ -904,11 +902,9 @@
 
 - (MDCTextControlColorViewModel *)containedInputViewColorViewModelForState:
     (MDCTextControlState)textControlState {
-  MDCTextControlColorViewModel *colorViewModel =
-      self.colorViewModels[@(textControlState)];
+  MDCTextControlColorViewModel *colorViewModel = self.colorViewModels[@(textControlState)];
   if (!colorViewModel) {
-    colorViewModel =
-        [[MDCTextControlColorViewModel alloc] initWithState:textControlState];
+    colorViewModel = [[MDCTextControlColorViewModel alloc] initWithState:textControlState];
   }
   return colorViewModel;
 }

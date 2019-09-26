@@ -22,10 +22,10 @@
 #import "MaterialTypography.h"
 #import "private/MDCBaseTextFieldLayout.h"
 #import "private/MDCContainedInputAssistiveLabelView.h"
+#import "private/MDCContainedInputViewStylePathDrawingUtils.h"
 #import "private/MDCTextControlColorViewModel.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-#import "private/MDCContainedInputViewStylePathDrawingUtils.h"
 #import "private/MDCTextControlTextFieldPrototypes.h"
 
 @interface MDCBaseTextField () <MDCContainedInputView>
@@ -93,8 +93,7 @@
   self.colorViewModels[@(MDCTextControlStateEditing)] =
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateEditing];
   self.colorViewModels[@(MDCTextControlStateDisabled)] =
-      [[MDCTextControlColorViewModel alloc]
-          initWithState:MDCTextControlStateDisabled];
+      [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateDisabled];
 }
 
 - (void)setUpAssistiveLabels {
@@ -149,11 +148,11 @@
 
 - (void)postLayoutSubviews {
   [MDCTextControlLabelAnimation layOutLabel:self.label
-                                             state:self.labelState
-                                  normalLabelFrame:self.layout.labelFrameNormal
-                                floatingLabelFrame:self.layout.labelFrameFloating
-                                        normalFont:self.normalFont
-                                      floatingFont:self.floatingFont];
+                                      state:self.labelState
+                           normalLabelFrame:self.layout.labelFrameNormal
+                         floatingLabelFrame:self.layout.labelFrameFloating
+                                 normalFont:self.normalFont
+                               floatingFont:self.floatingFont];
   [self.containerStyle applyStyleToContainedInputView:self];
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
@@ -236,8 +235,7 @@
 
 - (CGSize)preferredSizeWithWidth:(CGFloat)width {
   CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
-  MDCBaseTextFieldLayout *layout =
-      [self calculateLayoutWithTextFieldSize:fittingSize];
+  MDCBaseTextFieldLayout *layout = [self calculateLayoutWithTextFieldSize:fittingSize];
   return CGSizeMake(width, layout.calculatedHeight);
 }
 
@@ -408,7 +406,7 @@
   }
 }
 
--(void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
+- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
   [super setAttributedPlaceholder:attributedPlaceholder];
   if (self.placeholderColor) {
     [self updateAttributedPlaceholderColor];
@@ -561,8 +559,7 @@
   return [self textControlStateWithIsEnabled:self.isEnabled isEditing:self.isEditing];
 }
 
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled
-                                                         isEditing:(BOOL)isEditing {
+- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
   if (isEnabled) {
     if (isEditing) {
       return MDCTextControlStateEditing;
@@ -613,7 +610,7 @@
 - (void)updateAttributedPlaceholderColor {
   if (self.placeholderColor && self.attributedPlaceholder) {
     NSMutableAttributedString *mutableAttributedString =
-    [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedPlaceholder];
+        [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedPlaceholder];
     NSRange range = NSMakeRange(0, mutableAttributedString.length);
     NSDictionary *newColorAttribute = @{NSForegroundColorAttributeName : self.placeholderColor};
     [mutableAttributedString addAttributes:newColorAttribute range:range];
@@ -694,11 +691,9 @@
 
 - (MDCTextControlColorViewModel *)containedInputViewColorViewModelForState:
     (MDCTextControlState)textControlState {
-  MDCTextControlColorViewModel *colorViewModel =
-      self.colorViewModels[@(textControlState)];
+  MDCTextControlColorViewModel *colorViewModel = self.colorViewModels[@(textControlState)];
   if (!colorViewModel) {
-    colorViewModel =
-        [[MDCTextControlColorViewModel alloc] initWithState:textControlState];
+    colorViewModel = [[MDCTextControlColorViewModel alloc] initWithState:textControlState];
   }
   return colorViewModel;
 }

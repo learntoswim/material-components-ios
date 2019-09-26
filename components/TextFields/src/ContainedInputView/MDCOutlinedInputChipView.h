@@ -34,5 +34,4 @@ __attribute__((objc_subclassing_restricted)) @interface MDCOutlinedInputChipView
  */
 - (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;
 
-
 @end

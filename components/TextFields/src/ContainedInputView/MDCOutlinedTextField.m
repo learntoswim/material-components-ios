@@ -57,7 +57,6 @@
   return [self.outlinedStyle outlineColorForState:state];
 }
 
-
 - (MDCTextControlStyleOutlined *)outlinedStyle {
   MDCTextControlStyleOutlined *outlinedStyle = nil;
   if ([self.containerStyle isKindOfClass:[MDCTextControlStyleOutlined class]]) {

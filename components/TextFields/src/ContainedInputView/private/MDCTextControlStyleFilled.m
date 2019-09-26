@@ -89,8 +89,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   return self.underlineColors[@(state)];
 }
 
-- (void)setUnderlineColor:(nonnull UIColor *)underlineColor
-                 forState:(MDCTextControlState)state {
+- (void)setUnderlineColor:(nonnull UIColor *)underlineColor forState:(MDCTextControlState)state {
   self.underlineColors[@(state)] = underlineColor;
 }
 

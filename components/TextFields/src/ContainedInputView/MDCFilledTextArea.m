@@ -50,8 +50,7 @@
 
 - (void)setFilledBackgroundColor:(nonnull UIColor *)filledBackgroundColor
                         forState:(MDCTextControlState)state {
-  [self.filledStyle setFilledBackgroundColor:filledBackgroundColor
-                                    forState:state];
+  [self.filledStyle setFilledBackgroundColor:filledBackgroundColor forState:state];
   [self setNeedsLayout];
 }
 

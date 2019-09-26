@@ -113,7 +113,8 @@
   [self setFilledBackgroundColor:filledSublayerFillColorNormal forState:MDCTextControlStateNormal];
   [self setFilledBackgroundColor:filledSublayerFillColorEditing
                         forState:MDCTextControlStateEditing];
-  [self setFilledBackgroundColor:filledSublayerFillColorDisabled forState:MDCTextControlStateDisabled];
+  [self setFilledBackgroundColor:filledSublayerFillColorDisabled
+                        forState:MDCTextControlStateDisabled];
   [self setAssistiveLabelColor:assistiveLabelColorNormal forState:MDCTextControlStateNormal];
   [self setAssistiveLabelColor:assistiveLabelColorEditing forState:MDCTextControlStateEditing];
   [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:MDCTextControlStateDisabled];
@@ -170,7 +171,8 @@
   [self setFilledBackgroundColor:filledSublayerFillColorNormal forState:MDCTextControlStateNormal];
   [self setFilledBackgroundColor:filledSublayerFillColorEditing
                         forState:MDCTextControlStateEditing];
-  [self setFilledBackgroundColor:filledSublayerFillColorDisabled forState:MDCTextControlStateDisabled];
+  [self setFilledBackgroundColor:filledSublayerFillColorDisabled
+                        forState:MDCTextControlStateDisabled];
   [self setAssistiveLabelColor:assistiveLabelColorNormal forState:MDCTextControlStateNormal];
   [self setAssistiveLabelColor:assistiveLabelColorEditing forState:MDCTextControlStateEditing];
   [self setAssistiveLabelColor:assistiveLabelColorDisabled forState:MDCTextControlStateDisabled];

@@ -61,7 +61,8 @@
  @param floatingLabelColor The UIColor for the given state.
  @param state The MDCTextControlState.
  */
-- (void)setFloatingLabelColor:(nonnull UIColor *)floatingLabelColor forState:(MDCTextControlState)state;
+- (void)setFloatingLabelColor:(nonnull UIColor *)floatingLabelColor
+                     forState:(MDCTextControlState)state;
 
 /**
  Returns the floating label color for a given state. Floating label color refers to the color of the

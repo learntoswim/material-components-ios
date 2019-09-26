@@ -14,7 +14,6 @@
 
 #import "MDCTextControlTextFieldPrototypes.h"
 
-
 UIFont *MDCContainedInputViewDefaultFont() {
   UIFont *font = MDCContainedInputViewUITextFieldPrototype().font;
   if (!font) {
@@ -38,7 +37,7 @@ UITextField *MDCContainedInputViewUITextFieldPrototype() {
   return textField;
 }
 
-//NSDictionary *MDCContainedInputViewUITextFieldDefaultPlaceholderAttributes() {
+// NSDictionary *MDCContainedInputViewUITextFieldDefaultPlaceholderAttributes() {
 //  static dispatch_once_t onceToken;
 //  static UITextField *textField;
 //  dispatch_once(&onceToken, ^{
@@ -47,4 +46,3 @@ UITextField *MDCContainedInputViewUITextFieldPrototype() {
 //  });
 //  return nil;
 //}
-

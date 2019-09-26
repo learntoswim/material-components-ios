@@ -15,8 +15,8 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCTextControlLabelBehavior.h"
-#import "MaterialContainerScheme.h"
 #import "MDCTextControlState.h"
+#import "MaterialContainerScheme.h"
 
 @interface MDCBaseTextArea : UIControl
 
@@ -60,7 +60,8 @@
  @param floatingLabelColor The UIColor for the given state.
  @param state The MDCTextControlState.
  */
-- (void)setFloatingLabelColor:(nonnull UIColor *)floatingLabelColor forState:(MDCTextControlState)state;
+- (void)setFloatingLabelColor:(nonnull UIColor *)floatingLabelColor
+                     forState:(MDCTextControlState)state;
 /**
  Returns the floating label color for a given state. Floating label color refers to the color of the
  label when it's in its "floating position," i.e. when it's floating.

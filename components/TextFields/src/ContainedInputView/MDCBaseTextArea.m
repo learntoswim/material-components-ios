@@ -24,9 +24,9 @@
 #import "private/MDCBaseTextAreaLayout.h"
 #import "private/MDCContainedInputAssistiveLabelView.h"
 #import "private/MDCContainedInputView.h"
+#import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-#import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlTextFieldPrototypes.h"
 
 @class MDCBaseTextAreaTextView;
@@ -233,8 +233,7 @@
   self.colorViewModels[@(MDCTextControlStateEditing)] =
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateEditing];
   self.colorViewModels[@(MDCTextControlStateDisabled)] =
-      [[MDCTextControlColorViewModel alloc]
-          initWithState:MDCTextControlStateDisabled];
+      [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateDisabled];
 }
 
 - (void)setUpAssistiveLabels {
@@ -394,13 +393,11 @@
 }
 
 - (MDCTextControlState)determineCurrentTextControlState {
-  return [self
-      textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextView.isEditable)
-                                 isEditing:self.isFirstResponder];
+  return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextView.isEditable)
+                                   isEditing:self.isFirstResponder];
 }
 
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled
-                                                         isEditing:(BOOL)isEditing {
+- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
   if (isEnabled) {
     if (isEditing) {
       return MDCTextControlStateEditing;
@@ -414,11 +411,11 @@
 
 - (void)postLayoutSubviews {
   [MDCTextControlLabelAnimation layOutLabel:self.label
-                                             state:self.labelState
-                                  normalLabelFrame:self.layout.normalLabelFrame
-                                floatingLabelFrame:self.layout.floatingLabelFrame
-                                        normalFont:self.normalFont
-                                      floatingFont:self.floatingFont];
+                                      state:self.labelState
+                           normalLabelFrame:self.layout.normalLabelFrame
+                         floatingLabelFrame:self.layout.floatingLabelFrame
+                                 normalFont:self.normalFont
+                               floatingFont:self.floatingFont];
   [self.containerStyle applyStyleToContainedInputView:self];
 
   self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
@@ -654,11 +651,9 @@
 
 - (MDCTextControlColorViewModel *)containedInputViewColorViewModelForState:
     (MDCTextControlState)textControlState {
-  MDCTextControlColorViewModel *colorViewModel =
-      self.colorViewModels[@(textControlState)];
+  MDCTextControlColorViewModel *colorViewModel = self.colorViewModels[@(textControlState)];
   if (!colorViewModel) {
-    colorViewModel =
-        [[MDCTextControlColorViewModel alloc] initWithState:textControlState];
+    colorViewModel = [[MDCTextControlColorViewModel alloc] initWithState:textControlState];
   }
   return colorViewModel;
 }

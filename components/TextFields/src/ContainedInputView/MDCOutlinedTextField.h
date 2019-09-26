@@ -33,5 +33,4 @@ __attribute__((objc_subclassing_restricted)) @interface MDCOutlinedTextField : M
  */
 - (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;
 
-
 @end

@@ -42,8 +42,7 @@
 }
 
 - (void)commonMDCOutlinedTextAreaInit {
-  MDCTextControlStyleOutlined *outlinedStyle =
-      [[MDCTextControlStyleOutlined alloc] init];
+  MDCTextControlStyleOutlined *outlinedStyle = [[MDCTextControlStyleOutlined alloc] init];
   self.containerStyle = outlinedStyle;
 }
 
@@ -57,7 +56,6 @@
 - (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state {
   return [self.outlinedStyle outlineColorForState:state];
 }
-
 
 - (MDCTextControlStyleOutlined *)outlinedStyle {
   MDCTextControlStyleOutlined *outlinedStyle = nil;

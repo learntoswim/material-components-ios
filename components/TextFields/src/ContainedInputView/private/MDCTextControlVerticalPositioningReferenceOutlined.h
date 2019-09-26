@@ -17,8 +17,8 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputView.h"
-#import "MDCTextControlStyleBase.h"
 #import "MDCTextControlLabelBehavior.h"
+#import "MDCTextControlStyleBase.h"
 
 @interface MDCTextControlVerticalPositioningReferenceOutlined
     : NSObject <MDCTextControlVerticalPositioningReference>

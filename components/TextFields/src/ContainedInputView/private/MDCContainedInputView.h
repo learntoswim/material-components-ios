@@ -16,12 +16,12 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputViewAssistiveLabelDrawPriority.h"
+#import "MDCContainedInputViewLabelState.h"
 #import "MDCTextControlColorViewModel.h"
 #import "MDCTextControlLabelAnimation.h"
-#import "MDCContainedInputViewLabelState.h"
+#import "MDCTextControlLabelBehavior.h"
 #import "MDCTextControlState.h"
 #import "MDCTextControlVerticalPositioningReference.h"
-#import "MDCTextControlLabelBehavior.h"
 
 static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0.15;
 
@@ -53,14 +53,14 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 @property(nonatomic, assign, readonly) MDCTextControlLabelBehavior labelBehavior;
 
 /**
- The @c label is a label that occupies the text area in a resting state with no text and that either floats
- above the text or disappears in an editing state. It is distinct from a placeholder.
+ The @c label is a label that occupies the text area in a resting state with no text and that either
+ floats above the text or disappears in an editing state. It is distinct from a placeholder.
  */
 @property(strong, nonatomic, readonly, nonnull) UILabel *label;
 
 /**
- The @c normalFont is the contained input view's primary font. The text has this font. The label also
- has this font when it isn't floating.
+ The @c normalFont is the contained input view's primary font. The text has this font. The label
+ also has this font when it isn't floating.
  */
 @property(strong, nonatomic, readonly, nonnull) UIFont *normalFont;
 

@@ -14,8 +14,8 @@
 
 #import "MDCTextControlLabelAnimation.h"
 
-#import "MaterialAnimationTiming.h"
 #import "MDCContainedInputView.h"
+#import "MaterialAnimationTiming.h"
 
 @implementation MDCTextControlLabelAnimation
 
