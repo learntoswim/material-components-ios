@@ -46,7 +46,7 @@
 
 - (nonnull instancetype)initWithSize:(CGSize)size
                 positioningReference:
-                    (nonnull id<MDCContainerStyleVerticalPositioningReference>)positioningReference
+                    (nonnull id<MDCTextControlVerticalPositioningReference>)positioningReference
                                 text:(nullable NSString *)text
                          placeholder:(nullable NSString *)placeholder
                                 font:(nonnull UIFont *)font

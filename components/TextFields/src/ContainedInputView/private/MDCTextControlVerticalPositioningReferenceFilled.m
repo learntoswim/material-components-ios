@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewVerticalPositioningGuideFilled.h"
+#import "MDCTextControlVerticalPositioningReferenceFilled.h"
 
 #import <Foundation/Foundation.h>
 
@@ -28,10 +28,10 @@ static const CGFloat kMaxPaddingBetweenTextAndBottom = (CGFloat)10.0;
 static const CGFloat kMinPaddingAroundAssistiveLabels = (CGFloat)3.0;
 static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
 
-@interface MDCContainedInputViewVerticalPositioningGuideFilled ()
+@interface MDCTextControlVerticalPositioningReferenceFilled ()
 @end
 
-@implementation MDCContainedInputViewVerticalPositioningGuideFilled
+@implementation MDCTextControlVerticalPositioningReferenceFilled
 
 @synthesize paddingBetweenTopAndFloatingLabel = _paddingBetweenTopAndFloatingLabel;
 @synthesize paddingBetweenTopAndNormalLabel = _paddingBetweenTopAndNormalLabel;

@@ -18,7 +18,7 @@
 
 #import "private/MDCBaseTextField+ContainedInputView.h"
 #import "private/MDCContainedInputView.h"
-#import "private/MDCContainedInputViewStyleFilled.h"
+#import "private/MDCTextControlStyleFilled.h"
 
 @interface MDCFilledTextField ()
 @end
@@ -42,7 +42,7 @@
 }
 
 - (void)commonMDCFilledTextFieldInit {
-  self.containerStyle = [[MDCContainedInputViewStyleFilled alloc] init];
+  self.containerStyle = [[MDCTextControlStyleFilled alloc] init];
   self.borderStyle = UITextBorderStyleNone;
 }
 
@@ -68,10 +68,10 @@
   return [self.filledStyle underlineColorForState:state];
 }
 
-- (MDCContainedInputViewStyleFilled *)filledStyle {
-  MDCContainedInputViewStyleFilled *filledStyle = nil;
-  if ([self.containerStyle isKindOfClass:[MDCContainedInputViewStyleFilled class]]) {
-    filledStyle = (MDCContainedInputViewStyleFilled *)self.containerStyle;
+- (MDCTextControlStyleFilled *)filledStyle {
+  MDCTextControlStyleFilled *filledStyle = nil;
+  if ([self.containerStyle isKindOfClass:[MDCTextControlStyleFilled class]]) {
+    filledStyle = (MDCTextControlStyleFilled *)self.containerStyle;
   }
   return filledStyle;
 }

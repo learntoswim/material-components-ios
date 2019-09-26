@@ -18,7 +18,7 @@
 
 #import "private/MDCBaseInputChipView+MDCContainedInputView.h"
 #import "private/MDCContainedInputView.h"
-#import "private/MDCContainedInputViewStyleFilled.h"
+#import "private/MDCTextControlStyleFilled.h"
 
 @interface MDCFilledInputChipView ()
 @end
@@ -42,7 +42,7 @@
 }
 
 - (void)commonMDCFilledInputChipViewInit {
-  MDCContainedInputViewStyleFilled *filledStyle = [[MDCContainedInputViewStyleFilled alloc] init];
+  MDCTextControlStyleFilled *filledStyle = [[MDCTextControlStyleFilled alloc] init];
   self.containerStyle = filledStyle;
 }
 
@@ -68,10 +68,10 @@
   return [self.filledStyle underlineColorForState:state];
 }
 
-- (MDCContainedInputViewStyleFilled *)filledStyle {
-  MDCContainedInputViewStyleFilled *filledStyle = nil;
-  if ([self.containerStyle isKindOfClass:[MDCContainedInputViewStyleFilled class]]) {
-    filledStyle = (MDCContainedInputViewStyleFilled *)self.containerStyle;
+- (MDCTextControlStyleFilled *)filledStyle {
+  MDCTextControlStyleFilled *filledStyle = nil;
+  if ([self.containerStyle isKindOfClass:[MDCTextControlStyleFilled class]]) {
+    filledStyle = (MDCTextControlStyleFilled *)self.containerStyle;
   }
   return filledStyle;
 }

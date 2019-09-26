@@ -36,7 +36,7 @@ static const CGFloat kGradientBlurLength = 6;
 
 - (instancetype)initWithSize:(CGSize)size
                 positioningReference:
-                    (nonnull id<MDCContainerStyleVerticalPositioningReference>)positioningReference
+                    (nonnull id<MDCTextControlVerticalPositioningReference>)positioningReference
                                 text:(NSString *)text
                          placeholder:(NSString *)placeholder
                                 font:(UIFont *)font
@@ -88,7 +88,7 @@ static const CGFloat kGradientBlurLength = 6;
 
 - (void)calculateLayoutWithSize:(CGSize)size
                 positioningReference:
-                    (nonnull id<MDCContainerStyleVerticalPositioningReference>)positioningReference
+                    (nonnull id<MDCTextControlVerticalPositioningReference>)positioningReference
                                 text:(NSString *)text
                          placeholder:(NSString *)placeholder
                                 font:(UIFont *)font

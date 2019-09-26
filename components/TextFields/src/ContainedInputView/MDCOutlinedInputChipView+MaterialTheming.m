@@ -18,7 +18,7 @@
 
 #import "private/MDCBaseInputChipView+MDCContainedInputView.h"
 #import "private/MDCContainedInputView.h"
-#import "private/MDCContainedInputViewStyleOutlined.h"
+#import "private/MDCTextControlStyleOutlined.h"
 
 @implementation MDCOutlinedInputChipView (MaterialTheming)
 

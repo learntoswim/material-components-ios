@@ -16,16 +16,16 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputViewAssistiveLabelDrawPriority.h"
-#import "MDCContainedInputViewColorViewModel.h"
-#import "MDCContainedInputViewLabelAnimation.h"
+#import "MDCTextControlColorViewModel.h"
+#import "MDCTextControlLabelAnimation.h"
 #import "MDCContainedInputViewLabelState.h"
 #import "MDCTextControlState.h"
-#import "MDCContainerStyleVerticalPositioningReference.h"
+#import "MDCTextControlVerticalPositioningReference.h"
 #import "MDCTextControlLabelBehavior.h"
 
 static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0.15;
 
-@protocol MDCContainedInputViewStyle;
+@protocol MDCTextControlStyle;
 
 @protocol MDCContainedInputView <NSObject>
 
@@ -33,7 +33,7 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
  Dictates the @c MDCContainedInputViewStyle of the text field. Defaults to an instance of
  MDCContainedInputViewStyleBase.
  */
-@property(nonatomic, strong, nonnull) id<MDCContainedInputViewStyle> containerStyle;
+@property(nonatomic, strong, nonnull) id<MDCTextControlStyle> containerStyle;
 
 /**
  Describes the current @c MDCtextControlState of the view.
@@ -103,14 +103,14 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 /**
  This method returns a color view model for a given MDCTextControlState.
  */
-- (nonnull MDCContainedInputViewColorViewModel *)containedInputViewColorViewModelForState:
+- (nonnull MDCTextControlColorViewModel *)containedInputViewColorViewModelForState:
     (MDCTextControlState)textControlState;
 
 /**
  This method sets a color view model for a given MDCTextControlState.
  */
 - (void)setContainedInputViewColorViewModel:
-            (nonnull MDCContainedInputViewColorViewModel *)containedInputViewColorViewModel
+            (nonnull MDCTextControlColorViewModel *)containedInputViewColorViewModel
                                    forState:(MDCTextControlState)textFieldState;
 
 /**
@@ -131,7 +131,7 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 
 @end
 
-@protocol MDCContainedInputViewStyle <NSObject>
+@protocol MDCTextControlStyle <NSObject>
 
 /**
  This method allows objects conforming to MDCContainedInputViewStyle to apply themselves to objects
@@ -155,7 +155,7 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
  This method returns an object that tells the view where to position it's views
  vertically.
  */
-- (nonnull id<MDCContainerStyleVerticalPositioningReference>)
+- (nonnull id<MDCTextControlVerticalPositioningReference>)
     positioningReferenceWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                               normalFontLineHeight:(CGFloat)normalFontLineHeight
                                      textRowHeight:(CGFloat)textRowHeight

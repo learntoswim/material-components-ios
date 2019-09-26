@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewStyleOutlined.h"
+#import "MDCTextControlStyleOutlined.h"
 
 #import <Foundation/Foundation.h>
 
 #import "MDCContainedInputView.h"
 #import "MDCContainedInputViewStylePathDrawingUtils.h"
-#import "MDCContainedInputViewVerticalPositioningGuideOutlined.h"
+#import "MDCTextControlVerticalPositioningReferenceOutlined.h"
 
 static const CGFloat kOutlinedContainerStyleCornerRadius = (CGFloat)4.0;
 static const CGFloat kFloatingLabelOutlineSidePadding = (CGFloat)5.0;
 static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
-@interface MDCContainedInputViewStyleOutlined ()
+@interface MDCTextControlStyleOutlined ()
 
 @property(strong, nonatomic) CAShapeLayer *outlinedSublayer;
 @property(strong, nonatomic) NSMutableDictionary<NSNumber *, UIColor *> *outlineColors;
@@ -32,7 +32,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
 @end
 
-@implementation MDCContainedInputViewStyleOutlined
+@implementation MDCTextControlStyleOutlined
 
 - (instancetype)init {
   self = [super init];
@@ -185,14 +185,14 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   return path;
 }
 
-- (id<MDCContainerStyleVerticalPositioningReference>)
+- (id<MDCTextControlVerticalPositioningReference>)
     positioningReferenceWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                               normalFontLineHeight:(CGFloat)normalFontLineHeight
                                      textRowHeight:(CGFloat)textRowHeight
                                   numberOfTextRows:(CGFloat)numberOfTextRows
                                            density:(CGFloat)density
                           preferredContainerHeight:(CGFloat)preferredContainerHeight {
-  return [[MDCContainedInputViewVerticalPositioningGuideOutlined alloc]
+  return [[MDCTextControlVerticalPositioningReferenceOutlined alloc]
       initWithFloatingFontLineHeight:floatingLabelHeight
                 normalFontLineHeight:normalFontLineHeight
                        textRowHeight:textRowHeight

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewLabelAnimation.h"
+#import "MDCTextControlLabelAnimation.h"
 
 #import "MaterialAnimationTiming.h"
 #import "MDCContainedInputView.h"
 
-@implementation MDCContainedInputViewLabelAnimation
+@implementation MDCTextControlLabelAnimation
 
 + (void)layOutLabel:(nonnull UILabel *)label
                  state:(MDCContainedInputViewLabelState)labelState

@@ -17,8 +17,8 @@
 #import "MDCContainedInputView.h"
 #import "MDCTextControlLabelBehavior.h"
 
-@interface MDCContainedInputViewVerticalPositioningGuideFilled
-    : NSObject <MDCContainerStyleVerticalPositioningReference>
+@interface MDCTextControlVerticalPositioningReferenceBase
+    : NSObject <MDCTextControlVerticalPositioningReference>
 
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndFloatingLabel;
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndNormalLabel;

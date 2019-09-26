@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-/**
- Objects conforming to this protocol provide information about the vertical positions of views. This
- helps achieve the variations in floating label and text rect position across the filled and
- outlined styles, and also allows different densities to be possible.
- */
-@protocol MDCContainerStyleVerticalPositioningReference <NSObject>
+#import "MDCContainedInputView.h"
+#import "MDCTextControlLabelBehavior.h"
+
+@interface MDCTextControlVerticalPositioningReferenceFilled
+    : NSObject <MDCTextControlVerticalPositioningReference>
 
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndFloatingLabel;
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndNormalLabel;
@@ -28,5 +26,12 @@
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTextAndBottom;
 @property(nonatomic, assign, readonly) CGFloat paddingAroundAssistiveLabels;
 @property(nonatomic, assign, readonly) CGFloat containerHeight;
+
+- (instancetype)initWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
+                          normalFontLineHeight:(CGFloat)normalFontLineHeight
+                                 textRowHeight:(CGFloat)textRowHeight
+                              numberOfTextRows:(CGFloat)numberOfTextRows
+                                       density:(CGFloat)density
+                      preferredContainerHeight:(CGFloat)preferredContainerHeight;
 
 @end

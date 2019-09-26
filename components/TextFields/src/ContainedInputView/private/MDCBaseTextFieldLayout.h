@@ -18,7 +18,7 @@
 #import "MDCContainedInputAssistiveLabelView.h"
 #import "MDCContainedInputView.h"
 
-@protocol MDCContainedInputViewStyle;
+@protocol MDCTextControlStyle;
 
 @interface MDCBaseTextFieldLayout : NSObject
 
@@ -42,7 +42,7 @@
 
 - (nonnull instancetype)initWithTextFieldSize:(CGSize)textFieldSize
                          positioningReference:
-                             (nonnull id<MDCContainerStyleVerticalPositioningReference>)
+                             (nonnull id<MDCTextControlVerticalPositioningReference>)
                                  positioningReference
                                          text:(nullable NSString *)text
                                          font:(nonnull UIFont *)font

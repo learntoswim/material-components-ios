@@ -18,7 +18,7 @@
 
 #import "private/MDCBaseTextArea+MDCContainedInputView.h"
 #import "private/MDCContainedInputView.h"
-#import "private/MDCContainedInputViewStyleOutlined.h"
+#import "private/MDCTextControlStyleOutlined.h"
 
 @interface MDCOutlinedTextArea ()
 @end
@@ -42,8 +42,8 @@
 }
 
 - (void)commonMDCOutlinedTextAreaInit {
-  MDCContainedInputViewStyleOutlined *outlinedStyle =
-      [[MDCContainedInputViewStyleOutlined alloc] init];
+  MDCTextControlStyleOutlined *outlinedStyle =
+      [[MDCTextControlStyleOutlined alloc] init];
   self.containerStyle = outlinedStyle;
 }
 
@@ -59,10 +59,10 @@
 }
 
 
-- (MDCContainedInputViewStyleOutlined *)outlinedStyle {
-  MDCContainedInputViewStyleOutlined *outlinedStyle = nil;
-  if ([self.containerStyle isKindOfClass:[MDCContainedInputViewStyleOutlined class]]) {
-    outlinedStyle = (MDCContainedInputViewStyleOutlined *)self.containerStyle;
+- (MDCTextControlStyleOutlined *)outlinedStyle {
+  MDCTextControlStyleOutlined *outlinedStyle = nil;
+  if ([self.containerStyle isKindOfClass:[MDCTextControlStyleOutlined class]]) {
+    outlinedStyle = (MDCTextControlStyleOutlined *)self.containerStyle;
   }
   return outlinedStyle;
 }

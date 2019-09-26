@@ -43,7 +43,7 @@
 @property(nonatomic, strong, nonnull) NSArray<NSNumber *> *horizontalGradientLocations;
 
 - (nonnull instancetype)initWithSize:(CGSize)size
-                      containerStyle:(nonnull id<MDCContainedInputViewStyle>)containerStyle
+                      containerStyle:(nonnull id<MDCTextControlStyle>)containerStyle
                                 text:(nullable NSString *)text
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont

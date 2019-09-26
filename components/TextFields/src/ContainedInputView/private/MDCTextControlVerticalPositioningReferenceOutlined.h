@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewVerticalPositioningGuideBase.h"
+#import "MDCTextControlVerticalPositioningReferenceBase.h"
 
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputView.h"
-#import "MDCContainedInputViewStyleBase.h"
+#import "MDCTextControlStyleBase.h"
 #import "MDCTextControlLabelBehavior.h"
 
-@interface MDCContainedInputViewVerticalPositioningGuideOutlined
-    : NSObject <MDCContainerStyleVerticalPositioningReference>
+@interface MDCTextControlVerticalPositioningReferenceOutlined
+    : NSObject <MDCTextControlVerticalPositioningReference>
 
 - (instancetype)initWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                           normalFontLineHeight:(CGFloat)normalFontLineHeight

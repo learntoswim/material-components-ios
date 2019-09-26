@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewStyleFilled.h"
+#import "MDCTextControlStyleFilled.h"
 
 #import <Foundation/Foundation.h>
 
 #import "MDCContainedInputView.h"
 #import "MDCContainedInputViewStylePathDrawingUtils.h"
-#import "MDCContainedInputViewVerticalPositioningGuideFilled.h"
+#import "MDCTextControlVerticalPositioningReferenceFilled.h"
 
 static const CGFloat kFilledContainerStyleTopCornerRadius = (CGFloat)4.0;
 static const CGFloat kFilledContainerStyleUnderlineWidthThin = (CGFloat)1.0;
@@ -26,7 +26,7 @@ static const CGFloat kFilledContainerStyleUnderlineWidthThick = (CGFloat)2.0;
 
 static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
-@interface MDCContainedInputViewStyleFilled () <CAAnimationDelegate>
+@interface MDCTextControlStyleFilled () <CAAnimationDelegate>
 
 @property(strong, nonatomic) CAShapeLayer *filledSublayer;
 @property(strong, nonatomic) CAShapeLayer *thinUnderlineLayer;
@@ -42,7 +42,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
 @end
 
-@implementation MDCContainedInputViewStyleFilled
+@implementation MDCTextControlStyleFilled
 
 - (instancetype)init {
   self = [super init];
@@ -450,14 +450,14 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   return @"thickUnderlineGrowKey";
 }
 
-- (id<MDCContainerStyleVerticalPositioningReference>)
+- (id<MDCTextControlVerticalPositioningReference>)
     positioningReferenceWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                               normalFontLineHeight:(CGFloat)normalFontLineHeight
                                      textRowHeight:(CGFloat)textRowHeight
                                   numberOfTextRows:(CGFloat)numberOfTextRows
                                            density:(CGFloat)density
                           preferredContainerHeight:(CGFloat)preferredContainerHeight {
-  return [[MDCContainedInputViewVerticalPositioningGuideFilled alloc]
+  return [[MDCTextControlVerticalPositioningReferenceFilled alloc]
       initWithFloatingFontLineHeight:floatingLabelHeight
                 normalFontLineHeight:normalFontLineHeight
                        textRowHeight:textRowHeight

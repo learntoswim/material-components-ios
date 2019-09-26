@@ -35,7 +35,7 @@ static const CGFloat kGradientBlurLength = 6;
 @implementation MDCBaseTextAreaLayout
 
 - (instancetype)initWithSize:(CGSize)size
-                      containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
+                      containerStyle:(id<MDCTextControlStyle>)containerStyle
                                 text:(NSString *)text
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
@@ -74,7 +74,7 @@ static const CGFloat kGradientBlurLength = 6;
 }
 
 - (void)calculateLayoutWithSize:(CGSize)size
-                      containerStyle:(id<MDCContainedInputViewStyle>)containerStyle
+                      containerStyle:(id<MDCTextControlStyle>)containerStyle
                                 text:(NSString *)text
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
@@ -90,7 +90,7 @@ static const CGFloat kGradientBlurLength = 6;
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing {
-  id<MDCContainerStyleVerticalPositioningReference> positioningReference =
+  id<MDCTextControlVerticalPositioningReference> positioningReference =
       [containerStyle positioningReferenceWithFloatingFontLineHeight:floatingFont.lineHeight
                                                 normalFontLineHeight:font.lineHeight
                                                        textRowHeight:font.lineHeight
@@ -337,7 +337,7 @@ static const CGFloat kGradientBlurLength = 6;
                                        floatingLabelMaxY:(CGFloat)floatingLabelMaxY
                                            bottomPadding:(CGFloat)bottomPadding
                                     positioningReference:
-                                        (id<MDCContainerStyleVerticalPositioningReference>)
+                                        (id<MDCTextControlVerticalPositioningReference>)
                                             positioningReference {
   CGFloat topFadeStart = floatingLabelMaxY / viewHeight;
   if (topFadeStart <= 0) {

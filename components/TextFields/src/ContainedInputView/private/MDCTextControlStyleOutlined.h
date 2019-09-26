@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "MDCContainedInputViewLabelState.h"
 
-@interface MDCContainedInputViewLabelAnimation : NSObject
+#import "MDCContainedInputView.h"
+#import "MDCTextControlStyleBase.h"
 
-+ (void)layOutLabel:(nonnull UILabel *)floatingLabel
-                 state:(MDCContainedInputViewLabelState)labelState
-      normalLabelFrame:(CGRect)normalLabelFrame
-    floatingLabelFrame:(CGRect)floatingLabelFrame
-            normalFont:(nonnull UIFont *)normalFont
-          floatingFont:(nonnull UIFont *)floatingFont;
+@interface MDCTextControlStyleOutlined : NSObject <MDCTextControlStyle>
+- (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;
+- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCTextControlState)state;
 @end

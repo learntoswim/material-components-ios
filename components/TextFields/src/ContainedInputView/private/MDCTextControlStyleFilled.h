@@ -15,10 +15,10 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputView.h"
-#import "MDCContainedInputViewStyleBase.h"
+#import "MDCTextControlStyleBase.h"
 #import "MDCTextControlLabelBehavior.h"
 
-@interface MDCContainedInputViewStyleFilled : NSObject <MDCContainedInputViewStyle>
+@interface MDCTextControlStyleFilled : NSObject <MDCTextControlStyle>
 - (nonnull UIColor *)underlineColorForState:(MDCTextControlState)state;
 - (void)setUnderlineColor:(nonnull UIColor *)underlineColor
                  forState:(MDCTextControlState)state;

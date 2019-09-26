@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputView.h"
-#import "MDCContainedInputViewStyleBase.h"
 
-@interface MDCContainedInputViewStyleOutlined : NSObject <MDCContainedInputViewStyle>
-- (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;
-- (void)setOutlineColor:(nonnull UIColor *)outlineColor forState:(MDCTextControlState)state;
+/**
+ A base implementation of MDCContainedInputViewStyle.
+ */
+@interface MDCTextControlStyleBase : NSObject <MDCTextControlStyle>
 @end

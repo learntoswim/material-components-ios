@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputViewStyleBase.h"
+#import "MDCTextControlStyleBase.h"
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputView.h"
-#import "MDCContainedInputViewVerticalPositioningGuideBase.h"
+#import "MDCTextControlVerticalPositioningReferenceBase.h"
 
 static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
 
-@implementation MDCContainedInputViewStyleBase
+@implementation MDCTextControlStyleBase
 
 - (UIFont *)floatingFontWithNormalFont:(UIFont *)font {
   CGFloat scaleFactor = kBaseFloatingLabelScaleFactor;
@@ -36,14 +36,14 @@ static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
 - (void)removeStyleFrom:(id<MDCContainedInputView>)containedInputView {
 }
 
-- (id<MDCContainerStyleVerticalPositioningReference>)
+- (id<MDCTextControlVerticalPositioningReference>)
     positioningReferenceWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                               normalFontLineHeight:(CGFloat)normalFontLineHeight
                                      textRowHeight:(CGFloat)textRowHeight
                                   numberOfTextRows:(CGFloat)numberOfTextRows
                                            density:(CGFloat)density
                           preferredContainerHeight:(CGFloat)preferredContainerHeight {
-  return [[MDCContainedInputViewVerticalPositioningGuideBase alloc]
+  return [[MDCTextControlVerticalPositioningReferenceBase alloc]
       initWithFloatingFontLineHeight:floatingLabelHeight
                 normalFontLineHeight:normalFontLineHeight
                        textRowHeight:textRowHeight

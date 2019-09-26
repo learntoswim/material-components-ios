@@ -25,7 +25,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
 - (instancetype)initWithTextFieldSize:(CGSize)textFieldSize
                  positioningReference:
-                     (id<MDCContainerStyleVerticalPositioningReference>)positioningReference
+                     (id<MDCTextControlVerticalPositioningReference>)positioningReference
                                  text:(NSString *)text
                                  font:(UIFont *)font
                          floatingFont:(UIFont *)floatingFont
@@ -74,7 +74,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
 - (void)calculateLayoutWithTextFieldSize:(CGSize)textFieldSize
                     positioningReference:
-                        (id<MDCContainerStyleVerticalPositioningReference>)positioningReference
+                        (id<MDCTextControlVerticalPositioningReference>)positioningReference
                                     text:(NSString *)text
                                     font:(UIFont *)font
                             floatingFont:(UIFont *)floatingFont

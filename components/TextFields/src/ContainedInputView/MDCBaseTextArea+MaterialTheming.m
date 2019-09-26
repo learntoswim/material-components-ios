@@ -18,8 +18,8 @@
 
 #import "private/MDCBaseTextArea+MDCContainedInputView.h"
 #import "private/MDCContainedInputView.h"
-#import "private/MDCContainedInputViewStyleFilled.h"
-#import "private/MDCContainedInputViewStyleOutlined.h"
+#import "private/MDCTextControlStyleFilled.h"
+#import "private/MDCTextControlStyleOutlined.h"
 
 @implementation MDCBaseTextArea (MaterialTheming)
 
