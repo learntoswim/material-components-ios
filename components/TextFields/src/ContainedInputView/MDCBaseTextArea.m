@@ -27,6 +27,7 @@
 #import "private/MDCContainedInputViewLabelAnimation.h"
 #import "private/MDCContainedInputViewStyleBase.h"
 #import "private/MDCTextControlGradientManager.h"
+#import "private/MDCTextControlTextFieldPrototypes.h"
 
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
@@ -563,7 +564,7 @@
 }
 
 - (UIFont *)floatingFont {
-  return [self.containerStyle floatingFontWithFont:self.normalFont];
+  return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
 }
 
 #pragma mark Dynamic Type

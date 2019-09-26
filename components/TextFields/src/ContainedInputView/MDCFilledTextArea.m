@@ -56,7 +56,7 @@
 }
 
 - (nonnull UIColor *)filledBackgroundColorForState:(MDCTextControlState)state {
-  return [self.filledStyle underlineColorForState:state];
+  return [self.filledStyle filledBackgroundColorForState:state];
 }
 
 - (void)setUnderlineColor:(nonnull UIColor *)underlineColor forState:(MDCTextControlState)state {

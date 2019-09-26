@@ -13,9 +13,8 @@
 // limitations under the License.
 
 #import "MDCContainedInputViewLabelAnimation.h"
-#import "MaterialAnimationTiming.h"
-#import "MaterialMath.h"
 
+#import "MaterialAnimationTiming.h"
 #import "MDCContainedInputView.h"
 
 @implementation MDCContainedInputViewLabelAnimation

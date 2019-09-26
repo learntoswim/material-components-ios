@@ -101,7 +101,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
       ((UIColor *)self.outlineColors[@(containedInputView.textControlState)]).CGColor;
 }
 
-- (UIFont *)floatingFontWithFont:(UIFont *)font {
+- (UIFont *)floatingFontWithNormalFont:(UIFont *)font {
   CGFloat scaleFactor = kFilledFloatingLabelScaleFactor;
   CGFloat floatingFontSize = font.pointSize * scaleFactor;
   return [font fontWithSize:floatingFontSize];

@@ -466,7 +466,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
             preferredContainerHeight:preferredContainerHeight];
 }
 
-- (UIFont *)floatingFontWithFont:(UIFont *)font {
+- (UIFont *)floatingFontWithNormalFont:(UIFont *)font {
   CGFloat scaleFactor = kFilledFloatingLabelScaleFactor;
   CGFloat floatingFontSize = font.pointSize * scaleFactor;
   return [font fontWithSize:floatingFontSize];

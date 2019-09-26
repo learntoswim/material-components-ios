@@ -15,22 +15,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-/**
- A set of mutually exclusive readonly states that text controls can inhabit. The value of a text
- control's MDCTextControlState is internally determined by whether or it it's editing and whether or
- not it's enabled.
- */
-typedef NS_ENUM(NSInteger, MDCTextControlState) {
-  /**
-   The default state of the contained input view, when it is resting and not editing.
-   */
-  MDCTextControlStateNormal,
-  /**
-   The state the view is in during normal editing.
-   */
-  MDCTextControlStateEditing,
-  /**
-   The disabled state.
-   */
-  MDCTextControlStateDisabled,
-};
+UIFont *MDCContainedInputViewDefaultFont(void);
+
+UITextField *MDCContainedInputViewUITextFieldPrototype(void);

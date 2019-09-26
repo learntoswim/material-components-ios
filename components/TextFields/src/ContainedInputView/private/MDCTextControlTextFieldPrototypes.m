@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCTextControlState.h"
+#import "MDCTextControlTextFieldPrototypes.h"
 
 
 UIFont *MDCContainedInputViewDefaultFont() {
@@ -37,4 +37,14 @@ UITextField *MDCContainedInputViewUITextFieldPrototype() {
   });
   return textField;
 }
+
+//NSDictionary *MDCContainedInputViewUITextFieldDefaultPlaceholderAttributes() {
+//  static dispatch_once_t onceToken;
+//  static UITextField *textField;
+//  dispatch_once(&onceToken, ^{
+//    textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+//    textField.text = @"Text";
+//  });
+//  return nil;
+//}
 

@@ -26,6 +26,7 @@
 #import "private/MDCContainedInputViewLabelAnimation.h"
 #import "private/MDCContainedInputViewStyleBase.h"
 #import "private/MDCContainedInputViewStylePathDrawingUtils.h"
+#import "private/MDCTextControlTextFieldPrototypes.h"
 
 @interface MDCBaseTextField () <MDCContainedInputView>
 
@@ -235,9 +236,9 @@
 
 - (CGSize)preferredSizeWithWidth:(CGFloat)width {
   CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
-  MDCBaseTextFieldLayout *inputTextFieldLayout =
+  MDCBaseTextFieldLayout *layout =
       [self calculateLayoutWithTextFieldSize:fittingSize];
-  return CGSizeMake(width, inputTextFieldLayout.calculatedHeight);
+  return CGSizeMake(width, layout.calculatedHeight);
 }
 
 #pragma mark UITextField Accessor Overrides
@@ -393,12 +394,25 @@
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
   _placeholderColor = placeholderColor;
-  [self updateAttributedPlaceholder];
+  if (_placeholderColor) {
+    [self updateAttributedPlaceholderColor];
+  } else {
+    [self reestablishDefaultPlaceholderAttributes];
+  }
 }
 
 - (void)setPlaceholder:(NSString *)placeholder {
   [super setPlaceholder:placeholder];
-  [self updateAttributedPlaceholder];
+  if (self.placeholderColor) {
+    [self updateAttributedPlaceholderColor];
+  }
+}
+
+-(void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
+  [super setAttributedPlaceholder:attributedPlaceholder];
+  if (self.placeholderColor) {
+    [self updateAttributedPlaceholderColor];
+  }
 }
 
 #pragma mark MDCContainedInputView accessors
@@ -484,6 +498,8 @@
   return CGRectZero;
 }
 
+#pragma mark UITextField Drawing Overrides
+
 - (void)drawPlaceholderInRect:(CGRect)rect {
   if (self.shouldPlaceholderBeVisible) {
     [super drawPlaceholderInRect:rect];
@@ -501,7 +517,7 @@
 }
 
 - (UIFont *)floatingFont {
-  return [self.containerStyle floatingFontWithFont:self.normalFont];
+  return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
 }
 
 - (void)mdc_setAdjustsFontForContentSizeCategory:(BOOL)adjusts {
@@ -589,11 +605,20 @@
   }
 }
 
-- (void)updateAttributedPlaceholder {
-  NSDictionary *attributes = @{NSForegroundColorAttributeName : self.placeholderColor};
-  NSAttributedString *attributedPlaceholder =
-      [[NSAttributedString alloc] initWithString:self.placeholder attributes:attributes];
-  self.attributedPlaceholder = attributedPlaceholder;
+- (void)reestablishDefaultPlaceholderAttributes {
+  // this doesn't work
+  self.placeholder = self.placeholder;
+}
+
+- (void)updateAttributedPlaceholderColor {
+  if (self.placeholderColor && self.attributedPlaceholder) {
+    NSMutableAttributedString *mutableAttributedString =
+    [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedPlaceholder];
+    NSRange range = NSMakeRange(0, mutableAttributedString.length);
+    NSDictionary *newColorAttribute = @{NSForegroundColorAttributeName : self.placeholderColor};
+    [mutableAttributedString addAttributes:newColorAttribute range:range];
+    [super setAttributedPlaceholder:[mutableAttributedString copy]];
+  }
 }
 
 #pragma mark Label
