@@ -13,19 +13,21 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "MDCBaseTextField.h"
-#import "MDCContainedInputView.h"
 
 /**
- A UITextField subclass that attempts to do the following:
-
- - Earnestly interpret and actualize the Material guidelines for text fields, which can be found
- here: https://material.io/design/components/text-fields.html#outlined-text-field
-
- - Feel intuitive for someone used to the conventions of iOS development and UIKit controls.
-
- - Enable easy set up and reliable and predictable behavior.
-
+ This enum represents different states the floating label can be in.
  */
-@interface MDCBaseTextField (Private) <MDCContainedInputView>
-@end
+typedef NS_ENUM(NSUInteger, MDCTextControlLabelState) {
+  /**
+   The state where the floating label is not visible.
+   */
+  MDCTextControlLabelStateNone,
+  /**
+   The state where the floating label is floating.
+   */
+  MDCTextControlLabelStateFloating,
+  /**
+   The state where the floating label is occupying the normal text area.
+   */
+  MDCTextControlLabelStateNormal,
+};

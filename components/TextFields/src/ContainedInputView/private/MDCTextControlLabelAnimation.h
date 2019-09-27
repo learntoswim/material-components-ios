@@ -14,12 +14,12 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "MDCContainedInputViewLabelState.h"
+#import "MDCTextControlLabelState.h"
 
 @interface MDCTextControlLabelAnimation : NSObject
 
 + (void)layOutLabel:(nonnull UILabel *)floatingLabel
-                 state:(MDCContainedInputViewLabelState)labelState
+                 state:(MDCTextControlLabelState)labelState
       normalLabelFrame:(CGRect)normalLabelFrame
     floatingLabelFrame:(CGRect)floatingLabelFrame
             normalFont:(nonnull UIFont *)normalFont

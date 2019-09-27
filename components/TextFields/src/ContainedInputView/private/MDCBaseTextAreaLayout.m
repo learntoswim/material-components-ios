@@ -40,7 +40,7 @@ static const CGFloat kGradientBlurLength = 6;
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
                                label:(UILabel *)label
-                          labelState:(MDCContainedInputViewLabelState)labelState
+                          labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
@@ -79,7 +79,7 @@ static const CGFloat kGradientBlurLength = 6;
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
                                label:(UILabel *)label
-                          labelState:(MDCContainedInputViewLabelState)labelState
+                          labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
@@ -125,7 +125,7 @@ static const CGFloat kGradientBlurLength = 6;
   CGFloat textViewMinY = textViewMinYNormal;
   CGFloat textViewMinYWithFloatingLabel =
       floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndText;
-  if (labelState == MDCContainedInputViewLabelStateFloating) {
+  if (labelState == MDCTextControlLabelStateFloating) {
     textViewMinY = textViewMinYWithFloatingLabel;
   }
 

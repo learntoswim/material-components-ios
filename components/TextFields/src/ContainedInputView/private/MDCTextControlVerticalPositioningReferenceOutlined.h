@@ -16,7 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 #import "MDCTextControlLabelBehavior.h"
 #import "MDCTextControlStyleBase.h"
 

@@ -16,8 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "MDCContainedInputView.h"
-#import "MDCContainedInputViewStylePathDrawingUtils.h"
+#import "MDCTextControl.h"
+#import "MDCTextControlStylePathDrawingUtils.h"
 #import "MDCTextControlVerticalPositioningReferenceOutlined.h"
 
 static const CGFloat kOutlinedContainerStyleCornerRadius = (CGFloat)4.0;
@@ -80,14 +80,14 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   self.outlineColors[@(state)] = outlineColor;
 }
 
-- (void)applyStyleToContainedInputView:(id<MDCContainedInputView>)containedInputView {
+- (void)applyStyleToContainedInputView:(id<MDCTextControl>)containedInputView {
   if (![containedInputView isKindOfClass:[UIView class]]) {
     [self removeStyleFrom:containedInputView];
     return;
   }
   CGRect labelFrame = containedInputView.label.frame;
   BOOL isFloatingLabelFloating =
-      containedInputView.labelState == MDCContainedInputViewLabelStateFloating;
+      containedInputView.labelState == MDCTextControlLabelStateFloating;
   CGFloat containerHeight = CGRectGetMaxY(containedInputView.containerFrame);
   CGFloat lineWidth =
       (CGFloat)self.outlineLineWidths[@(containedInputView.textControlState)].doubleValue;
@@ -107,7 +107,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   return [font fontWithSize:floatingFontSize];
 }
 
-- (void)removeStyleFrom:(id<MDCContainedInputView>)containedInputView {
+- (void)removeStyleFrom:(id<MDCTextControl>)containedInputView {
   [self.outlinedSublayer removeFromSuperlayer];
 }
 
@@ -153,7 +153,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   }
 
   CGPoint topRightCornerPoint2 = CGPointMake(textFieldWidth, sublayerMinY + radius);
-  [MDCContainedInputViewStylePathDrawingUtils addTopRightCornerToPath:path
+  [MDCTextControlStylePathDrawingUtils addTopRightCornerToPath:path
                                                             fromPoint:topRightCornerPoint1
                                                               toPoint:topRightCornerPoint2
                                                            withRadius:radius];
@@ -161,7 +161,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   CGPoint bottomRightCornerPoint1 = CGPointMake(textFieldWidth, sublayerMaxY - radius);
   CGPoint bottomRightCornerPoint2 = CGPointMake(textFieldWidth - radius, sublayerMaxY);
   [path addLineToPoint:bottomRightCornerPoint1];
-  [MDCContainedInputViewStylePathDrawingUtils addBottomRightCornerToPath:path
+  [MDCTextControlStylePathDrawingUtils addBottomRightCornerToPath:path
                                                                fromPoint:bottomRightCornerPoint1
                                                                  toPoint:bottomRightCornerPoint2
                                                               withRadius:radius];
@@ -169,7 +169,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   CGPoint bottomLeftCornerPoint1 = CGPointMake(radius, sublayerMaxY);
   CGPoint bottomLeftCornerPoint2 = CGPointMake(0, sublayerMaxY - radius);
   [path addLineToPoint:bottomLeftCornerPoint1];
-  [MDCContainedInputViewStylePathDrawingUtils addBottomLeftCornerToPath:path
+  [MDCTextControlStylePathDrawingUtils addBottomLeftCornerToPath:path
                                                               fromPoint:bottomLeftCornerPoint1
                                                                 toPoint:bottomLeftCornerPoint2
                                                              withRadius:radius];
@@ -177,7 +177,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   CGPoint topLeftCornerPoint1 = CGPointMake(0, sublayerMinY + radius);
   CGPoint topLeftCornerPoint2 = CGPointMake(radius, sublayerMinY);
   [path addLineToPoint:topLeftCornerPoint1];
-  [MDCContainedInputViewStylePathDrawingUtils addTopLeftCornerToPath:path
+  [MDCTextControlStylePathDrawingUtils addTopLeftCornerToPath:path
                                                            fromPoint:topLeftCornerPoint1
                                                              toPoint:topLeftCornerPoint2
                                                           withRadius:radius];

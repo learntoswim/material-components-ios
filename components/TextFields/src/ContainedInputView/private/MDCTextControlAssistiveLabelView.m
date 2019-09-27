@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputAssistiveLabelView.h"
+#import "MDCTextControlAssistiveLabelView.h"
 
-@interface MDCContainedInputAssistiveLabelView ()
+@interface MDCTextControlAssistiveLabelView ()
 @property(nonatomic, strong) UILabel *leftAssistiveLabel;
 @property(nonatomic, strong) UILabel *rightAssistiveLabel;
 @end
 
-@implementation MDCContainedInputAssistiveLabelView
+@implementation MDCTextControlAssistiveLabelView
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];

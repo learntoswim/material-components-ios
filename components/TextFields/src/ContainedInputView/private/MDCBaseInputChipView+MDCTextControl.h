@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "MDCBaseTextArea.h"
-#import "MDCContainedInputView.h"
+#import "MDCBaseInputChipView.h"
+#import "MDCTextControl.h"
 
-@interface MDCBaseTextArea (Private) <MDCContainedInputView>
+@interface MDCBaseInputChipView (Private) <MDCTextControl>
 @end

@@ -15,8 +15,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputAssistiveLabelView.h"
-#import "MDCContainedInputView.h"
+#import "MDCTextControlAssistiveLabelView.h"
+#import "MDCTextControl.h"
 
 @protocol MDCTextControlStyle;
 

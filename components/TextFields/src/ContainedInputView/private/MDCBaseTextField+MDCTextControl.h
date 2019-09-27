@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "MDCContainedInputView.h"
+#import "MDCBaseTextField.h"
+#import "MDCTextControl.h"
 
-#import "MDCContainedInputAssistiveLabelViewLayout.h"
+/**
+ A UITextField subclass that attempts to do the following:
 
-@interface MDCContainedInputAssistiveLabelView : UIView
+ - Earnestly interpret and actualize the Material guidelines for text fields, which can be found
+ here: https://material.io/design/components/text-fields.html#outlined-text-field
 
-@property(nonatomic, strong, readonly, nonnull) UILabel *leftAssistiveLabel;
-@property(nonatomic, strong, readonly, nonnull) UILabel *rightAssistiveLabel;
-@property(nonatomic, strong, nonnull) MDCContainedInputAssistiveLabelViewLayout *layout;
+ - Feel intuitive for someone used to the conventions of iOS development and UIKit controls.
 
+ - Enable easy set up and reliable and predictable behavior.
+
+ */
+@interface MDCBaseTextField (Private) <MDCTextControl>
 @end

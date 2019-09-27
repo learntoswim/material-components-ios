@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MDCTextControl.h"
 
-/**
- This enum represents different states the floating label can be in.
- */
-typedef NS_ENUM(NSUInteger, MDCContainedInputViewLabelState) {
-  /**
-   The state where the floating label is not visible.
-   */
-  MDCContainedInputViewLabelStateNone,
-  /**
-   The state where the floating label is floating.
-   */
-  MDCContainedInputViewLabelStateFloating,
-  /**
-   The state where the floating label is occupying the normal text area.
-   */
-  MDCContainedInputViewLabelStateNormal,
-};
+#import "MDCContainedInputAssistiveLabelViewLayout.h"
+
+@interface MDCTextControlAssistiveLabelView : UIView
+
+@property(nonatomic, strong, readonly, nonnull) UILabel *leftAssistiveLabel;
+@property(nonatomic, strong, readonly, nonnull) UILabel *rightAssistiveLabel;
+@property(nonatomic, strong, nonnull) MDCContainedInputAssistiveLabelViewLayout *layout;
+
+@end

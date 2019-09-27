@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 #import "MDCTextControlVerticalPositioningReferenceBase.h"
 
 static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
@@ -30,10 +30,10 @@ static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
   return [font fontWithSize:floatingFontSize];
 }
 
-- (void)applyStyleToContainedInputView:(id<MDCContainedInputView>)inputView {
+- (void)applyStyleToContainedInputView:(id<MDCTextControl>)inputView {
 }
 
-- (void)removeStyleFrom:(id<MDCContainedInputView>)containedInputView {
+- (void)removeStyleFrom:(id<MDCTextControl>)containedInputView {
 }
 
 - (id<MDCTextControlVerticalPositioningReference>)

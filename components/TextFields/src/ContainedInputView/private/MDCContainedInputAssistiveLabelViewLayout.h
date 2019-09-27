@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 
 @interface MDCContainedInputAssistiveLabelViewLayout : NSObject
 

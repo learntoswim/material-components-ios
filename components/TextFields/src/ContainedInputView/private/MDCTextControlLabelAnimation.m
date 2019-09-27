@@ -14,13 +14,13 @@
 
 #import "MDCTextControlLabelAnimation.h"
 
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 #import "MaterialAnimationTiming.h"
 
 @implementation MDCTextControlLabelAnimation
 
 + (void)layOutLabel:(nonnull UILabel *)label
-                 state:(MDCContainedInputViewLabelState)labelState
+                 state:(MDCTextControlLabelState)labelState
       normalLabelFrame:(CGRect)normalLabelFrame
     floatingLabelFrame:(CGRect)floatingLabelFrame
             normalFont:(nonnull UIFont *)normalFont
@@ -28,7 +28,7 @@
   UIFont *targetFont;
   CGRect targetFrame;
   MDCAnimationTimingFunction mdcTimingFunction;
-  if (labelState == MDCContainedInputViewLabelStateFloating) {
+  if (labelState == MDCTextControlLabelStateFloating) {
     targetFont = floatingFont;
     targetFrame = floatingLabelFrame;
     mdcTimingFunction = MDCAnimationTimingFunctionAcceleration;

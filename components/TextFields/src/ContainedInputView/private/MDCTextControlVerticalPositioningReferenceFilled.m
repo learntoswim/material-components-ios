@@ -16,8 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "MDCContainedInputView.h"
-#import "MDCContainedInputViewStylePathDrawingUtils.h"
+#import "MDCTextControl.h"
+#import "MDCTextControlStylePathDrawingUtils.h"
 
 static const CGFloat kMinPaddingBetweenTopAndFloatingLabel = (CGFloat)6.0;
 static const CGFloat kMaxPaddingBetweenTopAndFloatingLabel = (CGFloat)10.0;

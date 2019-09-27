@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 #import "private/MDCBaseInputChipView+MDCContainedInputView.h"
-#import "private/MDCContainedInputView.h"
+#import "private/MDCTextControl.h"
 #import "private/MDCTextControlStyleFilled.h"
 #import "private/MDCTextControlStyleOutlined.h"
 

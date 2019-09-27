@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 #import "MDCTextControlVerticalPositioningReferenceBase.h"
 
 static const CGFloat kMinPaddingBetweenTopAndFloatingLabel = (CGFloat)6.0;

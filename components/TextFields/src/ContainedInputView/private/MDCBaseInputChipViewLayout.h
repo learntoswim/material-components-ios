@@ -15,7 +15,7 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCContainedInputAssistiveLabelViewLayout.h"
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 
 @interface MDCBaseInputChipViewLayout : NSObject
 @property(nonatomic, assign) CGFloat globalChipRowMinX;
@@ -52,7 +52,7 @@
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
                                label:(nonnull UILabel *)label
-                          labelState:(MDCContainedInputViewLabelState)labelState
+                          labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                                chips:(nonnull NSArray<UIView *> *)chips
                       staleChipViews:(nonnull NSArray<UIView *> *)staleChipViews

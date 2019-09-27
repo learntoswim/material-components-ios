@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputView.h"
+#import "MDCTextControl.h"
 #import "MDCTextControlStyleBase.h"
 
 @interface MDCTextControlStyleOutlined : NSObject <MDCTextControlStyle>

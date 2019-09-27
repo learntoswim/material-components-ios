@@ -14,8 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputAssistiveLabelView.h"
-#import "MDCContainedInputView.h"
+#import "MDCTextControlAssistiveLabelView.h"
+#import "MDCTextControl.h"
 
 @interface MDCBaseTextAreaLayout : NSObject
 @property(nonatomic, assign) CGFloat globalTextMinX;
@@ -48,7 +48,7 @@
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
                                label:(nonnull UILabel *)label
-                          labelState:(MDCContainedInputViewLabelState)labelState
+                          labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                   leftAssistiveLabel:(nonnull UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(nonnull UILabel *)rightAssistiveLabel

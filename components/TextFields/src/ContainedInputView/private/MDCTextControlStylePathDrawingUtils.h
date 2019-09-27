@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface MDCContainedInputViewStylePathDrawingUtils : NSObject
+@interface MDCTextControlStylePathDrawingUtils : NSObject
 
 + (void)addTopRightCornerToPath:(UIBezierPath *)path
                       fromPoint:(CGPoint)point1
