@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
-
-#import "MDCTextControl.h"
 #import "MDCTextControlVerticalPositioningReferenceBase.h"
 
 static const CGFloat kMinPaddingBetweenTopAndFloatingLabel = (CGFloat)6.0;

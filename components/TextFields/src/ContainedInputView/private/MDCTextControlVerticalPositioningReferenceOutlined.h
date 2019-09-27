@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCTextControlVerticalPositioningReferenceBase.h"
-
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCTextControl.h"
-#import "MDCTextControlLabelBehavior.h"
-#import "MDCTextControlStyleBase.h"
+#import "MDCTextControlVerticalPositioningReference.h"
 
 @interface MDCTextControlVerticalPositioningReferenceOutlined
     : NSObject <MDCTextControlVerticalPositioningReference>

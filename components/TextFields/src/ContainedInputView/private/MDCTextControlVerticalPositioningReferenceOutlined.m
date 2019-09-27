@@ -14,11 +14,6 @@
 
 #import "MDCTextControlVerticalPositioningReferenceOutlined.h"
 
-#import <Foundation/Foundation.h>
-
-#import "MDCTextControl.h"
-#import "MDCTextControlStylePathDrawingUtils.h"
-
 static const CGFloat kMinPaddingBetweenFloatingLabelAndText = (CGFloat)8.0;
 static const CGFloat kMaxPaddingBetweenFloatingLabelAndText = (CGFloat)12.0;
 static const CGFloat kMinPaddingAroundAssistiveLabels = (CGFloat)3.0;

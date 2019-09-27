@@ -270,6 +270,16 @@
   [self mdc_setRightView:rightView];
 }
 
+- (void)setPlaceholder:(NSString *)placeholder {
+  [super setPlaceholder:placeholder];
+  [self updatePlaceholder];
+}
+
+- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
+  [super setAttributedPlaceholder:attributedPlaceholder];
+  [self updatePlaceholder];
+}
+
 #pragma mark Custom Accessors
 
 - (NSString *)labelText {
@@ -392,25 +402,7 @@
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
   _placeholderColor = placeholderColor;
-  if (_placeholderColor) {
-    [self updateAttributedPlaceholderColor];
-  } else {
-    [self reestablishDefaultPlaceholderAttributes];
-  }
-}
-
-- (void)setPlaceholder:(NSString *)placeholder {
-  [super setPlaceholder:placeholder];
-  if (self.placeholderColor) {
-    [self updateAttributedPlaceholderColor];
-  }
-}
-
-- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
-  [super setAttributedPlaceholder:attributedPlaceholder];
-  if (self.placeholderColor) {
-    [self updateAttributedPlaceholderColor];
-  }
+  [self updatePlaceholder];
 }
 
 #pragma mark MDCTextControl accessors
@@ -602,9 +594,18 @@
   }
 }
 
+- (void)updatePlaceholder {
+  if (_placeholderColor) {
+    [self updateAttributedPlaceholderColor];
+  } else {
+    [self reestablishDefaultPlaceholderAttributes];
+  }
+}
+
 - (void)reestablishDefaultPlaceholderAttributes {
-  // this doesn't work
-  self.placeholder = self.placeholder;
+  NSDictionary *attributes = MDCTextControlUITextFieldDefaultPlaceholderAttributes();
+  self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder
+                                                               attributes:attributes];
 }
 
 - (void)updateAttributedPlaceholderColor {

@@ -32,17 +32,22 @@ UITextField *MDCTextControlUITextFieldPrototype() {
   static UITextField *textField;
   dispatch_once(&onceToken, ^{
     textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-    textField.text = @"Text";
+    textField.text = @"text";
+    textField.placeholder = @"placeholder";
   });
   return textField;
 }
 
-// NSDictionary *MDCTextControlUITextFieldDefaultPlaceholderAttributes() {
-//  static dispatch_once_t onceToken;
-//  static UITextField *textField;
-//  dispatch_once(&onceToken, ^{
-//    textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-//    textField.text = @"Text";
-//  });
-//  return nil;
-//}
+NSDictionary *MDCTextControlUITextFieldDefaultPlaceholderAttributes() {
+  static dispatch_once_t onceToken;
+  static NSDictionary *attributes;
+  dispatch_once(&onceToken, ^{
+    NSAttributedString *attributedPlaceholder =
+        MDCTextControlUITextFieldPrototype().attributedPlaceholder;
+    attributes =
+        [attributedPlaceholder attributesAtIndex:0
+                           longestEffectiveRange:nil
+                                         inRange:NSMakeRange(0, attributedPlaceholder.length)];
+  });
+  return attributes ?: @{};
+}

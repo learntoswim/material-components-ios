@@ -18,3 +18,5 @@
 UIFont *MDCTextControlDefaultFont(void);
 
 UITextField *MDCTextControlUITextFieldPrototype(void);
+
+NSDictionary *MDCTextControlUITextFieldDefaultPlaceholderAttributes(void);

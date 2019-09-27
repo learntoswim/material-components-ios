@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 #import "MDCTextControl.h"
-#import "MDCTextControlStyleBase.h"
 
 @interface MDCTextControlStyleOutlined : NSObject <MDCTextControlStyle>
 - (nonnull UIColor *)outlineColorForState:(MDCTextControlState)state;

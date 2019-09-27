@@ -14,8 +14,6 @@
 
 #import "MDCTextControlStyleOutlined.h"
 
-#import <Foundation/Foundation.h>
-
 #import "MDCTextControl.h"
 #import "MDCTextControlStylePathDrawingUtils.h"
 #import "MDCTextControlVerticalPositioningReferenceOutlined.h"
