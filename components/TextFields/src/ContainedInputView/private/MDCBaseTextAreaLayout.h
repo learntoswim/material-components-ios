@@ -14,8 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MDCTextControlAssistiveLabelView.h"
 #import "MDCTextControl.h"
+#import "MDCTextControlAssistiveLabelView.h"
 
 @interface MDCBaseTextAreaLayout : NSObject
 @property(nonatomic, assign) CGFloat globalTextMinX;

@@ -245,8 +245,8 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
             assistiveLabelDrawPriority:assistiveLabelDrawPriority
       customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
                      horizontalPadding:kHorizontalPadding
-                       paddingAboveAssistiveLabels:positioningReference.paddingAboveAssistiveLabels
-                                   paddingBelowAssistiveLabels:positioningReference.paddingBelowAssistiveLabels
+           paddingAboveAssistiveLabels:positioningReference.paddingAboveAssistiveLabels
+           paddingBelowAssistiveLabels:positioningReference.paddingBelowAssistiveLabels
                                  isRTL:isRTL];
   self.assistiveLabelViewFrame = CGRectMake(0, positioningReference.containerHeight, textFieldWidth,
                                             self.assistiveLabelViewLayout.calculatedHeight);

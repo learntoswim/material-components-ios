@@ -14,8 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MDCTextControlAssistiveLabelViewLayout.h"
 #import "MDCTextControl.h"
+#import "MDCTextControlAssistiveLabelViewLayout.h"
 
 @interface MDCBaseInputChipViewLayout : NSObject
 @property(nonatomic, assign) CGFloat globalChipRowMinX;

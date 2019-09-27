@@ -22,8 +22,8 @@
 #import "MaterialTypography.h"
 #import "private/MDCBaseTextArea+MDCTextControl.h"
 #import "private/MDCBaseTextAreaLayout.h"
-#import "private/MDCTextControlAssistiveLabelView.h"
 #import "private/MDCTextControl.h"
+#import "private/MDCTextControlAssistiveLabelView.h"
 #import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
@@ -488,9 +488,9 @@
 }
 
 - (MDCTextControlLabelState)labelStateWithLabelText:(NSString *)labelText
-                                                      text:(NSString *)text
-                                             canLabelFloat:(BOOL)canLabelFloat
-                                                 isEditing:(BOOL)isEditing {
+                                               text:(NSString *)text
+                                      canLabelFloat:(BOOL)canLabelFloat
+                                          isEditing:(BOOL)isEditing {
   BOOL hasLabelText = labelText.length > 0;
   BOOL hasText = text.length > 0;
   if (hasLabelText) {
@@ -643,9 +643,8 @@
   self.label.textColor = labelColor;
 }
 
-- (void)setTextControlColorViewModel:
-            (MDCTextControlColorViewModel *)TextControlColorViewModel
-                                   forState:(MDCTextControlState)textControlState {
+- (void)setTextControlColorViewModel:(MDCTextControlColorViewModel *)TextControlColorViewModel
+                            forState:(MDCTextControlState)textControlState {
   self.colorViewModels[@(textControlState)] = TextControlColorViewModel;
 }
 
@@ -661,55 +660,47 @@
 #pragma mark Color Accessors
 
 - (void)setNormalLabelColor:(nonnull UIColor *)labelColor forState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   colorViewModel.normalLabelColor = labelColor;
   [self setNeedsLayout];
 }
 
 - (UIColor *)normalLabelColorForState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   return colorViewModel.normalLabelColor;
 }
 
 - (void)setFloatingLabelColor:(nonnull UIColor *)labelColor forState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   colorViewModel.floatingLabelColor = labelColor;
   [self setNeedsLayout];
 }
 
 - (UIColor *)floatingLabelColorForState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   return colorViewModel.floatingLabelColor;
 }
 
 - (void)setTextColor:(nonnull UIColor *)labelColor forState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   colorViewModel.textColor = labelColor;
   [self setNeedsLayout];
 }
 
 - (UIColor *)textColorForState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   return colorViewModel.textColor;
 }
 
 - (void)setAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
                       forState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   colorViewModel.assistiveLabelColor = assistiveLabelColor;
   [self setNeedsLayout];
 }
 
 - (UIColor *)assistiveLabelColorForState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel =
-      [self textControlColorViewModelForState:state];
+  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   return colorViewModel.assistiveLabelColor;
 }
 

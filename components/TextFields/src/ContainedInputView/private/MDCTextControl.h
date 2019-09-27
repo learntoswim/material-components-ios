@@ -16,10 +16,10 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCTextControlAssistiveLabelDrawPriority.h"
-#import "MDCTextControlLabelState.h"
 #import "MDCTextControlColorViewModel.h"
 #import "MDCTextControlLabelAnimation.h"
 #import "MDCTextControlLabelBehavior.h"
+#import "MDCTextControlLabelState.h"
 #import "MDCTextControlState.h"
 #import "MDCTextControlVerticalPositioningReference.h"
 
@@ -88,8 +88,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
  text, like a character counter. It is better to draw the short text first and use whatever space is
  leftover for the longer text, which may wrap to new lines.
  */
-@property(nonatomic, assign)
-    MDCTextControlAssistiveLabelDrawPriority assistiveLabelDrawPriority;
+@property(nonatomic, assign) MDCTextControlAssistiveLabelDrawPriority assistiveLabelDrawPriority;
 
 /**
  When @c assistiveLabelDrawPriority is set to @c .custom the value of this property helps determine
@@ -111,7 +110,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
  */
 - (void)setTextControlColorViewModel:
             (nonnull MDCTextControlColorViewModel *)textControlColorViewModel
-                                   forState:(MDCTextControlState)textFieldState;
+                            forState:(MDCTextControlState)textFieldState;
 
 /**
  Returns the rect surrounding the main content, i.e. the area that the container should be drawn

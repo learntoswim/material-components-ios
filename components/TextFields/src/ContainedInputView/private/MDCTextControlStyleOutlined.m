@@ -86,11 +86,9 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
     return;
   }
   CGRect labelFrame = TextControl.label.frame;
-  BOOL isFloatingLabelFloating =
-      TextControl.labelState == MDCTextControlLabelStateFloating;
+  BOOL isFloatingLabelFloating = TextControl.labelState == MDCTextControlLabelStateFloating;
   CGFloat containerHeight = CGRectGetMaxY(TextControl.containerFrame);
-  CGFloat lineWidth =
-      (CGFloat)self.outlineLineWidths[@(TextControl.textControlState)].doubleValue;
+  CGFloat lineWidth = (CGFloat)self.outlineLineWidths[@(TextControl.textControlState)].doubleValue;
   UIView *uiView = (UIView *)TextControl;
   [self applyStyleTo:uiView
                    labelFrame:labelFrame
@@ -154,33 +152,33 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
   CGPoint topRightCornerPoint2 = CGPointMake(textFieldWidth, sublayerMinY + radius);
   [MDCTextControlStylePathDrawingUtils addTopRightCornerToPath:path
-                                                            fromPoint:topRightCornerPoint1
-                                                              toPoint:topRightCornerPoint2
-                                                           withRadius:radius];
+                                                     fromPoint:topRightCornerPoint1
+                                                       toPoint:topRightCornerPoint2
+                                                    withRadius:radius];
 
   CGPoint bottomRightCornerPoint1 = CGPointMake(textFieldWidth, sublayerMaxY - radius);
   CGPoint bottomRightCornerPoint2 = CGPointMake(textFieldWidth - radius, sublayerMaxY);
   [path addLineToPoint:bottomRightCornerPoint1];
   [MDCTextControlStylePathDrawingUtils addBottomRightCornerToPath:path
-                                                               fromPoint:bottomRightCornerPoint1
-                                                                 toPoint:bottomRightCornerPoint2
-                                                              withRadius:radius];
+                                                        fromPoint:bottomRightCornerPoint1
+                                                          toPoint:bottomRightCornerPoint2
+                                                       withRadius:radius];
 
   CGPoint bottomLeftCornerPoint1 = CGPointMake(radius, sublayerMaxY);
   CGPoint bottomLeftCornerPoint2 = CGPointMake(0, sublayerMaxY - radius);
   [path addLineToPoint:bottomLeftCornerPoint1];
   [MDCTextControlStylePathDrawingUtils addBottomLeftCornerToPath:path
-                                                              fromPoint:bottomLeftCornerPoint1
-                                                                toPoint:bottomLeftCornerPoint2
-                                                             withRadius:radius];
+                                                       fromPoint:bottomLeftCornerPoint1
+                                                         toPoint:bottomLeftCornerPoint2
+                                                      withRadius:radius];
 
   CGPoint topLeftCornerPoint1 = CGPointMake(0, sublayerMinY + radius);
   CGPoint topLeftCornerPoint2 = CGPointMake(radius, sublayerMinY);
   [path addLineToPoint:topLeftCornerPoint1];
   [MDCTextControlStylePathDrawingUtils addTopLeftCornerToPath:path
-                                                           fromPoint:topLeftCornerPoint1
-                                                             toPoint:topLeftCornerPoint2
-                                                          withRadius:radius];
+                                                    fromPoint:topLeftCornerPoint1
+                                                      toPoint:topLeftCornerPoint2
+                                                   withRadius:radius];
 
   return path;
 }

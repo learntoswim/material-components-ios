@@ -105,15 +105,16 @@ static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
 
   CGFloat containerHeightWithPaddingsDeterminedByDensity =
       [self calculateContainerHeightWithFoatingLabelHeight:floatingLabelHeight
-                                    textRowHeight:textRowHeight
-                                 numberOfTextRows:numberOfTextRows
-                paddingBetweenTopAndFloatingLabel:_paddingBetweenTopAndFloatingLabel
-               paddingBetweenFloatingLabelAndText:_paddingBetweenFloatingLabelAndText
-                      paddingBetweenTextAndBottom:_paddingBetweenTextAndBottom];
+                                             textRowHeight:textRowHeight
+                                          numberOfTextRows:numberOfTextRows
+                         paddingBetweenTopAndFloatingLabel:_paddingBetweenTopAndFloatingLabel
+                        paddingBetweenFloatingLabelAndText:_paddingBetweenFloatingLabelAndText
+                               paddingBetweenTextAndBottom:_paddingBetweenTextAndBottom];
   if (preferredContainerHeight > 0) {
     if (preferredContainerHeight > containerHeightWithPaddingsDeterminedByDensity) {
       if (!isMultiline) {
-        CGFloat difference = preferredContainerHeight - containerHeightWithPaddingsDeterminedByDensity;
+        CGFloat difference =
+            preferredContainerHeight - containerHeightWithPaddingsDeterminedByDensity;
         CGFloat sumOfPaddingValues = _paddingBetweenTopAndFloatingLabel +
                                      _paddingBetweenFloatingLabelAndText +
                                      _paddingBetweenTextAndBottom;
@@ -153,7 +154,8 @@ static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
                                             textRowHeight:(CGFloat)textRowHeight
                                          numberOfTextRows:(CGFloat)numberOfTextRows
                         paddingBetweenTopAndFloatingLabel:(CGFloat)paddingBetweenTopAndFloatingLabel
-                       paddingBetweenFloatingLabelAndText:(CGFloat)paddingBetweenFloatingLabelAndText
+                       paddingBetweenFloatingLabelAndText:
+                           (CGFloat)paddingBetweenFloatingLabelAndText
                               paddingBetweenTextAndBottom:(CGFloat)paddingBetweenTextAndBottom {
   CGFloat totalTextHeight = numberOfTextRows * textRowHeight;
   return paddingBetweenTopAndFloatingLabel + floatingLabelHeight +

@@ -33,8 +33,8 @@
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                    horizontalPadding:(CGFloat)horizontalPadding
-                     paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
-                     paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
+         paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
+         paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
                                isRTL:(BOOL)isRTL {
   self = [super init];
   if (self) {
@@ -44,8 +44,8 @@
                  assistiveLabelDrawPriority:assistiveLabelDrawPriority
            customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
                           horizontalPadding:horizontalPadding
-                            paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
-                            paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
+                paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
+                paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
                                       isRTL:isRTL];
     return self;
   }
@@ -60,8 +60,8 @@
                    (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
          customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                         horizontalPadding:(CGFloat)horizontalPadding
-                          paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
-                          paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
+              paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
+              paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
                                     isRTL:(BOOL)isRTL {
   CGFloat assistiveLabelsCombinedMinX = horizontalPadding;
   CGFloat assistiveLabelsCombinedMaxX = superviewWidth - horizontalPadding;
