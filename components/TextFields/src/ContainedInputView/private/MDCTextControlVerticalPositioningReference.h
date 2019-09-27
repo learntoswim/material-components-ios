@@ -26,7 +26,8 @@
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndNormalLabel;
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenFloatingLabelAndText;
 @property(nonatomic, assign, readonly) CGFloat paddingBetweenTextAndBottom;
-@property(nonatomic, assign, readonly) CGFloat paddingAroundAssistiveLabels;
+@property(nonatomic, assign, readonly) CGFloat paddingAboveAssistiveLabels;
+@property(nonatomic, assign, readonly) CGFloat paddingBelowAssistiveLabels;
 @property(nonatomic, assign, readonly) CGFloat containerHeight;
 
 @end

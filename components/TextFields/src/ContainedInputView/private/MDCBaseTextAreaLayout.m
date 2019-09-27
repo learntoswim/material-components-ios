@@ -147,7 +147,6 @@ static const CGFloat kGradientBlurLength = 6;
                                              contentOffset:contentOffset
                                              textViewFrame:textViewFrame];
 
-  CGFloat assistiveLabelVerticalPadding = positioningReference.paddingAroundAssistiveLabels;
   self.assistiveLabelViewLayout = [[MDCContainedInputAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
                     leftAssistiveLabel:leftAssistiveLabel
@@ -155,7 +154,8 @@ static const CGFloat kGradientBlurLength = 6;
             assistiveLabelDrawPriority:assistiveLabelDrawPriority
       customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
                      horizontalPadding:kHorizontalPadding
-                       verticalPadding:assistiveLabelVerticalPadding
+                       paddingAboveAssistiveLabels:positioningReference.paddingAboveAssistiveLabels
+                                   paddingBelowAssistiveLabels:positioningReference.paddingBelowAssistiveLabels
                                  isRTL:isRTL];
   self.assistiveLabelViewFrame = CGRectMake(0, positioningReference.containerHeight, size.width,
                                             self.assistiveLabelViewLayout.calculatedHeight);

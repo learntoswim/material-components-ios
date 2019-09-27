@@ -33,7 +33,8 @@
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                    horizontalPadding:(CGFloat)horizontalPadding
-                     verticalPadding:(CGFloat)verticalPadding
+                     paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
+                     paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
                                isRTL:(BOOL)isRTL {
   self = [super init];
   if (self) {
@@ -43,7 +44,8 @@
                  assistiveLabelDrawPriority:assistiveLabelDrawPriority
            customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
                           horizontalPadding:horizontalPadding
-                            verticalPadding:verticalPadding
+                            paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
+                            paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
                                       isRTL:isRTL];
     return self;
   }
@@ -58,14 +60,15 @@
                    (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
          customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                         horizontalPadding:(CGFloat)horizontalPadding
-                          verticalPadding:(CGFloat)verticalPadding
+                          paddingAboveAssistiveLabels:(CGFloat)paddingAboveAssistiveLabels
+                          paddingBelowAssistiveLabels:(CGFloat)paddingBelowAssistiveLabels
                                     isRTL:(BOOL)isRTL {
   CGFloat assistiveLabelsCombinedMinX = horizontalPadding;
   CGFloat assistiveLabelsCombinedMaxX = superviewWidth - horizontalPadding;
   CGFloat assistiveLabelsCombinedMaxWidth =
       assistiveLabelsCombinedMaxX - assistiveLabelsCombinedMinX;
 
-  CGFloat assistiveLabelsCombinedMinY = verticalPadding;
+  CGFloat assistiveLabelsCombinedMinY = paddingAboveAssistiveLabels;
   CGFloat leadingAssistiveLabelWidth = 0;
   CGFloat trailingAssistiveLabelWidth = 0;
   CGSize leadingAssistiveLabelSize = CGSizeZero;
@@ -142,7 +145,7 @@
       MAX(CGRectGetMaxY(leftAssistiveLabelFrame), CGRectGetMaxY(rightAssistiveLabelFrame));
   self.leftAssistiveLabelFrame = leftAssistiveLabelFrame;
   self.rightAssistiveLabelFrame = rightAssistiveLabelFrame;
-  self.calculatedHeight = maxAssistiveLabelHeight + verticalPadding;
+  self.calculatedHeight = maxAssistiveLabelHeight + paddingBelowAssistiveLabels;
 }
 
 - (CGSize)assistiveLabelSizeWithLabel:(UILabel *)label constrainedToWidth:(CGFloat)maxWidth {

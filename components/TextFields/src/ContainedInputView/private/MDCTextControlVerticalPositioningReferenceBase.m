@@ -23,8 +23,10 @@ static const CGFloat kMinPaddingBetweenFloatingLabelAndText = (CGFloat)3.0;
 static const CGFloat kMaxPaddingBetweenFloatingLabelAndText = (CGFloat)6.0;
 static const CGFloat kMinPaddingBetweenTextAndBottom = (CGFloat)3.0;
 static const CGFloat kMaxPaddingBetweenTextAndBottom = (CGFloat)6.0;
-static const CGFloat kMinPaddingAroundAssistiveLabels = (CGFloat)3.0;
-static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
+static const CGFloat kMinPaddingAboveAssistiveLabels = (CGFloat)0.0;
+static const CGFloat kMaxPaddingAboveAssistiveLabels = (CGFloat)0.0;
+static const CGFloat kMinPaddingBelowAssistiveLabels = (CGFloat)3.0;
+static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
 
 @interface MDCTextControlVerticalPositioningReferenceBase ()
 @end
@@ -35,8 +37,9 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
 @synthesize paddingBetweenTopAndNormalLabel = _paddingBetweenTopAndNormalLabel;
 @synthesize paddingBetweenFloatingLabelAndText = _paddingBetweenFloatingLabelAndText;
 @synthesize paddingBetweenTextAndBottom = _paddingBetweenTextAndBottom;
+@synthesize paddingAboveAssistiveLabels = _paddingAboveAssistiveLabels;
+@synthesize paddingBelowAssistiveLabels = _paddingBelowAssistiveLabels;
 @synthesize containerHeight = _containerHeight;
-@synthesize paddingAroundAssistiveLabels = _paddingAroundAssistiveLabels;
 
 - (instancetype)initWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                           normalFontLineHeight:(CGFloat)normalFontLineHeight
@@ -86,24 +89,31 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
   _paddingBetweenTextAndBottom =
       kMinPaddingBetweenTextAndBottom + paddingBetweenTextAndBottomAddition;
 
-  CGFloat paddingAroundAssistiveLabelsRange =
-      kMaxPaddingAroundAssistiveLabels - kMinPaddingAroundAssistiveLabels;
-  CGFloat paddingAroundAssistiveLabelsAddition =
-      paddingAroundAssistiveLabelsRange * (1 - standardizedDensity);
-  _paddingAroundAssistiveLabels =
-      kMinPaddingAroundAssistiveLabels + paddingAroundAssistiveLabelsAddition;
+  CGFloat paddingAboveAssistiveLabelsRange =
+      kMaxPaddingAboveAssistiveLabels - kMinPaddingAboveAssistiveLabels;
+  CGFloat paddingAboveAssistiveLabelsAddition =
+      paddingAboveAssistiveLabelsRange * (1 - standardizedDensity);
+  _paddingAboveAssistiveLabels =
+      kMinPaddingAboveAssistiveLabels + paddingAboveAssistiveLabelsAddition;
 
-  CGFloat heightWithPaddingsDeterminedByDensity =
-      [self calculateHeightWithFoatingLabelHeight:floatingLabelHeight
+  CGFloat paddingBelowAssistiveLabelsRange =
+      kMaxPaddingBelowAssistiveLabels - kMinPaddingBelowAssistiveLabels;
+  CGFloat paddingBelowAssistiveLabelsAddition =
+      paddingBelowAssistiveLabelsRange * (1 - standardizedDensity);
+  _paddingBelowAssistiveLabels =
+      kMinPaddingBelowAssistiveLabels + paddingBelowAssistiveLabelsAddition;
+
+  CGFloat containerHeightWithPaddingsDeterminedByDensity =
+      [self calculateContainerHeightWithFoatingLabelHeight:floatingLabelHeight
                                     textRowHeight:textRowHeight
                                  numberOfTextRows:numberOfTextRows
                 paddingBetweenTopAndFloatingLabel:_paddingBetweenTopAndFloatingLabel
                paddingBetweenFloatingLabelAndText:_paddingBetweenFloatingLabelAndText
                       paddingBetweenTextAndBottom:_paddingBetweenTextAndBottom];
   if (preferredContainerHeight > 0) {
-    if (preferredContainerHeight > heightWithPaddingsDeterminedByDensity) {
+    if (preferredContainerHeight > containerHeightWithPaddingsDeterminedByDensity) {
       if (!isMultiline) {
-        CGFloat difference = preferredContainerHeight - heightWithPaddingsDeterminedByDensity;
+        CGFloat difference = preferredContainerHeight - containerHeightWithPaddingsDeterminedByDensity;
         CGFloat sumOfPaddingValues = _paddingBetweenTopAndFloatingLabel +
                                      _paddingBetweenFloatingLabelAndText +
                                      _paddingBetweenTextAndBottom;
@@ -120,8 +130,8 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
     }
   }
 
-  _containerHeight = heightWithPaddingsDeterminedByDensity;
-  if (preferredContainerHeight > heightWithPaddingsDeterminedByDensity) {
+  _containerHeight = containerHeightWithPaddingsDeterminedByDensity;
+  if (preferredContainerHeight > containerHeightWithPaddingsDeterminedByDensity) {
     _containerHeight = preferredContainerHeight;
   }
 
@@ -139,12 +149,12 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
   return standardizedDensity;
 }
 
-- (CGFloat)calculateHeightWithFoatingLabelHeight:(CGFloat)floatingLabelHeight
-                                   textRowHeight:(CGFloat)textRowHeight
-                                numberOfTextRows:(CGFloat)numberOfTextRows
-               paddingBetweenTopAndFloatingLabel:(CGFloat)paddingBetweenTopAndFloatingLabel
-              paddingBetweenFloatingLabelAndText:(CGFloat)paddingBetweenFloatingLabelAndText
-                     paddingBetweenTextAndBottom:(CGFloat)paddingBetweenTextAndBottom {
+- (CGFloat)calculateContainerHeightWithFoatingLabelHeight:(CGFloat)floatingLabelHeight
+                                            textRowHeight:(CGFloat)textRowHeight
+                                         numberOfTextRows:(CGFloat)numberOfTextRows
+                        paddingBetweenTopAndFloatingLabel:(CGFloat)paddingBetweenTopAndFloatingLabel
+                       paddingBetweenFloatingLabelAndText:(CGFloat)paddingBetweenFloatingLabelAndText
+                              paddingBetweenTextAndBottom:(CGFloat)paddingBetweenTextAndBottom {
   CGFloat totalTextHeight = numberOfTextRows * textRowHeight;
   return paddingBetweenTopAndFloatingLabel + floatingLabelHeight +
          paddingBetweenFloatingLabelAndText + totalTextHeight + paddingBetweenTextAndBottom;
@@ -166,8 +176,12 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
   return _paddingBetweenTextAndBottom;
 }
 
-- (CGFloat)paddingAroundAssistiveLabels {
-  return _paddingAroundAssistiveLabels;
+- (CGFloat)paddingAboveAssistiveLabels {
+  return _paddingAboveAssistiveLabels;
+}
+
+- (CGFloat)paddingBelowAssistiveLabels {
+  return _paddingBelowAssistiveLabels;
 }
 
 - (CGFloat)containerHeight {
