@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "private/MDCBaseInputChipView+MDCContainedInputView.h"
+#import "private/MDCBaseInputChipView+MDCTextControl.h"
 #import "private/MDCTextControl.h"
 #import "private/MDCTextControlStyleFilled.h"
 
@@ -59,7 +59,7 @@
 }
 
 - (void)applyDefaultColorScheme:(id<MDCColorScheming>)colorScheme {
-  CGFloat disabledOpacity = 0.60;
+  CGFloat disabledOpacity = (CGFloat)0.60;
 
   UIColor *textColorNormal = [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.87];
   UIColor *textColorEditing = textColorNormal;
@@ -120,7 +120,7 @@
 }
 
 - (void)applyErrorColorScheme:(id<MDCColorScheming>)colorScheme {
-  CGFloat disabledOpacity = 0.60;
+  CGFloat disabledOpacity = (CGFloat)0.60;
 
   UIColor *textColorNormal = [colorScheme.onSurfaceColor colorWithAlphaComponent:(CGFloat)0.87];
   UIColor *textColorEditing = textColorNormal;

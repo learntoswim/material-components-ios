@@ -49,7 +49,7 @@
   CAMediaTimingFunction *timingFunction =
       [CAMediaTimingFunction mdc_functionWithType:MDCAnimationTimingFunctionStandard];
   [UIView mdc_animateWithTimingFunction:timingFunction
-                               duration:kMDCContainedInputViewDefaultAnimationDuration
+                               duration:kMDCTextControlDefaultAnimationDuration
                                   delay:0
                                 options:UIViewAnimationOptionTransitionNone
                              animations:^{

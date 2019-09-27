@@ -14,9 +14,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "../../../src/ContainedInputView/private/MDCBaseTextFieldLayout.h"
-#import "../../../src/ContainedInputView/private/MDCTextControlVerticalPositioningReferenceBase.h"
-#import "MaterialTextFields+ContainedInputView.h"
+#import "../../../src/TextControl/private/MDCBaseTextFieldLayout.h"
+#import "../../../src/TextControl/private/MDCTextControlVerticalPositioningReferenceBase.h"
+#import "MaterialTextControls.h"
 
 @interface MDCBaseTextFieldLayout (Testing)
 - (CGFloat)textHeightWithFont:(UIFont *)font;
@@ -43,23 +43,23 @@
 
   MDCBaseTextFieldLayout *layout = [[MDCBaseTextFieldLayout alloc]
                  initWithTextFieldSize:textFieldSize
-                  positioningReference:[MDCContainedInputViewVerticalPositioningGuideBase new]
+                  positioningReference:[MDCTextControlVerticalPositioningGuideBase new]
                                   text:@"Text"
                            placeholder:nil
                                   font:font
                           floatingFont:floatingFont
                                  label:[UILabel new]
-                            labelState:MDCContainedInputViewLabelStateFloating
+                            labelState:MDCTextControlLabelStateFloating
                          labelBehavior:MDCTextControlLabelBehaviorFloats
                               leftView:[self createSideView]
                           leftViewMode:viewMode
                              rightView:[self createSideView]
                          rightViewMode:viewMode
-                           clearButton:[MDCContainedInputViewClearButton new]
+                           clearButton:[MDCTextControlClearButton new]
                        clearButtonMode:viewMode
                     leftAssistiveLabel:[UILabel new]
                    rightAssistiveLabel:[UILabel new]
-            underlineLabelDrawPriority:MDCContainedInputViewAssistiveLabelDrawPriorityTrailing
+            underlineLabelDrawPriority:MDCTextControlAssistiveLabelDrawPriorityTrailing
       customAssistiveLabelDrawPriority:0.0
               preferredContainerHeight:0
                                  isRTL:NO

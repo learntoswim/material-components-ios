@@ -39,7 +39,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                    leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                   rightAssistiveLabel:(UILabel *)rightAssistiveLabel
            assistiveLabelDrawPriority:
-               (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
      customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
              preferredContainerHeight:(CGFloat)preferredContainerHeight
                                 isRTL:(BOOL)isRTL
@@ -88,7 +88,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                       leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                      rightAssistiveLabel:(UILabel *)rightAssistiveLabel
               assistiveLabelDrawPriority:
-                  (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+                  (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
         customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                 preferredContainerHeight:(CGFloat)preferredContainerHeight
                                    isRTL:(BOOL)isRTL

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "ContainedInputViewTextFieldsManualLayoutExampleViewController.h"
+#import "MDCTextControlTextFieldsManualLayoutExampleViewController.h"
 
 #import "MaterialButtons.h"
 
@@ -30,7 +30,7 @@
 static const NSUInteger kDefaultHorizontalPadding = 20;
 static const NSUInteger kDefaultVerticalPadding = 20;
 
-@interface ContainedInputViewTextFieldsManualLayoutExampleViewController ()
+@interface MDCTextControlTextFieldsManualLayoutExampleViewController ()
 
 @property(strong, nonatomic) UIScrollView *scrollView;
 
@@ -41,7 +41,7 @@ static const NSUInteger kDefaultVerticalPadding = 20;
 
 @end
 
-@implementation ContainedInputViewTextFieldsManualLayoutExampleViewController
+@implementation MDCTextControlTextFieldsManualLayoutExampleViewController
 
 - (instancetype)init {
   self = [super init];

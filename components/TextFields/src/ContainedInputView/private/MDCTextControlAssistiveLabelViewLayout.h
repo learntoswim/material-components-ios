@@ -27,7 +27,7 @@
                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
-              (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+              (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                    horizontalPadding:(CGFloat)horizontalPadding
                      verticalPadding:(CGFloat)verticalPadding

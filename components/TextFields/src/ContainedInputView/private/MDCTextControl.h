@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputViewAssistiveLabelDrawPriority.h"
+#import "MDCTextControlAssistiveLabelDrawPriority.h"
 #import "MDCTextControlLabelState.h"
 #import "MDCTextControlColorViewModel.h"
 #import "MDCTextControlLabelAnimation.h"
@@ -23,15 +23,15 @@
 #import "MDCTextControlState.h"
 #import "MDCTextControlVerticalPositioningReference.h"
 
-static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0.15;
+static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 
 @protocol MDCTextControlStyle;
 
 @protocol MDCTextControl <NSObject>
 
 /**
- Dictates the @c MDCContainedInputViewStyle of the text field. Defaults to an instance of
- MDCContainedInputViewStyleBase.
+ Dictates the @c MDCTextControlStyle of the text field. Defaults to an instance of
+ MDCTextControlStyleBase.
  */
 @property(nonatomic, strong, nonnull) id<MDCTextControlStyle> containerStyle;
 
@@ -41,7 +41,7 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 @property(nonatomic, assign, readonly) MDCTextControlState textControlState;
 
 /**
- Describes the current @c MDCContainedInputViewLabelState of the view. This
+ Describes the current @c MDCTextControlLabelState of the view. This
  value is affected by things like the view's state, the value for @c canFloatingLabelFloat, and the
  text of the floating label.
  */
@@ -83,13 +83,13 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
  This property is used to determine how much horizontal space to allot for each of the two assistive
  labels.
 
- @note The default value is MDCContainedInputViewAssistiveLabelDrawPriorityTrailing. The rationale
+ @note The default value is MDCTextControlAssistiveLabelDrawPriorityTrailing. The rationale
  behind this is it is less likely to have long explanatory error text and more likely to have short
  text, like a character counter. It is better to draw the short text first and use whatever space is
  leftover for the longer text, which may wrap to new lines.
  */
 @property(nonatomic, assign)
-    MDCContainedInputViewAssistiveLabelDrawPriority assistiveLabelDrawPriority;
+    MDCTextControlAssistiveLabelDrawPriority assistiveLabelDrawPriority;
 
 /**
  When @c assistiveLabelDrawPriority is set to @c .custom the value of this property helps determine
@@ -109,7 +109,7 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 /**
  This method sets a color view model for a given MDCTextControlState.
  */
-- (void)setContainedInputViewColorViewModel:
+- (void)setTextControlColorViewModel:
             (nonnull MDCTextControlColorViewModel *)textControlColorViewModel
                                    forState:(MDCTextControlState)textFieldState;
 
@@ -134,16 +134,16 @@ static const CGFloat kMDCContainedInputViewDefaultAnimationDuration = (CGFloat)0
 @protocol MDCTextControlStyle <NSObject>
 
 /**
- This method allows objects conforming to MDCContainedInputViewStyle to apply themselves to objects
- conforming to MDCContainedInputView with a set of colors represented by an object conforming to
- MDCContainedInputViewColorViewModel.
+ This method allows objects conforming to MDCTextControlStyle to apply themselves to objects
+ conforming to MDCTextControl with a set of colors represented by an object conforming to
+ MDCTextControlColorViewModel.
  */
-- (void)applyStyleToContainedInputView:(nonnull id<MDCTextControl>)containedInputView;
+- (void)applyStyleToTextControl:(nonnull id<MDCTextControl>)textControl;
 /**
- This method allows objects conforming to MDCContainedInputViewStyle to remove the styling
- previously applied to objects conforming to MDCContainedInputView.
+ This method allows objects conforming to MDCTextControlStyle to remove the styling
+ previously applied to objects conforming to MDCTextControl.
  */
-- (void)removeStyleFrom:(nonnull id<MDCTextControl>)containedInputView;
+- (void)removeStyleFrom:(nonnull id<MDCTextControl>)textControl;
 
 /**
  The method returns a UIFont for the floating label based on the @c normalFont of the

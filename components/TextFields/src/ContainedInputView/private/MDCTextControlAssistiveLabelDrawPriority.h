@@ -18,22 +18,22 @@
 /**
  Dictates the relative importance of the underline labels, and the order in which they are laid out.
  */
-typedef NS_ENUM(NSUInteger, MDCContainedInputViewAssistiveLabelDrawPriority) {
+typedef NS_ENUM(NSUInteger, MDCTextControlAssistiveLabelDrawPriority) {
   /**
    When the priority is @c .leading, the @c leadingAssistiveLabel will be laid out first within the
    horizontal space available for @b both underline labels. Any remaining space will then be given
    for the @c trailingAssistiveLabel.
    */
-  MDCContainedInputViewAssistiveLabelDrawPriorityLeading,
+  MDCTextControlAssistiveLabelDrawPriorityLeading,
   /**
    When the priority is @c .trailing, the @c trailingAssistiveLabel will be laid out first within
    the horizontal space available for @b both underline labels. Any remaining space will then be
    given for the @c leadingAssistiveLabel.
    */
-  MDCContainedInputViewAssistiveLabelDrawPriorityTrailing,
+  MDCTextControlAssistiveLabelDrawPriorityTrailing,
   /**
    When the priority is @c .custom, the @c customAssistiveLabelDrawPriority property will be used to
    divide the space available for the two underline labels.
    */
-  MDCContainedInputViewAssistiveLabelDrawPriorityCustom,
+  MDCTextControlAssistiveLabelDrawPriorityCustom,
 };

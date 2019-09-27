@@ -78,7 +78,7 @@
 #pragma mark View Setup
 
 - (void)initializeProperties {
-  self.font = MDCContainedInputViewDefaultFont();
+  self.font = MDCTextControlDefaultFont();
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   self.labelState = [self determineCurrentLabelState];
@@ -97,7 +97,7 @@
 }
 
 - (void)setUpAssistiveLabels {
-  self.assistiveLabelDrawPriority = MDCContainedInputViewAssistiveLabelDrawPriorityTrailing;
+  self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
   self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
   CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
   UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
@@ -153,7 +153,7 @@
                          floatingLabelFrame:self.layout.labelFrameFloating
                                  normalFont:self.normalFont
                                floatingFont:self.floatingFont];
-  [self.containerStyle applyStyleToContainedInputView:self];
+  [self.containerStyle applyStyleToTextControl:self];
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
   [self.assistiveLabelView setNeedsLayout];
@@ -180,7 +180,7 @@
 - (CGFloat)clearButtonSideLength {
   static dispatch_once_t onceToken;
   static CGRect systemClearButtonRect;
-  UITextField *textField = MDCContainedInputViewUITextFieldPrototype();
+  UITextField *textField = MDCTextControlUITextFieldPrototype();
   dispatch_once(&onceToken, ^{
     systemClearButtonRect = [textField clearButtonRectForBounds:textField.bounds];
   });
@@ -413,7 +413,7 @@
   }
 }
 
-#pragma mark MDCContainedInputView accessors
+#pragma mark MDCTextControl accessors
 
 - (void)setLabelBehavior:(MDCTextControlLabelBehavior)labelBehavior {
   if (_labelBehavior == labelBehavior) {
@@ -429,7 +429,7 @@
     [oldStyle removeStyleFrom:self];
   }
   _containerStyle = containerStyle;
-  [_containerStyle applyStyleToContainedInputView:self];
+  [_containerStyle applyStyleToTextControl:self];
 }
 
 - (CGRect)containerFrame {
@@ -507,7 +507,7 @@
 #pragma mark Fonts
 
 - (UIFont *)font {
-  return [super font] ?: MDCContainedInputViewDefaultFont();
+  return [super font] ?: MDCTextControlDefaultFont();
 }
 
 - (UIFont *)normalFont {
@@ -682,7 +682,7 @@
   self.label.textColor = labelColor;
 }
 
-- (void)setContainedInputViewColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
+- (void)setTextControlColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
                                    forState:(MDCTextControlState)textControlState {
   if (colorViewModel) {
     self.colorViewModels[@(textControlState)] = colorViewModel;

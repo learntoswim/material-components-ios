@@ -15,6 +15,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-UIFont *MDCContainedInputViewDefaultFont(void);
+UIFont *MDCTextControlDefaultFont(void);
 
-UITextField *MDCContainedInputViewUITextFieldPrototype(void);
+UITextField *MDCTextControlUITextFieldPrototype(void);

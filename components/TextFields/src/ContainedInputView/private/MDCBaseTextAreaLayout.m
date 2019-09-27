@@ -45,7 +45,7 @@ static const CGFloat kGradientBlurLength = 6;
                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
-              (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+              (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
             preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
@@ -84,7 +84,7 @@ static const CGFloat kGradientBlurLength = 6;
                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
-              (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+              (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
             preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows

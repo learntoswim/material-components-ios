@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "private/MDCBaseTextField+ContainedInputView.h"
+#import "private/MDCBaseTextField+MDCTextControl.h"
 #import "private/MDCTextControl.h"
 #import "private/MDCTextControlStyleFilled.h"
 

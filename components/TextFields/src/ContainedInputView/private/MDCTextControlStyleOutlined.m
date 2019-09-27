@@ -37,12 +37,12 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 - (instancetype)init {
   self = [super init];
   if (self) {
-    [self commonMDCContainedInputViewStyleOutlinedInit];
+    [self commonMDCTextControlStyleOutlinedInit];
   }
   return self;
 }
 
-- (void)commonMDCContainedInputViewStyleOutlinedInit {
+- (void)commonMDCTextControlStyleOutlinedInit {
   [self setUpOutlineColors];
   [self setUpOutlineLineWidths];
   [self setUpOutlineSublayer];
@@ -80,25 +80,25 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   self.outlineColors[@(state)] = outlineColor;
 }
 
-- (void)applyStyleToContainedInputView:(id<MDCTextControl>)containedInputView {
-  if (![containedInputView isKindOfClass:[UIView class]]) {
-    [self removeStyleFrom:containedInputView];
+- (void)applyStyleToTextControl:(id<MDCTextControl>)TextControl {
+  if (![TextControl isKindOfClass:[UIView class]]) {
+    [self removeStyleFrom:TextControl];
     return;
   }
-  CGRect labelFrame = containedInputView.label.frame;
+  CGRect labelFrame = TextControl.label.frame;
   BOOL isFloatingLabelFloating =
-      containedInputView.labelState == MDCTextControlLabelStateFloating;
-  CGFloat containerHeight = CGRectGetMaxY(containedInputView.containerFrame);
+      TextControl.labelState == MDCTextControlLabelStateFloating;
+  CGFloat containerHeight = CGRectGetMaxY(TextControl.containerFrame);
   CGFloat lineWidth =
-      (CGFloat)self.outlineLineWidths[@(containedInputView.textControlState)].doubleValue;
-  UIView *uiView = (UIView *)containedInputView;
+      (CGFloat)self.outlineLineWidths[@(TextControl.textControlState)].doubleValue;
+  UIView *uiView = (UIView *)TextControl;
   [self applyStyleTo:uiView
                    labelFrame:labelFrame
               containerHeight:containerHeight
       isFloatingLabelFloating:isFloatingLabelFloating
              outlineLineWidth:lineWidth];
   self.outlinedSublayer.strokeColor =
-      ((UIColor *)self.outlineColors[@(containedInputView.textControlState)]).CGColor;
+      ((UIColor *)self.outlineColors[@(TextControl.textControlState)]).CGColor;
 }
 
 - (UIFont *)floatingFontWithNormalFont:(UIFont *)font {
@@ -107,7 +107,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   return [font fontWithSize:floatingFontSize];
 }
 
-- (void)removeStyleFrom:(id<MDCTextControl>)containedInputView {
+- (void)removeStyleFrom:(id<MDCTextControl>)TextControl {
   [self.outlinedSublayer removeFromSuperlayer];
 }
 

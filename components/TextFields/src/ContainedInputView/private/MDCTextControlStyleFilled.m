@@ -47,12 +47,12 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 - (instancetype)init {
   self = [super init];
   if (self) {
-    [self commonMDCContainedInputViewStyleFilledInit];
+    [self commonMDCTextControlStyleFilledInit];
   }
   return self;
 }
 
-- (void)commonMDCContainedInputViewStyleFilledInit {
+- (void)commonMDCTextControlStyleFilledInit {
   [self setUpUnderlineColors];
   [self setUpFilledBackgroundColors];
   [self setUpSublayers];
@@ -102,18 +102,18 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
   self.filledBackgroundColors[@(state)] = filledBackgroundColor;
 }
 
-- (void)applyStyleToContainedInputView:(id<MDCTextControl>)containedInputView {
-  if (![containedInputView isKindOfClass:[UIView class]]) {
-    [self removeStyleFrom:containedInputView];
+- (void)applyStyleToTextControl:(id<MDCTextControl>)textControl {
+  if (![textControl isKindOfClass:[UIView class]]) {
+    [self removeStyleFrom:textControl];
     return;
   }
-  UIView *uiView = (UIView *)containedInputView;
+  UIView *uiView = (UIView *)textControl;
   [self applyStyleToView:uiView
-                   state:containedInputView.textControlState
-          containerFrame:containedInputView.containerFrame];
+                   state:textControl.textControlState
+          containerFrame:textControl.containerFrame];
 }
 
-- (void)removeStyleFrom:(id<MDCTextControl>)containedInputView {
+- (void)removeStyleFrom:(id<MDCTextControl>)textControl {
   [self.filledSublayer removeFromSuperlayer];
   [self.thinUnderlineLayer removeFromSuperlayer];
   [self.thickUnderlineLayer removeFromSuperlayer];
@@ -277,7 +277,7 @@ static const CGFloat kFilledFloatingLabelScaleFactor = 0.75;
 
 - (CABasicAnimation *)basicAnimationWithKeyPath:(NSString *)keyPath {
   CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:keyPath];
-  animation.duration = kMDCContainedInputViewDefaultAnimationDuration;
+  animation.duration = kMDCTextControlDefaultAnimationDuration;
   animation.timingFunction =
       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
   animation.repeatCount = 0;

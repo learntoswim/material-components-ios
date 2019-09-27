@@ -19,7 +19,7 @@
 
 /**
  This object represents a group of colors that are applied on a state by state basis to
- MDCContainedInputViews. Each property corresponds to a MDCTextControl specific subview.
+ MDCTextControls. Each property corresponds to a MDCTextControl specific subview.
  */
 @interface MDCTextControlColorViewModel : NSObject
 /**

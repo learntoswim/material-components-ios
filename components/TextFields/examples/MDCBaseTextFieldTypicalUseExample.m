@@ -16,7 +16,7 @@
 
 #import "MaterialButtons.h"
 #import "MaterialContainerScheme.h"
-#import "MaterialTextFields+ContainedInputView.h"
+#import "MaterialTextControls.h"
 
 static NSString *const kExampleTitle = @"MDCBaseTextField";
 

@@ -20,7 +20,7 @@
 
 #import "MaterialMath.h"
 #import "MaterialTypography.h"
-#import "private/MDCBaseInputChipView+MDCContainedInputView.h"
+#import "private/MDCBaseInputChipView+MDCTextControl.h"
 #import "private/MDCBaseInputChipViewLayout.h"
 #import "private/MDCTextControlAssistiveLabelView.h"
 #import "private/MDCTextControl.h"
@@ -62,11 +62,11 @@
 }
 
 - (void)commonMDCBaseInputChipViewTextFieldInit {
-  self.font = MDCContainedInputViewDefaultFont();
+  self.font = MDCTextControlDefaultFont();
 }
 
 - (UIFont *)font {
-  return [super font] ?: MDCContainedInputViewDefaultFont();
+  return [super font] ?: MDCTextControlDefaultFont();
 }
 
 - (void)deleteBackward {
@@ -127,7 +127,7 @@
                                     UIGestureRecognizerDelegate,
                                     UIScrollViewDelegate>
 
-#pragma mark MDCContainedInputView properties
+#pragma mark MDCTextControl properties
 
 @property(strong, nonatomic) UILabel *label;
 
@@ -285,11 +285,11 @@
     [oldStyle removeStyleFrom:self];
   }
   _containerStyle = containerStyle;
-  [_containerStyle applyStyleToContainedInputView:self];
+  [_containerStyle applyStyleToTextControl:self];
 }
 
 - (void)setUpAssistiveLabels {
-  self.assistiveLabelDrawPriority = MDCContainedInputViewAssistiveLabelDrawPriorityTrailing;
+  self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
   self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
   CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
   UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
@@ -403,7 +403,7 @@
         //        NSLog(@"max offset: %@",@(maxOffset));
         newContentOffset.x = maxOffset;
       }
-      CGFloat minOffset = -1.0 * (self.scrollView.contentSize.width - width);
+      CGFloat minOffset = (CGFloat)-1.0 * (self.scrollView.contentSize.width - width);
       if (newContentOffset.x < minOffset) {
         //        NSLog(@"min offset: %@",@(minOffset));
         newContentOffset.x = minOffset;
@@ -529,7 +529,7 @@
                          floatingLabelFrame:self.layout.labelFrameFloating
                                  normalFont:self.normalFont
                                floatingFont:self.floatingFont];
-  [self.containerStyle applyStyleToContainedInputView:self];
+  [self.containerStyle applyStyleToTextControl:self];
 
   //  self.leftAssistiveLabel.frame = self.layout.leftAssistiveLabelFrame;
   //  self.rightAssistiveLabel.frame = self.layout.rightAssistiveLabelFrame;
@@ -896,7 +896,7 @@
   self.label.textColor = labelColor;
 }
 
-- (void)setContainedInputViewColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
+- (void)setTextControlColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
                                    forState:(MDCTextControlState)textControlState {
   self.colorViewModels[@(textControlState)] = colorViewModel;
 }

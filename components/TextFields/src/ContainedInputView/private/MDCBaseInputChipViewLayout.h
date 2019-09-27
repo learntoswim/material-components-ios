@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MDCContainedInputAssistiveLabelViewLayout.h"
+#import "MDCTextControlAssistiveLabelViewLayout.h"
 #import "MDCTextControl.h"
 
 @interface MDCBaseInputChipViewLayout : NSObject
@@ -62,7 +62,7 @@
                   leftAssistiveLabel:(nonnull UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(nonnull UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
-              (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+              (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
             preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows

@@ -20,7 +20,7 @@
 
 #import "MaterialMath.h"
 #import "MaterialTypography.h"
-#import "private/MDCBaseTextArea+MDCContainedInputView.h"
+#import "private/MDCBaseTextArea+MDCTextControl.h"
 #import "private/MDCBaseTextAreaLayout.h"
 #import "private/MDCTextControlAssistiveLabelView.h"
 #import "private/MDCTextControl.h"
@@ -62,7 +62,7 @@
   self.textContainerInset = UIEdgeInsetsZero;
   self.layoutMargins = UIEdgeInsetsZero;
   self.textContainer.lineFragmentPadding = 0;
-  self.font = MDCContainedInputViewDefaultFont();
+  self.font = MDCTextControlDefaultFont();
 }
 
 - (void)setFont:(UIFont *)font {
@@ -70,7 +70,7 @@
 }
 
 - (UIFont *)font {
-  return [super font] ?: MDCContainedInputViewDefaultFont();
+  return [super font] ?: MDCTextControlDefaultFont();
 }
 
 - (BOOL)resignFirstResponder {
@@ -96,7 +96,7 @@
                                MDCBaseTextAreaTextViewDelegate,
                                UIGestureRecognizerDelegate>
 
-#pragma mark MDCContainedInputView properties
+#pragma mark MDCTextControl properties
 @property(strong, nonatomic) UILabel *label;
 @property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
 
@@ -223,7 +223,7 @@
     [oldStyle removeStyleFrom:self];
   }
   _containerStyle = containerStyle;
-  [_containerStyle applyStyleToContainedInputView:self];
+  [_containerStyle applyStyleToTextControl:self];
 }
 
 - (void)setUpColorViewModels {
@@ -237,7 +237,7 @@
 }
 
 - (void)setUpAssistiveLabels {
-  self.assistiveLabelDrawPriority = MDCContainedInputViewAssistiveLabelDrawPriorityTrailing;
+  self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
   self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
   CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
   UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
@@ -416,7 +416,7 @@
                          floatingLabelFrame:self.layout.floatingLabelFrame
                                  normalFont:self.normalFont
                                floatingFont:self.floatingFont];
-  [self.containerStyle applyStyleToContainedInputView:self];
+  [self.containerStyle applyStyleToTextControl:self];
 
   self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
   self.scrollView.frame = self.layout.scrollViewFrame;
@@ -643,10 +643,10 @@
   self.label.textColor = labelColor;
 }
 
-- (void)setContainedInputViewColorViewModel:
-            (MDCTextControlColorViewModel *)containedInputViewColorViewModel
+- (void)setTextControlColorViewModel:
+            (MDCTextControlColorViewModel *)TextControlColorViewModel
                                    forState:(MDCTextControlState)textControlState {
-  self.colorViewModels[@(textControlState)] = containedInputViewColorViewModel;
+  self.colorViewModels[@(textControlState)] = TextControlColorViewModel;
 }
 
 - (MDCTextControlColorViewModel *)textControlColorViewModelForState:

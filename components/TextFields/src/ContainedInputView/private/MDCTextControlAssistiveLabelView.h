@@ -16,7 +16,7 @@
 #import <UIKit/UIKit.h>
 #import "MDCTextControl.h"
 
-#import "MDCContainedInputAssistiveLabelViewLayout.h"
+#import "MDCTextControlAssistiveLabelViewLayout.h"
 
 @interface MDCTextControlAssistiveLabelView : UIView
 

@@ -18,7 +18,7 @@
 #import "MDCTextControl.h"
 
 /**
- A base implementation of MDCContainedInputViewStyle.
+ A base implementation of MDCTextControlStyle.
  */
 @interface MDCTextControlStyleBase : NSObject <MDCTextControlStyle>
 @end

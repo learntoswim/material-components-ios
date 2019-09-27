@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCContainedInputAssistiveLabelViewLayout.h"
+#import "MDCTextControlAssistiveLabelViewLayout.h"
 
 @interface MDCContainedInputAssistiveLabelViewLayout ()
 
@@ -30,7 +30,7 @@
                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
-              (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+              (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                    horizontalPadding:(CGFloat)horizontalPadding
                      verticalPadding:(CGFloat)verticalPadding
@@ -55,7 +55,7 @@
                        leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                       rightAssistiveLabel:(UILabel *)rightAssistiveLabel
                assistiveLabelDrawPriority:
-                   (MDCContainedInputViewAssistiveLabelDrawPriority)assistiveLabelDrawPriority
+                   (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
          customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
                         horizontalPadding:(CGFloat)horizontalPadding
                           verticalPadding:(CGFloat)verticalPadding
@@ -73,7 +73,7 @@
   UILabel *leadingAssistiveLabel = isRTL ? rightAssistiveLabel : leftAssistiveLabel;
   UILabel *trailingAssistiveLabel = isRTL ? leftAssistiveLabel : rightAssistiveLabel;
   switch (assistiveLabelDrawPriority) {
-    case MDCContainedInputViewAssistiveLabelDrawPriorityCustom:
+    case MDCTextControlAssistiveLabelDrawPriorityCustom:
       leadingAssistiveLabelWidth = [self
           leadingAssistiveLabelWidthWithCombinedAssistiveLabelsWidth:assistiveLabelsCombinedMaxWidth
                                                   customDrawPriority:
@@ -84,7 +84,7 @@
       trailingAssistiveLabelSize = [self assistiveLabelSizeWithLabel:trailingAssistiveLabel
                                                   constrainedToWidth:trailingAssistiveLabelWidth];
       break;
-    case MDCContainedInputViewAssistiveLabelDrawPriorityLeading:
+    case MDCTextControlAssistiveLabelDrawPriorityLeading:
       leadingAssistiveLabelSize =
           [self assistiveLabelSizeWithLabel:leadingAssistiveLabel
                          constrainedToWidth:assistiveLabelsCombinedMaxWidth];
@@ -97,7 +97,7 @@
                                               leadingAssistiveLabelSize.width];
       }
       break;
-    case MDCContainedInputViewAssistiveLabelDrawPriorityTrailing:
+    case MDCTextControlAssistiveLabelDrawPriorityTrailing:
       trailingAssistiveLabelSize =
           [self assistiveLabelSizeWithLabel:trailingAssistiveLabel
                          constrainedToWidth:assistiveLabelsCombinedMaxWidth];

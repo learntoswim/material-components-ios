@@ -15,7 +15,7 @@
 #import <XCTest/XCTest.h>
 
 #import <objc/runtime.h>
-#import "MaterialTextFields+ContainedInputView.h"
+#import "MaterialTextControls.h"
 
 @interface MDCBaseTextField (Private)
 @property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;

@@ -30,10 +30,10 @@ static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
   return [font fontWithSize:floatingFontSize];
 }
 
-- (void)applyStyleToContainedInputView:(id<MDCTextControl>)inputView {
+- (void)applyStyleToTextControl:(id<MDCTextControl>)textControl {
 }
 
-- (void)removeStyleFrom:(id<MDCTextControl>)containedInputView {
+- (void)removeStyleFrom:(id<MDCTextControl>)textControl {
 }
 
 - (id<MDCTextControlVerticalPositioningReference>)
