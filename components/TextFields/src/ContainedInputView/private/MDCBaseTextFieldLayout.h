@@ -40,6 +40,9 @@
 @property(nonatomic, readonly) CGFloat calculatedHeight;
 @property(nonatomic, assign) CGFloat containerHeight;
 
+@property(nonatomic, readonly) CGFloat calculatedHeight;
+@property(nonatomic, assign) CGFloat containerHeight;
+
 - (nonnull instancetype)initWithTextFieldSize:(CGSize)textFieldSize
                          positioningReference:
                              (nonnull id<MDCTextControlVerticalPositioningReference>)

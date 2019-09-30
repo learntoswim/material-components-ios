@@ -146,6 +146,7 @@ mdc_unit_test_objc_library(
         ":FontThemer",
         ":TextFields",
         ":TypographyThemer",
+        ":private",
     ],
 )
 

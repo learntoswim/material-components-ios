@@ -52,6 +52,26 @@ NSString *const kMDCBottomDrawerScrollViewAccessibilityIdentifier =
 }
 @end
 
+/**
+ View that allows touches that aren't handled from within the view to be propagated up the
+ responder chain. This is used to allow forwarding of tap events from the scroll view through to
+ the delegate if that has been enabled on the VC.
+ */
+
+@interface MDCBottomDrawerScrollView : UIScrollView
+@end
+
+@implementation MDCBottomDrawerScrollView
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+  // Allow unhandled touches to propagate along the responder chain and optionally be handled by
+  // the drawer delegate.
+  UIView *view = [super hitTest:point withEvent:event];
+  return view == self ? nil : view;
+}
+
+@end
+
 @interface MDCBottomDrawerContainerViewController (LayoutCalculations)
 
 /**
@@ -160,6 +180,7 @@ NSString *const kMDCBottomDrawerScrollViewAccessibilityIdentifier =
   CGFloat _contentHeightSurplus;
   CGFloat _addedContentHeight;
   CGFloat _contentVCPreferredContentSizeHeightCached;
+  CGFloat _headerVCPerferredContentSizeHeightCached;
   CGFloat _scrollToContentOffsetY;
   BOOL _shouldPresentAtFullscreen;
 }
@@ -638,15 +659,43 @@ NSString *const kMDCBottomDrawerScrollViewAccessibilityIdentifier =
       contentOffset.y >= self.transitionCompleteContentOffset ? 1 : transitionPercentage;
   [self.delegate bottomDrawerContainerViewControllerTopTransitionRatio:self
                                                        transitionRatio:transitionPercentage];
+
   [self updateDrawerState:transitionPercentage];
-  self.currentlyFullscreen = self.contentReachesFullscreen && headerTransitionToTop >= 1;
+  self.currentlyFullscreen =
+      self.contentReachesFullscreen && headerTransitionToTop >= 1 && contentOffset.y > 0;
   CGFloat fullscreenHeaderHeight =
       self.contentReachesFullscreen ? self.topHeaderHeight : [self contentHeaderHeight];
+
+  CGFloat contentHeight =
+      _contentVCPreferredContentSizeHeightCached + _headerVCPerferredContentSizeHeightCached;
+  if (self.shouldAlwaysExpandHeader && (contentHeight < self.presentingViewBounds.size.height)) {
+    // Make sure the content offset is greater than the content height surplus or we will divide
+    // by 0.
+    if (contentOffset.y > self.contentHeightSurplus) {
+      CGFloat additionalScrollPassedMaxHeight =
+          self.contentHeaderTopInset -
+          (self.contentHeightSurplus + self.addedContentHeightThreshold);
+      fullscreenHeaderHeight = self.topHeaderHeight;
+      headerTransitionToTop =
+          MIN(1, (contentOffset.y - self.contentHeightSurplus) / additionalScrollPassedMaxHeight);
+    }
+  }
 
   [self updateContentHeaderWithTransitionToTop:headerTransitionToTop
                         fullscreenHeaderHeight:fullscreenHeaderHeight];
   [self updateTopHeaderBottomShadowWithContentOffset:contentOffset];
   [self updateContentWithHeight:contentOffset.y];
+
+  // Calculate the current yOffset of the header and content.
+  CGFloat yOffset = self.contentViewController.view.frame.origin.y -
+                    self.headerViewController.view.frame.size.height - contentOffset.y;
+
+  // While animation open, always send back the final target Y offset.
+  if (self.animatingPresentation) {
+    yOffset = self.contentHeaderTopInset;
+  }
+  [self.delegate bottomDrawerContainerViewControllerDidChangeYOffset:self
+                                                             yOffset:MAX(0.0f, yOffset)];
 }
 
 - (void)updateContentHeaderWithTransitionToTop:(CGFloat)headerTransitionToTop
@@ -660,8 +709,12 @@ NSString *const kMDCBottomDrawerScrollViewAccessibilityIdentifier =
 
   if ([self.headerViewController
           respondsToSelector:@selector(updateDrawerHeaderTransitionRatio:)]) {
-    [self.headerViewController
-        updateDrawerHeaderTransitionRatio:contentReachesFullscreen ? headerTransitionToTop : 0];
+    if (self.shouldAlwaysExpandHeader) {
+      [self.headerViewController updateDrawerHeaderTransitionRatio:headerTransitionToTop];
+    } else {
+      [self.headerViewController
+          updateDrawerHeaderTransitionRatio:contentReachesFullscreen ? headerTransitionToTop : 0];
+    }
   }
   CGFloat contentHeaderHeight = self.contentHeaderHeight;
   CGFloat headersDiff = fullscreenHeaderHeight - contentHeaderHeight;
@@ -726,7 +779,7 @@ NSString *const kMDCBottomDrawerScrollViewAccessibilityIdentifier =
 
 - (UIScrollView *)scrollView {
   if (!_scrollView) {
-    _scrollView = [[UIScrollView alloc] init];
+    _scrollView = [[MDCBottomDrawerScrollView alloc] init];
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.alwaysBounceVertical = YES;
     _scrollView.backgroundColor = [UIColor clearColor];
@@ -818,6 +871,7 @@ NSString *const kMDCBottomDrawerScrollViewAccessibilityIdentifier =
     contentHeight = MAX(contentHeight, containerHeight - self.topHeaderHeight);
   }
   _contentVCPreferredContentSizeHeightCached = contentHeight;
+  _headerVCPerferredContentSizeHeightCached = contentHeaderHeight;
 
   contentHeight += addedContentHeight;
   _addedContentHeight = addedContentHeight;

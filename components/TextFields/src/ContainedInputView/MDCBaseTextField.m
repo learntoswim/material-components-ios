@@ -131,6 +131,7 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
+
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
 }
 
@@ -231,6 +232,12 @@
     value = 1;
   }
   return value;
+}
+
+- (CGSize)preferredSizeWithWidth:(CGFloat)width {
+  CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
+  MDCBaseTextFieldLayout *layout = [self calculateLayoutWithTextFieldSize:fittingSize];
+  return CGSizeMake(width, layout.calculatedHeight);
 }
 
 - (CGSize)preferredSizeWithWidth:(CGFloat)width {
@@ -502,6 +509,8 @@
   return [super font] ?: MDCTextControlDefaultFont();
 }
 
+#pragma mark Fonts
+
 - (UIFont *)normalFont {
   return self.font;
 }
@@ -616,6 +625,53 @@
     NSDictionary *newColorAttribute = @{NSForegroundColorAttributeName : self.placeholderColor};
     [mutableAttributedString addAttributes:newColorAttribute range:range];
     [super setAttributedPlaceholder:[mutableAttributedString copy]];
+  }
+}
+
+#pragma mark MDCTextControlState
+
+- (MDCTextControlState)determineCurrentTextControlState {
+  return [self textControlStateWithIsEnabled:self.isEnabled isEditing:self.isEditing];
+}
+
+- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
+  if (isEnabled) {
+    if (isEditing) {
+      return MDCTextControlStateEditing;
+    } else {
+      return MDCTextControlStateNormal;
+    }
+  } else {
+    return MDCTextControlStateDisabled;
+  }
+}
+
+#pragma mark Placeholder
+
+- (BOOL)shouldPlaceholderBeVisible {
+  return [self shouldPlaceholderBeVisibleWithPlaceholder:self.placeholder
+                                                    text:self.text
+                                              labelState:self.labelState];
+}
+
+- (BOOL)shouldPlaceholderBeVisibleWithPlaceholder:(NSString *)placeholder
+                                             text:(NSString *)text
+                                       labelState:(MDCTextControlLabelState)labelState {
+  BOOL hasPlaceholder = placeholder.length > 0;
+  BOOL hasText = text.length > 0;
+
+  if (hasPlaceholder) {
+    if (hasText) {
+      return NO;
+    } else {
+      if (labelState == MDCTextControlLabelStateNormal) {
+        return NO;
+      } else {
+        return YES;
+      }
+    }
+  } else {
+    return NO;
   }
 }
 
