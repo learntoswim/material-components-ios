@@ -554,7 +554,7 @@
                                                 object:nil];
 }
 
-#pragma mark MDCtextControlState
+#pragma mark MDCTextControlState
 
 - (MDCTextControlState)determineCurrentTextControlState {
   return [self textControlStateWithIsEnabled:self.isEnabled isEditing:self.isEditing];

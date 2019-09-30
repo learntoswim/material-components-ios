@@ -36,7 +36,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 @property(nonatomic, strong, nonnull) id<MDCTextControlStyle> containerStyle;
 
 /**
- Describes the current @c MDCtextControlState of the view.
+ Describes the current @c MDCTextControlState of the view.
  */
 @property(nonatomic, assign, readonly) MDCTextControlState textControlState;
 
