@@ -120,27 +120,27 @@ static const CGFloat kGradientBlurLength = 6;
                                floatingFont:floatingFont
                           globalChipRowMinX:globalChipRowMinX
                           globalChipRowMaxX:globalChipRowMaxX
-          paddingBetweenTopAndFloatingLabel:positioningReference.paddingBetweenTopAndFloatingLabel
+          paddingBetweenContainerTopAndFloatingLabel:positioningReference.paddingBetweenContainerTopAndFloatingLabel
                                       isRTL:isRTL];
   CGFloat floatingLabelMaxY = CGRectGetMaxY(labelFrameFloating);
 
   CGFloat initialChipRowMinYWithFloatingLabel =
-      floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndText;
+      floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
 
-  CGFloat bottomPadding = positioningReference.paddingBetweenTextAndBottom;
+  CGFloat bottomPadding = positioningReference.paddingBetweenEditingTextAndContainerBottom;
 
   CGRect labelFrameNormal =
       [self normalLabelFrameWithText:label.text
                                      font:font
                         globalChipRowMinX:globalChipRowMinX
                         globalChipRowMaxX:globalChipRowMaxX
-          paddingBetweenTopAndNormalLabel:positioningReference.paddingBetweenTopAndNormalLabel
+          paddingBetweenContainerTopAndNormalLabel:positioningReference.paddingBetweenContainerTopAndNormalLabel
                                     isRTL:isRTL];
 
   CGFloat initialChipRowMinYNormal = 0;
   CGFloat halfOfNormalLabelHeight = (CGFloat)0.5 * font.lineHeight;
   CGFloat halfOfChipRowHeight = ((CGFloat)0.5 * chipRowHeight);
-  initialChipRowMinYNormal = positioningReference.paddingBetweenTopAndNormalLabel +
+  initialChipRowMinYNormal = positioningReference.paddingBetweenContainerTopAndNormalLabel +
                              halfOfNormalLabelHeight - halfOfChipRowHeight;
   CGFloat initialChipRowMinY = initialChipRowMinYNormal;
   if (labelState == MDCTextControlLabelStateFloating) {
@@ -241,7 +241,7 @@ static const CGFloat kGradientBlurLength = 6;
                                font:(UIFont *)font
                   globalChipRowMinX:(CGFloat)globalChipRowMinX
                   globalChipRowMaxX:(CGFloat)globalChipRowMaxX
-    paddingBetweenTopAndNormalLabel:(CGFloat)paddingBetweenTopAndNormalLabel
+    paddingBetweenContainerTopAndNormalLabel:(CGFloat)paddingBetweenContainerTopAndNormalLabel
                               isRTL:(BOOL)isRTL {
   CGFloat maxTextWidth = globalChipRowMaxX - globalChipRowMinX;
   CGSize textSize = [self textSizeWithText:text font:font maxWidth:maxTextWidth];
@@ -249,7 +249,7 @@ static const CGFloat kGradientBlurLength = 6;
   if (isRTL) {
     normalLabelMinX = globalChipRowMaxX - textSize.width;
   }
-  CGFloat normalLabelMinY = paddingBetweenTopAndNormalLabel;
+  CGFloat normalLabelMinY = paddingBetweenContainerTopAndNormalLabel;
   return CGRectMake(normalLabelMinX, normalLabelMinY, textSize.width, textSize.height);
 }
 
@@ -257,11 +257,11 @@ static const CGFloat kGradientBlurLength = 6;
                          floatingFont:(UIFont *)floatingFont
                     globalChipRowMinX:(CGFloat)globalChipRowMinX
                     globalChipRowMaxX:(CGFloat)globalChipRowMaxX
-    paddingBetweenTopAndFloatingLabel:(CGFloat)paddingBetweenTopAndFloatingLabel
+    paddingBetweenContainerTopAndFloatingLabel:(CGFloat)paddingBetweenContainerTopAndFloatingLabel
                                 isRTL:(BOOL)isRTL {
   CGFloat maxTextWidth = globalChipRowMaxX - globalChipRowMinX;
   CGSize textSize = [self textSizeWithText:text font:floatingFont maxWidth:maxTextWidth];
-  CGFloat floatingLabelMinY = paddingBetweenTopAndFloatingLabel;
+  CGFloat floatingLabelMinY = paddingBetweenContainerTopAndFloatingLabel;
   CGFloat floatingLabelMinX = globalChipRowMinX;
   if (isRTL) {
     floatingLabelMinX = globalChipRowMaxX - textSize.width;
