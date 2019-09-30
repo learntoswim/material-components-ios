@@ -748,7 +748,7 @@
 
 #pragma mark Accessors
 
-- (CGFloat)numberOfTextRows {
+- (CGFloat)numberOfVisibleTextRows {
   return self.preferredNumberOfVisibleRows;
 }
 

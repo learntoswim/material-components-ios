@@ -126,7 +126,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
  */
 @property(nonatomic, assign) CGFloat preferredContainerHeight;
 
-@property(nonatomic, assign, readonly) CGFloat numberOfTextRows;
+@property(nonatomic, assign, readonly) CGFloat numberOfVisibleTextRows;
 
 @end
 

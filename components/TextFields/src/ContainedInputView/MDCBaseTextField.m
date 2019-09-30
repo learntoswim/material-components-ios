@@ -240,16 +240,11 @@
   return CGSizeMake(width, layout.calculatedHeight);
 }
 
-- (CGSize)preferredSizeWithWidth:(CGFloat)width {
-  CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
-  MDCBaseTextFieldLayout *layout = [self calculateLayoutWithTextFieldSize:fittingSize];
-  return CGSizeMake(width, layout.calculatedHeight);
-}
-
 #pragma mark UITextField Accessor Overrides
 
 - (void)setEnabled:(BOOL)enabled {
   [super setEnabled:enabled];
+
   [self setNeedsLayout];
 }
 
@@ -435,7 +430,7 @@
   return CGRectMake(0, 0, CGRectGetWidth(self.frame), self.layout.containerHeight);
 }
 
-- (CGFloat)numberOfTextRows {
+- (CGFloat)numberOfVisibleTextRows {
   return 1;
 }
 
@@ -509,8 +504,6 @@
   return [super font] ?: MDCTextControlDefaultFont();
 }
 
-#pragma mark Fonts
-
 - (UIFont *)normalFont {
   return self.font;
 }
@@ -576,15 +569,13 @@
 
 - (BOOL)shouldPlaceholderBeVisible {
   return [self shouldPlaceholderBeVisibleWithPlaceholder:self.placeholder
-                                              labelState:self.labelState
                                                     text:self.text
-                                               isEditing:self.isEditing];
+                                              labelState:self.labelState];
 }
 
 - (BOOL)shouldPlaceholderBeVisibleWithPlaceholder:(NSString *)placeholder
-                                       labelState:(MDCTextControlLabelState)labelState
                                              text:(NSString *)text
-                                        isEditing:(BOOL)isEditing {
+                                       labelState:(MDCTextControlLabelState)labelState {
   BOOL hasPlaceholder = placeholder.length > 0;
   BOOL hasText = text.length > 0;
 
@@ -628,52 +619,6 @@
   }
 }
 
-#pragma mark MDCTextControlState
-
-- (MDCTextControlState)determineCurrentTextControlState {
-  return [self textControlStateWithIsEnabled:self.isEnabled isEditing:self.isEditing];
-}
-
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
-  if (isEnabled) {
-    if (isEditing) {
-      return MDCTextControlStateEditing;
-    } else {
-      return MDCTextControlStateNormal;
-    }
-  } else {
-    return MDCTextControlStateDisabled;
-  }
-}
-
-#pragma mark Placeholder
-
-- (BOOL)shouldPlaceholderBeVisible {
-  return [self shouldPlaceholderBeVisibleWithPlaceholder:self.placeholder
-                                                    text:self.text
-                                              labelState:self.labelState];
-}
-
-- (BOOL)shouldPlaceholderBeVisibleWithPlaceholder:(NSString *)placeholder
-                                             text:(NSString *)text
-                                       labelState:(MDCTextControlLabelState)labelState {
-  BOOL hasPlaceholder = placeholder.length > 0;
-  BOOL hasText = text.length > 0;
-
-  if (hasPlaceholder) {
-    if (hasText) {
-      return NO;
-    } else {
-      if (labelState == MDCTextControlLabelStateNormal) {
-        return NO;
-      } else {
-        return YES;
-      }
-    }
-  } else {
-    return NO;
-  }
-}
 
 #pragma mark Label
 
