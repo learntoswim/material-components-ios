@@ -75,6 +75,10 @@
   [self setUpAssistiveLabels];
 }
 
+-(void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark View Setup
 
 - (void)initializeProperties {
@@ -603,9 +607,9 @@
 }
 
 - (void)reestablishDefaultPlaceholderAttributes {
-  NSDictionary *attributes = MDCTextControlUITextFieldDefaultPlaceholderAttributes();
-  self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder
-                                                               attributes:attributes];
+//  NSDictionary *attributes = MDCTextControlUITextFieldDefaultPlaceholderAttributes();
+//  self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder
+//                                                               attributes:attributes];
 }
 
 - (void)updateAttributedPlaceholderColor {

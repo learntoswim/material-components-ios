@@ -151,7 +151,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 - (UIFont *_Nonnull)floatingFontWithNormalFont:(nonnull UIFont *)font;
 
 /**
- This method returns an object that tells the view where to position it's views
+ This method returns an object that tells the view where to position its views
  vertically.
  */
 - (nonnull id<MDCTextControlVerticalPositioningReference>)
