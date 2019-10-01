@@ -37,6 +37,18 @@
 @property(nonatomic, assign) MDCTextControlLabelBehavior labelBehavior;
 
 /**
+ The @c leadingAssistiveLabel is a label below the text on the leading edge of the view. It can be
+ used to display helper or error text.
+ */
+@property(strong, nonatomic, readonly, nonnull) UILabel *leadingAssistiveLabel;
+
+/**
+ The @c trailingAssistiveLabel is a label below the text on the trailing edge of the view. It can be
+ used to display helper or error text.
+ */
+@property(strong, nonatomic, readonly, nonnull) UILabel *trailingAssistiveLabel;
+
+/**
  This is an RTL-aware wrapper around UITextField's leftView/rightView class.
  */
 @property(strong, nonatomic, nullable) UIView *leadingView;
