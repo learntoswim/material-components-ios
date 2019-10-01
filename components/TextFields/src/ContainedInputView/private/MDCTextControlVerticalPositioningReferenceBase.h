@@ -27,4 +27,9 @@
                                        density:(CGFloat)density
                       preferredContainerHeight:(CGFloat)preferredContainerHeight;
 
+- (instancetype)initWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
+                          normalFontLineHeight:(CGFloat)normalFontLineHeight
+                                 textRowHeight:(CGFloat)textRowHeight
+                              numberOfTextRows:(CGFloat)numberOfTextRows;
+
 @end
