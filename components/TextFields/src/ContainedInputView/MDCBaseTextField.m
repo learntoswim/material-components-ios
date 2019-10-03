@@ -194,8 +194,8 @@
 }
 
 - (MDCBaseTextFieldLayout *)calculateLayoutWithTextFieldSize:(CGSize)textFieldSize {
-  CGFloat normalizedCustomAssistiveLabelDrawPriority =
-      [self normalizedCustomAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority];
+  CGFloat clampedCustomAssistiveLabelDrawPriority =
+      [self clampedCustomAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority];
   return [[MDCBaseTextFieldLayout alloc]
                  initWithTextFieldSize:textFieldSize
                   positioningReference:[self createPositioningReference]
@@ -212,7 +212,7 @@
                     leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
                    rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
             assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
-      customAssistiveLabelDrawPriority:normalizedCustomAssistiveLabelDrawPriority
+      customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
               preferredContainerHeight:self.preferredContainerHeight
                                  isRTL:self.isRTL
                              isEditing:self.isEditing];
@@ -228,7 +228,7 @@
                             preferredContainerHeight:self.preferredContainerHeight];
 }
 
-- (CGFloat)normalizedCustomAssistiveLabelDrawPriority:(CGFloat)customPriority {
+- (CGFloat)clampedCustomAssistiveLabelDrawPriority:(CGFloat)customPriority {
   CGFloat value = customPriority;
   if (value < 0) {
     value = 0;
