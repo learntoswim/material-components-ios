@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "MDCTextControlVerticalPositioningReferenceBase.h"
+#import "MaterialMath.h"
 
 static const CGFloat kMinPaddingBetweenContainerTopAndFloatingLabel = (CGFloat)6.0;
 static const CGFloat kMaxPaddingBetweenContainerTopAndFloatingLabel = (CGFloat)10.0;
