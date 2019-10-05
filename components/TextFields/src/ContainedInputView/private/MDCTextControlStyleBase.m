@@ -36,20 +36,20 @@ static const CGFloat kBaseFloatingLabelScaleFactor = 0.75;
 - (void)removeStyleFrom:(id<MDCTextControl>)textControl {
 }
 
+- (id<MDCTextControlVerticalPositioningReference>)positioningReference {
+  return [[MDCTextControlVerticalPositioningReferenceBase alloc] init];
+}
+
 - (id<MDCTextControlVerticalPositioningReference>)
     positioningReferenceWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                               normalFontLineHeight:(CGFloat)normalFontLineHeight
                                      textRowHeight:(CGFloat)textRowHeight
-                                  numberOfTextRows:(CGFloat)numberOfTextRows
-                                           density:(CGFloat)density
-                          preferredContainerHeight:(CGFloat)preferredContainerHeight {
+                                  numberOfTextRows:(CGFloat)numberOfTextRows {
   return [[MDCTextControlVerticalPositioningReferenceBase alloc]
       initWithFloatingFontLineHeight:floatingLabelHeight
                 normalFontLineHeight:normalFontLineHeight
                        textRowHeight:textRowHeight
-                    numberOfTextRows:numberOfTextRows
-                             density:density
-            preferredContainerHeight:preferredContainerHeight];
+                    numberOfTextRows:numberOfTextRows];
 }
 
 @end

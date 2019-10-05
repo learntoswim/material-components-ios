@@ -16,7 +16,7 @@
 
 #import "MaterialButtons.h"
 #import "MaterialContainerScheme.h"
-#import "MaterialTextControls.h"
+#import "MaterialTextFields+ContainedInputView.h"
 
 static NSString *const kExampleTitle = @"MDCBaseTextField";
 
@@ -49,7 +49,9 @@ static NSString *const kExampleTitle = @"MDCBaseTextField";
   self.view.backgroundColor = self.containerScheme.colorScheme.backgroundColor;
   self.textField = [[MDCBaseTextField alloc] initWithFrame:self.preferredTextFieldFrame];
   self.textField.borderStyle = UITextBorderStyleRoundedRect;
-  self.textField.labelText = @"This is a label";
+  self.textField.label.text = @"This is a label";
+  self.textField.placeholder = @"This is placeholder text";
+  self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
   [self.view addSubview:self.textField];
 
   self.resignFirstResponderButton = [self createFirstResponderButton];
@@ -77,7 +79,6 @@ static NSString *const kExampleTitle = @"MDCBaseTextField";
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
   [self.textField sizeToFit];
-//  self.textField.frame = self.preferredTextFieldFrame;
   self.resignFirstResponderButton.frame =
       CGRectMake(CGRectGetMinX(self.textField.frame), CGRectGetMaxY(self.textField.frame) + 20,
                  CGRectGetWidth(self.resignFirstResponderButton.frame),

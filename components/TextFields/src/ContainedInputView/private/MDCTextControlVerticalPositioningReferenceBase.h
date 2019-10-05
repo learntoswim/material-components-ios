@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 #import "MDCTextControlVerticalPositioningReference.h"
@@ -20,11 +19,15 @@
 @interface MDCTextControlVerticalPositioningReferenceBase
     : NSObject <MDCTextControlVerticalPositioningReference>
 
+@property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndFloatingLabel;
+@property(nonatomic, assign, readonly) CGFloat paddingBetweenTopAndNormalLabel;
+@property(nonatomic, assign, readonly) CGFloat paddingBetweenFloatingLabelAndText;
+@property(nonatomic, assign, readonly) CGFloat paddingBetweenTextAndBottom;
+@property(nonatomic, assign, readonly) CGFloat containerHeight;
+
 - (instancetype)initWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                           normalFontLineHeight:(CGFloat)normalFontLineHeight
                                  textRowHeight:(CGFloat)textRowHeight
-                              numberOfTextRows:(CGFloat)numberOfTextRows
-                                       density:(CGFloat)density
-                      preferredContainerHeight:(CGFloat)preferredContainerHeight;
+                              numberOfTextRows:(CGFloat)numberOfTextRows;
 
 @end

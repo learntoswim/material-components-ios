@@ -18,44 +18,40 @@
 
 #import <MDFInternationalization/MDFInternationalization.h>
 
-#import "MaterialMath.h"
-#import "MaterialTypography.h"
+#import "MDCTextControlState.h"
 #import "private/MDCBaseTextFieldLayout.h"
-#import "private/MDCTextControlAssistiveLabelView.h"
 #import "private/MDCTextControlColorViewModel.h"
 #import "private/MDCTextControlLabelAnimation.h"
+#import "private/MDCTextControlLabelState.h"
 #import "private/MDCTextControlStyleBase.h"
-#import "private/MDCTextControlStylePathDrawingUtils.h"
-#import "private/MDCTextControlTextFieldPrototypes.h"
+#import "private/MDCTextControlVerticalPositioningReferenceBase.h"
 
 @interface MDCBaseTextField () <MDCTextControl>
 
 @property(strong, nonatomic) UILabel *label;
-@property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
 @property(strong, nonatomic) MDCBaseTextFieldLayout *layout;
 @property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 @property(nonatomic, assign) MDCTextControlState textControlState;
 @property(nonatomic, assign) MDCTextControlLabelState labelState;
 
+/**
+ This property maps MDCTextControlStates as NSNumbers to
+ MDCTextControlColorViewModels.
+ */
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 
 @end
 
 @implementation MDCBaseTextField
-@synthesize preferredContainerHeight = _preferredContainerHeight;
-@synthesize assistiveLabelDrawPriority = _assistiveLabelDrawPriority;
-@synthesize customAssistiveLabelDrawPriority = _customAssistiveLabelDrawPriority;
 @synthesize containerStyle = _containerStyle;
-@synthesize labelBehavior = _labelBehavior;
-@synthesize placeholderColor = _placeholderColor;
 
 #pragma mark Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    [self commonMDCBaseTextFieldInit];
+    [self commonMDCInputTextFieldInit];
   }
   return self;
 }
@@ -63,30 +59,23 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    [self commonMDCBaseTextFieldInit];
+    [self commonMDCInputTextFieldInit];
   }
   return self;
 }
 
-- (void)commonMDCBaseTextFieldInit {
+- (void)commonMDCInputTextFieldInit {
   [self initializeProperties];
   [self setUpColorViewModels];
   [self setUpLabel];
-  [self setUpAssistiveLabels];
-}
-
--(void)dealloc {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark View Setup
 
 - (void)initializeProperties {
-  self.font = MDCTextControlDefaultFont();
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   self.labelState = [self determineCurrentLabelState];
-  self.textControlState = [self determineCurrentTextControlState];
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
   self.colorViewModels = [[NSMutableDictionary alloc] init];
 }
@@ -98,16 +87,6 @@
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateEditing];
   self.colorViewModels[@(MDCTextControlStateDisabled)] =
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateDisabled];
-}
-
-- (void)setUpAssistiveLabels {
-  self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
-  self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
-  CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
-  UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
-  self.assistiveLabelView.leftAssistiveLabel.font = assistiveFont;
-  self.assistiveLabelView.rightAssistiveLabel.font = assistiveFont;
-  [self addSubview:self.assistiveLabelView];
 }
 
 - (void)setUpLabel {
@@ -141,27 +120,32 @@
 
 #pragma mark Layout
 
+/**
+ UITextField layout methods such as @c -textRectForBounds: and @c -editingRectForBounds: are called
+ within @c -layoutSubviews. The exact values of the CGRects MDCBaseTextField returns from these
+ methods depend on many factors, and are calculated alongside all the other frames of
+ MDCBaseTextField's subviews. To ensure that these values are known before UITextField's layout
+ methods expect them, they are determined by this method, which is called before the superclass's @c
+ -layoutSubviews in the layout cycle.
+ */
 - (void)preLayoutSubviews {
   self.textControlState = [self determineCurrentTextControlState];
   self.labelState = [self determineCurrentLabelState];
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
-  CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX);
+  CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX);
   self.layout = [self calculateLayoutWithTextFieldSize:fittingSize];
 }
 
 - (void)postLayoutSubviews {
+  self.label.hidden = self.labelState == MDCTextControlLabelStateNone;
   [MDCTextControlLabelAnimation layOutLabel:self.label
                                       state:self.labelState
                            normalLabelFrame:self.layout.labelFrameNormal
                          floatingLabelFrame:self.layout.labelFrameFloating
                                  normalFont:self.normalFont
                                floatingFont:self.floatingFont];
-  [self.containerStyle applyStyleToTextControl:self];
-  self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
-  self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
-  [self.assistiveLabelView setNeedsLayout];
   self.leftView.hidden = self.layout.leftViewHidden;
   self.rightView.hidden = self.layout.rightViewHidden;
 }
@@ -175,6 +159,17 @@
   return textRect;
 }
 
+/**
+ To understand this method one must understand that the CGRect UITextField returns from @c
+ -textRectForBounds: does not actually represent the CGRect of visible text in UITextField. It
+ represents the CGRect of an internal "field editing" class, which has a height that is
+ significantly taller than the text (@c font.lineHeight) itself. Providing a height in @c
+ -textRectForBounds: that differs from the height determined by the superclass results in a text
+ field with poor text rendering, sometimes to the point of the text not being visible. By taking the
+ desired CGRect of the visible text from the layout object, giving it the height preferred by the
+ superclass's implementation of @c -textRectForBounds:, and then ensuring that this new CGRect has
+ the same midY as the original CGRect, we are able to take control of the text's positioning.
+ */
 - (CGRect)adjustTextAreaFrame:(CGRect)textRect
     withParentClassTextAreaFrame:(CGRect)parentClassTextAreaFrame {
   CGFloat systemDefinedHeight = CGRectGetHeight(parentClassTextAreaFrame);
@@ -182,40 +177,24 @@
   return CGRectMake(CGRectGetMinX(textRect), minY, CGRectGetWidth(textRect), systemDefinedHeight);
 }
 
-- (CGFloat)clearButtonSideLength {
-  static dispatch_once_t onceToken;
-  static CGRect systemClearButtonRect;
-  UITextField *textField = MDCTextControlUITextFieldPrototype();
-  dispatch_once(&onceToken, ^{
-    systemClearButtonRect = [textField clearButtonRectForBounds:textField.bounds];
-  });
-  CGFloat sideLength = CGRectGetHeight(systemClearButtonRect);
-  return sideLength > 0 ? sideLength : 19.0;
-}
-
 - (MDCBaseTextFieldLayout *)calculateLayoutWithTextFieldSize:(CGSize)textFieldSize {
-  CGFloat clampedCustomAssistiveLabelDrawPriority =
-      [self clampedCustomAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority];
-  return [[MDCBaseTextFieldLayout alloc]
-                 initWithTextFieldSize:textFieldSize
-                  positioningReference:[self createPositioningReference]
-                                  text:self.text
-                                  font:self.normalFont
-                          floatingFont:self.floatingFont
-                                 label:self.label
-                              leftView:self.leftView
-                          leftViewMode:self.leftViewMode
-                             rightView:self.rightView
-                         rightViewMode:self.rightViewMode
-                 clearButtonSideLength:[self clearButtonSideLength]
-                       clearButtonMode:self.clearButtonMode
-                    leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
-                   rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
-            assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
-      customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
-              preferredContainerHeight:self.preferredContainerHeight
-                                 isRTL:self.isRTL
-                             isEditing:self.isEditing];
+  CGFloat clearButtonSideLength = [self clearButtonSideLengthWithTextFieldSize:textFieldSize];
+  id<MDCTextControlVerticalPositioningReference> positioningReference =
+      [self createPositioningReference];
+  return [[MDCBaseTextFieldLayout alloc] initWithTextFieldSize:textFieldSize
+                                          positioningReference:positioningReference
+                                                          text:self.text
+                                                          font:self.normalFont
+                                                  floatingFont:self.floatingFont
+                                                         label:self.label
+                                                      leftView:self.leftView
+                                                  leftViewMode:self.leftViewMode
+                                                     rightView:self.rightView
+                                                 rightViewMode:self.rightViewMode
+                                         clearButtonSideLength:clearButtonSideLength
+                                               clearButtonMode:self.clearButtonMode
+                                                         isRTL:self.isRTL
+                                                     isEditing:self.isEditing];
 }
 
 - (id<MDCTextControlVerticalPositioningReference>)createPositioningReference {
@@ -223,19 +202,13 @@
       positioningReferenceWithFloatingFontLineHeight:self.floatingFont.lineHeight
                                 normalFontLineHeight:self.normalFont.lineHeight
                                        textRowHeight:self.normalFont.lineHeight
-                                    numberOfTextRows:1
-                                             density:0
-                            preferredContainerHeight:self.preferredContainerHeight];
+                                    numberOfTextRows:1];
 }
 
-- (CGFloat)clampedCustomAssistiveLabelDrawPriority:(CGFloat)customPriority {
-  CGFloat value = customPriority;
-  if (value < 0) {
-    value = 0;
-  } else if (value > 1) {
-    value = 1;
-  }
-  return value;
+- (CGFloat)clearButtonSideLengthWithTextFieldSize:(CGSize)textFieldSize {
+  CGRect bounds = CGRectMake(0, 0, textFieldSize.width, textFieldSize.height);
+  CGRect systemPlaceholderRect = [super clearButtonRectForBounds:bounds];
+  return systemPlaceholderRect.size.height;
 }
 
 - (CGSize)preferredSizeWithWidth:(CGFloat)width {
@@ -276,41 +249,7 @@
   [self mdc_setRightView:rightView];
 }
 
-- (void)setPlaceholder:(NSString *)placeholder {
-  [super setPlaceholder:placeholder];
-  [self updatePlaceholder];
-}
-
-- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
-  [super setAttributedPlaceholder:attributedPlaceholder];
-  [self updatePlaceholder];
-}
-
 #pragma mark Custom Accessors
-
-- (NSString *)labelText {
-  return self.label.text;
-}
-
-- (void)setLabelText:(nullable NSString *)labelText {
-  self.label.text = [labelText copy];
-}
-
-- (UILabel *)leadingAssistiveLabel {
-  if ([self isRTL]) {
-    return self.assistiveLabelView.rightAssistiveLabel;
-  } else {
-    return self.assistiveLabelView.leftAssistiveLabel;
-  }
-}
-
-- (UILabel *)trailingAssistiveLabel {
-  if ([self isRTL]) {
-    return self.assistiveLabelView.leftAssistiveLabel;
-  } else {
-    return self.assistiveLabelView.rightAssistiveLabel;
-  }
-}
 
 - (void)setTrailingView:(UIView *)trailingView {
   if ([self isRTL]) {
@@ -346,12 +285,10 @@
 
 - (void)mdc_setLeftView:(UIView *)leftView {
   [super setLeftView:leftView];
-  // TODO: Determine if a call to setNeedsLayout is necessary or if super calls it
 }
 
 - (void)mdc_setRightView:(UIView *)rightView {
   [super setRightView:rightView];
-  // TODO: Determine if a call to setNeedsLayout is necessary or if super calls it
 }
 
 - (void)setTrailingViewMode:(UITextFieldViewMode)trailingViewMode {
@@ -402,15 +339,6 @@
   [self setNeedsLayout];
 }
 
-- (UIColor *)placeholderColor {
-  return _placeholderColor ?: [UIColor lightGrayColor];
-}
-
-- (void)setPlaceholderColor:(UIColor *)placeholderColor {
-  _placeholderColor = placeholderColor;
-  [self updatePlaceholder];
-}
-
 #pragma mark MDCTextControl accessors
 
 - (void)setLabelBehavior:(MDCTextControlLabelBehavior)labelBehavior {
@@ -449,14 +377,15 @@
 - (CGRect)editingRectForBounds:(CGRect)bounds {
   CGRect textRect = [self textRectFromLayout:self.layout labelState:self.labelState];
   return [self adjustTextAreaFrame:textRect
-      withParentClassTextAreaFrame:[super editingRectForBounds:bounds]];
+      withParentClassTextAreaFrame:[super textRectForBounds:bounds]];
 }
 
 // The implementations for this method and the method below deserve some context! Unfortunately,
 // Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and
 // you set @c leftView on a standard UITextField. Even though the property that you set is called @c
 // leftView, the method @c -rightViewRectForBounds: will be called. They are treating @c leftView as
-// @c rightView, even though @c rightView is nil. It's bonkers.
+// @c rightView, even though @c rightView is nil. The RTL-aware wrappers around these APIs that
+// MDCBaseTextField introduce handle this situation more accurately.
 - (CGRect)leftViewRectForBounds:(CGRect)bounds {
   if ([self isRTL]) {
     return self.layout.rightViewFrame;
@@ -504,51 +433,21 @@
 
 #pragma mark Fonts
 
-- (UIFont *)font {
-  return [super font] ?: MDCTextControlDefaultFont();
-}
-
 - (UIFont *)normalFont {
-  return self.font;
+  return self.font ?: [self uiTextFieldDefaultFont];
 }
 
 - (UIFont *)floatingFont {
-  return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
+  return [self.normalFont fontWithSize:(self.normalFont.pointSize * (CGFloat)0.5)];
 }
 
-- (void)mdc_setAdjustsFontForContentSizeCategory:(BOOL)adjusts {
-  _mdc_adjustsFontForContentSizeCategory = adjusts;
-  if (_mdc_adjustsFontForContentSizeCategory) {
-    [self startObservingUIContentSizeCategory];
-  } else {
-    [self stopObservingUIContentSizeCategory];
-  }
-  [self updateFontsForDynamicType];
-}
-
-- (void)updateFontsForDynamicType {
-  if (self.mdc_adjustsFontForContentSizeCategory) {
-    UIFont *textFont = [UIFont mdc_preferredFontForMaterialTextStyle:MDCFontTextStyleBody1];
-    UIFont *helperFont = [UIFont mdc_preferredFontForMaterialTextStyle:MDCFontTextStyleCaption];
-    self.font = textFont;
-    self.label.font = textFont;
-    self.leadingAssistiveLabel.font = helperFont;
-    self.leadingAssistiveLabel.font = helperFont;
-  }
-  [self setNeedsLayout];
-}
-
-- (void)startObservingUIContentSizeCategory {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(updateFontsForDynamicType)
-                                               name:UIContentSizeCategoryDidChangeNotification
-                                             object:nil];
-}
-
-- (void)stopObservingUIContentSizeCategory {
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:UIContentSizeCategoryDidChangeNotification
-                                                object:nil];
+- (UIFont *)uiTextFieldDefaultFont {
+  static dispatch_once_t onceToken;
+  static UIFont *font;
+  dispatch_once(&onceToken, ^{
+    font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+  });
+  return font;
 }
 
 #pragma mark MDCTextControlState
@@ -597,32 +496,6 @@
     return NO;
   }
 }
-
-- (void)updatePlaceholder {
-  if (_placeholderColor) {
-    [self updateAttributedPlaceholderColor];
-  } else {
-    [self reestablishDefaultPlaceholderAttributes];
-  }
-}
-
-- (void)reestablishDefaultPlaceholderAttributes {
-//  NSDictionary *attributes = MDCTextControlUITextFieldDefaultPlaceholderAttributes();
-//  self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.placeholder
-//                                                               attributes:attributes];
-}
-
-- (void)updateAttributedPlaceholderColor {
-  if (self.placeholderColor && self.attributedPlaceholder) {
-    NSMutableAttributedString *mutableAttributedString =
-        [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedPlaceholder];
-    NSRange range = NSMakeRange(0, mutableAttributedString.length);
-    NSDictionary *newColorAttribute = @{NSForegroundColorAttributeName : self.placeholderColor};
-    [mutableAttributedString addAttributes:newColorAttribute range:range];
-    [super setAttributedPlaceholder:[mutableAttributedString copy]];
-  }
-}
-
 
 #pragma mark Label
 
@@ -683,8 +556,6 @@
     labelColor = colorViewModel.floatingLabelColor;
   }
   self.textColor = colorViewModel.textColor;
-  self.leadingAssistiveLabel.textColor = colorViewModel.assistiveLabelColor;
-  self.trailingAssistiveLabel.textColor = colorViewModel.assistiveLabelColor;
   self.label.textColor = labelColor;
 }
 
@@ -737,18 +608,6 @@
 - (UIColor *)textColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   return colorViewModel.textColor;
-}
-
-- (void)setAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
-                      forState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  colorViewModel.assistiveLabelColor = assistiveLabelColor;
-  [self setNeedsLayout];
-}
-
-- (UIColor *)assistiveLabelColorForState:(MDCTextControlState)state {
-  MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.assistiveLabelColor;
 }
 
 @end

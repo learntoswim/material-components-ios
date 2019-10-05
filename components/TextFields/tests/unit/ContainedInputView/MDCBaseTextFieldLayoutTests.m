@@ -14,9 +14,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "../../../src/TextControl/private/MDCBaseTextFieldLayout.h"
-#import "../../../src/TextControl/private/MDCTextControlVerticalPositioningReferenceBase.h"
-#import "MaterialTextControls.h"
+#import "../../../src/ContainedInputView/private/MDCBaseTextFieldLayout.h"
+#import "../../../src/ContainedInputView/private/MDCTextControlVerticalPositioningReferenceBase.h"
+#import "MaterialTextFields+ContainedInputView.h"
 
 @interface MDCBaseTextFieldLayout (Testing)
 - (CGFloat)textHeightWithFont:(UIFont *)font;
@@ -41,29 +41,23 @@
   UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
   UIFont *floatingFont = [font fontWithSize:(font.pointSize * (CGFloat)0.5)];
 
-  MDCBaseTextFieldLayout *layout = [[MDCBaseTextFieldLayout alloc]
-                 initWithTextFieldSize:textFieldSize
-                  positioningReference:[MDCTextControlVerticalPositioningGuideBase new]
-                                  text:@"Text"
-                           placeholder:nil
-                                  font:font
-                          floatingFont:floatingFont
-                                 label:[UILabel new]
-                            labelState:MDCTextControlLabelStateFloating
-                         labelBehavior:MDCTextControlLabelBehaviorFloats
-                              leftView:[self createSideView]
-                          leftViewMode:viewMode
-                             rightView:[self createSideView]
-                         rightViewMode:viewMode
-                           clearButton:[MDCTextControlClearButton new]
-                       clearButtonMode:viewMode
-                    leftAssistiveLabel:[UILabel new]
-                   rightAssistiveLabel:[UILabel new]
-            underlineLabelDrawPriority:MDCTextControlAssistiveLabelDrawPriorityTrailing
-      customAssistiveLabelDrawPriority:0.0
-              preferredContainerHeight:0
-                                 isRTL:NO
-                             isEditing:isEditing];
+  MDCTextControlVerticalPositioningReferenceBase *positioningReference =
+      [[MDCTextControlVerticalPositioningReferenceBase alloc] init];
+  MDCBaseTextFieldLayout *layout =
+      [[MDCBaseTextFieldLayout alloc] initWithTextFieldSize:textFieldSize
+                                       positioningReference:positioningReference
+                                                       text:@"Text"
+                                                       font:font
+                                               floatingFont:floatingFont
+                                                      label:[[UILabel alloc] init]
+                                                   leftView:[self createSideView]
+                                               leftViewMode:viewMode
+                                                  rightView:[self createSideView]
+                                              rightViewMode:viewMode
+                                      clearButtonSideLength:19
+                                            clearButtonMode:viewMode
+                                                      isRTL:NO
+                                                  isEditing:isEditing];
   return layout;
 }
 

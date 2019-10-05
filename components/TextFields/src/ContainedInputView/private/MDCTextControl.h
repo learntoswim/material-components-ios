@@ -15,7 +15,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCTextControlAssistiveLabelDrawPriority.h"
 #import "MDCTextControlColorViewModel.h"
 #import "MDCTextControlLabelAnimation.h"
 #import "MDCTextControlLabelBehavior.h"
@@ -30,25 +29,27 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 @protocol MDCTextControl <NSObject>
 
 /**
- Dictates the @c MDCTextControlStyle of the text field. Defaults to an instance of
- MDCTextControlStyleBase.
+ This object represents the style of the text control, i.e. the thing that makes it filled or
+ outlined. See the documentation for MDCTextControlStyle for more information on its
+ responsibilities.
  */
 @property(nonatomic, strong, nonnull) id<MDCTextControlStyle> containerStyle;
 
 /**
- Describes the current @c MDCTextControlState of the view.
+ Describes the current @c MDCtextControlState of the view. This value is affected by things like
+ UIControlState, as well as whether or not it's editing.
  */
 @property(nonatomic, assign, readonly) MDCTextControlState textControlState;
 
 /**
- Describes the current @c MDCTextControlLabelState of the view. This
- value is affected by things like the view's state, the value for @c canFloatingLabelFloat, and the
+ Describes the current MDCTextControlLabelState of the contained input view. This
+ value is affected by things like the view's @c textControlState, its @c labelBehavior, and the
  text of the floating label.
  */
 @property(nonatomic, assign, readonly) MDCTextControlLabelState labelState;
 
 /**
- Describes the behavior of the label when the control begis editing.
+ Describes the behavior of the label when the view begins editing.
  */
 @property(nonatomic, assign, readonly) MDCTextControlLabelBehavior labelBehavior;
 
@@ -59,7 +60,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 @property(strong, nonatomic, readonly, nonnull) UILabel *label;
 
 /**
- The @c normalFont is the view's primary font. The text has this font. The label
+ The @c normalFont is the contained input view's primary font. The text has this font. The label
  also has this font when it isn't floating.
  */
 @property(strong, nonatomic, readonly, nonnull) UIFont *normalFont;
@@ -70,62 +71,29 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 @property(strong, nonatomic, readonly, nonnull) UIFont *floatingFont;
 
 /**
- The @c leadingAssistiveLabel can be used to display helper or error text.
- */
-@property(strong, nonatomic, readonly, nonnull) UILabel *leadingAssistiveLabel;
-
-/**
- The @c trailingAssistiveLabel can be used to display helper or error text.
- */
-@property(strong, nonatomic, readonly, nonnull) UILabel *trailingAssistiveLabel;
-
-/**
- This property is used to determine how much horizontal space to allot for each of the two assistive
- labels.
-
- @note The default value is MDCTextControlAssistiveLabelDrawPriorityTrailing. The rationale
- behind this is it is less likely to have long explanatory error text and more likely to have short
- text, like a character counter. It is better to draw the short text first and use whatever space is
- leftover for the longer text, which may wrap to new lines.
- */
-@property(nonatomic, assign) MDCTextControlAssistiveLabelDrawPriority assistiveLabelDrawPriority;
-
-/**
- When @c assistiveLabelDrawPriority is set to @c .custom the value of this property helps determine
- what percentage of the available width each assistive label gets. It can be thought of as a
- divider. A value of @c 0 would result in the trailing assistive label getting all the available
- width. A value of @c 1 would result in the leading assistive label getting all the available width.
- A value of @c .5 would result in each assistive label getting 50% of the available width.
- */
-@property(nonatomic, assign) CGFloat customAssistiveLabelDrawPriority;
-
-/**
- This method returns a color view model for a given MDCTextControlState.
+ This method returns a MDCTextControlColorViewModel for a given MDCTextControlState.
  */
 - (nonnull MDCTextControlColorViewModel *)textControlColorViewModelForState:
     (MDCTextControlState)textControlState;
 
 /**
- This method sets a color view model for a given MDCTextControlState.
+ This method sets a MDCTextControlColorViewModel for a given MDCTextControlState.
  */
 - (void)setTextControlColorViewModel:
             (nonnull MDCTextControlColorViewModel *)textControlColorViewModel
                             forState:(MDCTextControlState)textFieldState;
 
 /**
- Returns the rect surrounding the main content, i.e. the area that the container should be drawn
- around.
+ Returns the CGRect surrounding the main content, i.e. the area that the container should be drawn
+ around. In an outlined MDCTextControl, this will be the CGRect the outline is drawn around. In a
+ filled MDCTextControl, it will be the rect the filled background is drawn in.
  */
 @property(nonatomic, assign, readonly) CGRect containerFrame;
 
 /**
- This API allows the user to override the default main content area height. The main content area is
- the part of the view where the where the data input happens. It is located above the assistive
- label area. If this property is set to a value that's lower than the default main content area
- height the value will be ignored in the calculation of the view's @c intrinsicContentSize.
+ The number of rows of text the MDCTextControl shows at one time. For textfields, this will always
+ be 1. For other views it can be more than that.
  */
-@property(nonatomic, assign) CGFloat preferredContainerHeight;
-
 @property(nonatomic, assign, readonly) CGFloat numberOfVisibleTextRows;
 
 @end
@@ -134,8 +102,7 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 
 /**
  This method allows objects conforming to MDCTextControlStyle to apply themselves to objects
- conforming to MDCTextControl with a set of colors represented by an object conforming to
- MDCTextControlColorViewModel.
+ conforming to MDCTextControl.
  */
 - (void)applyStyleToTextControl:(nonnull id<MDCTextControl>)textControl;
 /**
@@ -151,15 +118,13 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 - (UIFont *_Nonnull)floatingFontWithNormalFont:(nonnull UIFont *)font;
 
 /**
- This method returns an object that tells the view where to position its views
+ This method returns an object that tells the view where to position it's views
  vertically.
  */
 - (nonnull id<MDCTextControlVerticalPositioningReference>)
     positioningReferenceWithFloatingFontLineHeight:(CGFloat)floatingLabelHeight
                               normalFontLineHeight:(CGFloat)normalFontLineHeight
                                      textRowHeight:(CGFloat)textRowHeight
-                                  numberOfTextRows:(CGFloat)numberOfTextRows
-                                           density:(CGFloat)density
-                          preferredContainerHeight:(CGFloat)preferredContainerHeight;
+                                  numberOfTextRows:(CGFloat)numberOfTextRows;
 
 @end

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "MDCBaseTextFieldLayout.h"
+#import "MDCTextControlLabelState.h"
 
 static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
@@ -36,12 +37,6 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                         rightViewMode:(UITextFieldViewMode)rightViewMode
                 clearButtonSideLength:(CGFloat)clearButtonSideLength
                       clearButtonMode:(UITextFieldViewMode)clearButtonMode
-                   leftAssistiveLabel:(UILabel *)leftAssistiveLabel
-                  rightAssistiveLabel:(UILabel *)rightAssistiveLabel
-           assistiveLabelDrawPriority:
-               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
-     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
-             preferredContainerHeight:(CGFloat)preferredContainerHeight
                                 isRTL:(BOOL)isRTL
                             isEditing:(BOOL)isEditing {
   self = [super init];
@@ -58,11 +53,6 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                              rightViewMode:rightViewMode
                      clearButtonSideLength:clearButtonSideLength
                            clearButtonMode:clearButtonMode
-                        leftAssistiveLabel:leftAssistiveLabel
-                       rightAssistiveLabel:rightAssistiveLabel
-                assistiveLabelDrawPriority:assistiveLabelDrawPriority
-          customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
-                  preferredContainerHeight:preferredContainerHeight
                                      isRTL:isRTL
                                  isEditing:isEditing];
     return self;
@@ -85,45 +75,38 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                            rightViewMode:(UITextFieldViewMode)rightViewMode
                    clearButtonSideLength:(CGFloat)clearButtonSideLength
                          clearButtonMode:(UITextFieldViewMode)clearButtonMode
-                      leftAssistiveLabel:(UILabel *)leftAssistiveLabel
-                     rightAssistiveLabel:(UILabel *)rightAssistiveLabel
-              assistiveLabelDrawPriority:
-                  (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
-        customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
-                preferredContainerHeight:(CGFloat)preferredContainerHeight
                                    isRTL:(BOOL)isRTL
                                isEditing:(BOOL)isEditing {
-  BOOL shouldAttemptToDisplayLeftView = [self displaysSideView:leftView
-                                                      viewMode:leftViewMode
-                                                     isEditing:isEditing];
-  BOOL shouldAttemptToDisplayRightView = [self displaysSideView:rightView
-                                                       viewMode:rightViewMode
-                                                      isEditing:isEditing];
-  BOOL shouldAttemptToDisplayClearButton =
-      [self shouldDisplayClearButtonWithViewMode:clearButtonMode isEditing:isEditing text:text];
-
+  BOOL displaysLeftView = [self displaysSideView:leftView
+                                        viewMode:leftViewMode
+                                       isEditing:isEditing];
+  BOOL displaysRightView = [self displaysSideView:rightView
+                                         viewMode:rightViewMode
+                                        isEditing:isEditing];
+  BOOL displaysClearButton = [self shouldDisplayClearButtonWithViewMode:clearButtonMode
+                                                              isEditing:isEditing
+                                                                   text:text];
   CGFloat leftViewWidth = CGRectGetWidth(leftView.frame);
   CGFloat leftViewMinX = 0;
   CGFloat leftViewMaxX = 0;
-  if (shouldAttemptToDisplayLeftView) {
+  if (displaysLeftView) {
     leftViewMinX = kHorizontalPadding;
     leftViewMaxX = leftViewMinX + leftViewWidth;
   }
 
   CGFloat textFieldWidth = textFieldSize.width;
   CGFloat rightViewMinX = 0;
-  if (shouldAttemptToDisplayRightView) {
+  if (displaysRightView) {
     CGFloat rightViewMaxX = textFieldWidth - kHorizontalPadding;
     rightViewMinX = rightViewMaxX - CGRectGetWidth(rightView.frame);
   }
 
   CGFloat clearButtonMinX = 0;
   if (isRTL) {
-    clearButtonMinX =
-        shouldAttemptToDisplayLeftView ? leftViewMaxX + kHorizontalPadding : kHorizontalPadding;
+    clearButtonMinX = displaysLeftView ? leftViewMaxX + kHorizontalPadding : kHorizontalPadding;
   } else {
-    CGFloat clearButtonMaxX = shouldAttemptToDisplayRightView ? rightViewMinX - kHorizontalPadding
-                                                              : textFieldWidth - kHorizontalPadding;
+    CGFloat clearButtonMaxX = displaysRightView ? rightViewMinX - kHorizontalPadding
+                                                : textFieldWidth - kHorizontalPadding;
     clearButtonMinX = clearButtonMaxX - clearButtonSideLength;
   }
 
@@ -144,21 +127,21 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
   CGFloat leftViewHeight = CGRectGetHeight(leftView.frame);
   CGFloat leftViewMinY = 0;
-  if (shouldAttemptToDisplayLeftView) {
+  if (displaysLeftView) {
     leftViewMinY = [self minYForSubviewWithHeight:leftViewHeight centerY:containerMidY];
   }
 
   CGFloat rightViewHeight = CGRectGetHeight(rightView.frame);
   CGFloat rightViewMinY = 0;
-  if (shouldAttemptToDisplayRightView) {
+  if (displaysRightView) {
     rightViewMinY = [self minYForSubviewWithHeight:rightViewHeight centerY:containerMidY];
   }
 
   CGFloat clearButtonMinY = [self minYForSubviewWithHeight:clearButtonSideLength
                                                    centerY:textRectCenterYNormal];
-  //  CGFloat clearButtonFloatingMinY =
-  //      [self minYForSubviewWithHeight:clearButtonSideLength
-  //                             centerY:textRectCenterYWithFloatingLabel];
+  CGFloat clearButtonFloatingMinY =
+      [self minYForSubviewWithHeight:clearButtonSideLength
+                             centerY:textRectCenterYWithFloatingLabel];
 
   CGFloat textRectMinX = 0;
   CGFloat textRectMaxX = 0;
@@ -168,18 +151,17 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   CGFloat floatingLabelMaxX = 0;
 
   if (isRTL) {
-    if (shouldAttemptToDisplayClearButton) {
+    if (displaysClearButton) {
       CGFloat clearButtonMaxX = clearButtonMinX + clearButtonSideLength;
       textRectMinX = clearButtonMaxX + kHorizontalPadding;
       labelMinX = textRectMinX;
       floatingLabelMinX = clearButtonMinX;
     } else {
-      textRectMinX =
-          shouldAttemptToDisplayLeftView ? leftViewMaxX + kHorizontalPadding : kHorizontalPadding;
+      textRectMinX = displaysLeftView ? leftViewMaxX + kHorizontalPadding : kHorizontalPadding;
       labelMinX = textRectMinX;
       floatingLabelMinX = textRectMinX;
     }
-    if (shouldAttemptToDisplayRightView) {
+    if (displaysRightView) {
       textRectMaxX = rightViewMinX - kHorizontalPadding;
     } else {
       textRectMaxX = textFieldWidth - kHorizontalPadding;
@@ -187,19 +169,18 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
     labelMaxX = textRectMaxX;
     floatingLabelMaxX = labelMaxX;
   } else {
-    textRectMinX =
-        shouldAttemptToDisplayLeftView ? leftViewMaxX + kHorizontalPadding : kHorizontalPadding;
+    textRectMinX = displaysLeftView ? leftViewMaxX + kHorizontalPadding : kHorizontalPadding;
     labelMinX = textRectMinX;
     floatingLabelMinX = labelMinX;
-    if (shouldAttemptToDisplayClearButton) {
+    if (displaysClearButton) {
       textRectMaxX = clearButtonMinX - kHorizontalPadding;
     } else {
-      textRectMaxX = shouldAttemptToDisplayRightView ? rightViewMinX - kHorizontalPadding
-                                                     : textFieldWidth - kHorizontalPadding;
+      textRectMaxX = displaysRightView ? rightViewMinX - kHorizontalPadding
+                                       : textFieldWidth - kHorizontalPadding;
     }
     labelMaxX = textRectMaxX;
-    floatingLabelMaxX = shouldAttemptToDisplayRightView ? rightViewMinX - kHorizontalPadding
-                                                        : textFieldWidth - kHorizontalPadding;
+    floatingLabelMaxX = displaysRightView ? rightViewMinX - kHorizontalPadding
+                                          : textFieldWidth - kHorizontalPadding;
   }
 
   CGFloat textRectWidth = textRectMaxX - textRectMinX;
@@ -213,11 +194,11 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   CGRect leftViewFrame = CGRectMake(leftViewMinX, leftViewMinY, leftViewWidth, leftViewHeight);
   CGRect rightViewFrame =
       CGRectMake(rightViewMinX, rightViewMinY, CGRectGetWidth(rightView.frame), rightViewHeight);
+
   CGRect clearButtonFrameNormal =
       CGRectMake(clearButtonMinX, clearButtonMinY, clearButtonSideLength, clearButtonSideLength);
-  CGRect clearButtonFrameFloating = clearButtonFrameNormal;
-  //  CGRectMake(clearButtonMinX, clearButtonFloatingMinY,
-  //                                               clearButtonSideLength, clearButtonSideLength);
+  CGRect clearButtonFrameFloating = CGRectMake(clearButtonMinX, clearButtonFloatingMinY,
+                                               clearButtonSideLength, clearButtonSideLength);
 
   CGRect labelFrameNormal = [self labelFrameWithText:label.text
                                           labelState:MDCTextControlLabelStateNormal
@@ -238,18 +219,6 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                                               textRect:textRectNormal
                                                  isRTL:isRTL];
 
-  self.assistiveLabelViewLayout = [[MDCContainedInputAssistiveLabelViewLayout alloc]
-                         initWithWidth:textFieldWidth
-                    leftAssistiveLabel:leftAssistiveLabel
-                   rightAssistiveLabel:rightAssistiveLabel
-            assistiveLabelDrawPriority:assistiveLabelDrawPriority
-      customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
-                     horizontalPadding:kHorizontalPadding
-           paddingAboveAssistiveLabels:positioningReference.paddingAboveAssistiveLabels
-           paddingBelowAssistiveLabels:positioningReference.paddingBelowAssistiveLabels
-                                 isRTL:isRTL];
-  self.assistiveLabelViewFrame = CGRectMake(0, positioningReference.containerHeight, textFieldWidth,
-                                            self.assistiveLabelViewLayout.calculatedHeight);
   self.leftViewFrame = leftViewFrame;
   self.rightViewFrame = rightViewFrame;
   self.clearButtonFrameFloating = clearButtonFrameFloating;
@@ -258,15 +227,9 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   self.textRectNormal = textRectNormal;
   self.labelFrameFloating = labelFrameFloating;
   self.labelFrameNormal = labelFrameNormal;
-  self.leftViewHidden = !shouldAttemptToDisplayLeftView;
-  self.rightViewHidden = !shouldAttemptToDisplayRightView;
+  self.leftViewHidden = !displaysLeftView;
+  self.rightViewHidden = !displaysRightView;
   self.containerHeight = positioningReference.containerHeight;
-}
-
-- (CGFloat)leadingAssistiveLabelWidthWithCombinedAssistiveLabelsWidth:
-               (CGFloat)totalAssistiveLabelsWidth
-                                                   customDrawPriority:(CGFloat)customDrawPriority {
-  return customDrawPriority * totalAssistiveLabelsWidth;
 }
 
 - (CGFloat)minYForSubviewWithHeight:(CGFloat)height centerY:(CGFloat)centerY {
@@ -276,21 +239,26 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 - (BOOL)displaysSideView:(UIView *)subview
                 viewMode:(UITextFieldViewMode)viewMode
                isEditing:(BOOL)isEditing {
+  BOOL displaysSideView = NO;
   if (subview && !CGSizeEqualToSize(CGSizeZero, subview.frame.size)) {
     switch (viewMode) {
       case UITextFieldViewModeWhileEditing:
-        return isEditing;
+        displaysSideView = isEditing;
+        break;
       case UITextFieldViewModeUnlessEditing:
-        return !isEditing;
+        displaysSideView = !isEditing;
+        break;
       case UITextFieldViewModeAlways:
-        return YES;
+        displaysSideView = YES;
+        break;
       case UITextFieldViewModeNever:
-        return NO;
+        displaysSideView = NO;
+        break;
       default:
-        return NO;
+        break;
     }
   }
-  return NO;
+  return displaysSideView;
 }
 
 - (BOOL)shouldDisplayClearButtonWithViewMode:(UITextFieldViewMode)viewMode
@@ -311,16 +279,18 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   }
 }
 
-- (CGSize)labelSizeWithText:(NSString *)text maxWidth:(CGFloat)maxWidth font:(UIFont *)font {
+- (CGSize)floatingLabelSizeWithText:(NSString *)placeholder
+                           maxWidth:(CGFloat)maxWidth
+                               font:(UIFont *)font {
   if (!font) {
     return CGSizeZero;
   }
   CGSize fittingSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
   NSDictionary *attributes = @{NSFontAttributeName : font};
-  CGRect rect = [text boundingRectWithSize:fittingSize
-                                   options:NSStringDrawingUsesLineFragmentOrigin
-                                attributes:attributes
-                                   context:nil];
+  CGRect rect = [placeholder boundingRectWithSize:fittingSize
+                                          options:NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attributes
+                                          context:nil];
   rect.size.height = font.lineHeight;
   return rect.size;
 }
@@ -343,7 +313,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
     case MDCTextControlLabelStateNone:
       break;
     case MDCTextControlLabelStateFloating:
-      size = [self labelSizeWithText:text maxWidth:maxWidth font:floatingFont];
+      size = [self floatingLabelSizeWithText:text maxWidth:maxWidth font:floatingFont];
       originY = floatingLabelMinY;
       if (isRTL) {
         originX = labelMaxX - size.width;
@@ -353,7 +323,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
       rect = CGRectMake(originX, originY, size.width, size.height);
       break;
     case MDCTextControlLabelStateNormal:
-      size = [self labelSizeWithText:text maxWidth:maxWidth font:font];
+      size = [self floatingLabelSizeWithText:text maxWidth:maxWidth font:font];
       CGFloat textRectMidY = CGRectGetMidY(textRect);
       originY = textRectMidY - ((CGFloat)0.5 * size.height);
       if (isRTL) {
@@ -374,12 +344,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 }
 
 - (CGFloat)calculatedHeight {
-  CGFloat maxY = self.containerHeight;
-  CGFloat assistiveLabelViewMaxY = CGRectGetMaxY(self.assistiveLabelViewFrame);
-  if (assistiveLabelViewMaxY > maxY) {
-    maxY = assistiveLabelViewMaxY;
-  }
-  return maxY;
+  return self.containerHeight;
 }
 
 @end

@@ -18,27 +18,17 @@
 #import "MDCTextControlState.h"
 
 /**
- A UITextField subclass that attempts to do the following:
- - Earnestly interpret and actualize the Material guidelines for text fields, which can be found
- here: https://material.io/design/components/text-fields.html#outlined-text-field
- - Feel intuitive for someone used to the conventions of iOS development and UIKit controls.
- - Enable easy set up and reliable and predictable behavior.
- Caution: While not explicitly forbidden by the compiler, subclassing this class is highly
- discouraged and not supported. Please consider alternatives.
+ A UITextField subclass that will potentially provide the foundation for Material TextFields in the
+ future. This class is under active development and should be used with caution.
  */
 @interface MDCBaseTextField : UITextField
 
 /**
- The @c labelText is the text that occupies the area the textfield's text usually occupies when
- there is no text. It is distinct from the placeholder in that it can move above the textfield's
- text area or disappear to reveal the placeholder when editing begins.
+ The @c label is a label that occupies the area the text usually occupies when there is no
+ text. It is distinct from the placeholder in that it can move above the text area or disappear to
+ reveal the placeholder when editing begins.
  */
-@property(strong, nonatomic, nullable) NSString *labelText;
-
-/**
- The text color of the placeholder.
- */
-@property(strong, nonatomic, nonnull) UIColor *placeholderColor;
+@property(strong, nonatomic, readonly, nonnull) UILabel *label;
 
 /**
  This property determines the behavior of the textfield's label during editing.
@@ -47,46 +37,24 @@
 @property(nonatomic, assign) MDCTextControlLabelBehavior labelBehavior;
 
 /**
- The @c leadingAssistiveLabel is a label below the text on the leading edge of the view. It can be
- used to display helper or error text.
- */
-@property(strong, nonatomic, readonly, nonnull) UILabel *leadingAssistiveLabel;
-
-/**
- The @c trailingAssistiveLabel is a label below the text on the trailing edge of the view. It can be
- used to display helper or error text.
- */
-@property(strong, nonatomic, readonly, nonnull) UILabel *trailingAssistiveLabel;
-
-/**
- This is an RTL-aware wrapper around UITextField's leftView/rightView property.
+ This is an RTL-aware wrapper around UITextField's leftView/rightView class.
  */
 @property(strong, nonatomic, nullable) UIView *leadingView;
 
 /**
- This is an RTL-aware wrapper around UITextField's leftView/rightView property.
+ This is an RTL-aware wrapper around UITextField's leftView/rightView class.
  */
 @property(strong, nonatomic, nullable) UIView *trailingView;
 
 /**
- This is an RTL-aware wrapper around UITextField's leftViewMode/rightViewMode property.
+ This is an RTL-aware wrapper around UITextField's leftViewMode/rightViewMode class.
  */
 @property(nonatomic, assign) UITextFieldViewMode leadingViewMode;
 
 /**
- This is an RTL-aware wrapper around UITextField's leftViewMode/rightViewMode property.
+ This is an RTL-aware wrapper around UITextField's leftViewMode/rightViewMode class.
  */
 @property(nonatomic, assign) UITextFieldViewMode trailingViewMode;
-
-/**
- Indicates whether the text field should automatically update its font when the device’s
- UIContentSizeCategory is changed.
- This property is modeled after the adjustsFontForContentSizeCategory property in the
- UIContentSizeCategoryAdjusting protocol added by Apple in iOS 10.0.
- Defaults value is NO.
- */
-@property(nonatomic, setter=mdc_setAdjustsFontForContentSizeCategory:)
-    BOOL mdc_adjustsFontForContentSizeCategory;
 
 /**
  Sets the floating label color for a given state.
@@ -122,6 +90,7 @@
  @param state The MDCTextControlState.
  */
 - (nonnull UIColor *)normalLabelColorForState:(MDCTextControlState)state;
+
 /**
  Sets the text color for a given state.
  Text color in this case refers to the color of the input text.
@@ -135,18 +104,5 @@
  @param state The MDCTextControlState.
  */
 - (nonnull UIColor *)textColorForState:(MDCTextControlState)state;
-/**
- Sets the assistive label color for a given state.
- @param assistiveLabelColor The UIColor for the given state.
- @param state The MDCTextControlState.
- */
-- (void)setAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
-                      forState:(MDCTextControlState)state;
-
-/**
- Returns the assistive label color for a given state.
- @param state The MDCTextControlState.
- */
-- (nonnull UIColor *)assistiveLabelColorForState:(MDCTextControlState)state;
 
 @end

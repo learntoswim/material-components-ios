@@ -63,8 +63,7 @@ mdc_extension_objc_library(
     deps = [
         "//components/AnimationTiming",
         "@material_internationalization_ios//:MDFInternationalization",
-        "//components/schemes/Container",
-        "//components/Chips",
+        "//components/private/Math",
     ],
 )
 
@@ -110,8 +109,6 @@ mdc_examples_objc_library(
         ":TextFields",
         ":TypographyThemer",
         "//components/Buttons",
-        "//components/Buttons:Theming",
-        "//components/Chips",
         "//components/schemes/Container",
     ],
 )
