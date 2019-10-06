@@ -184,6 +184,14 @@ static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
   return _paddingBelowAssistiveLabels;
 }
 
+- (CGFloat)paddingAboveAssistiveLabels {
+  return _paddingAboveAssistiveLabels;
+}
+
+- (CGFloat)paddingBelowAssistiveLabels {
+  return _paddingBelowAssistiveLabels;
+}
+
 - (CGFloat)containerHeight {
   return _containerHeight;
 }

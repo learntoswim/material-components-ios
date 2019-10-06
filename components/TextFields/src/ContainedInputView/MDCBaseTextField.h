@@ -149,4 +149,32 @@
  */
 - (nonnull UIColor *)assistiveLabelColorForState:(MDCTextControlState)state;
 
+/**
+ Sets the leading assistive label text color.
+ @param leadingAssistiveLabelColor The UIColor for the given state.
+ @param state The MDCTextControlState.
+ */
+- (void)setLeadingAssistiveLabelColor:(nonnull UIColor *)leadingAssistiveLabelColor
+                             forState:(MDCTextControlState)state;
+
+/**
+ Returns the leading assistive label color for a given state.
+ @param state The MDCTextControlState.
+ */
+- (nonnull UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state;
+
+/**
+ Sets the trailing assistive label text color.
+ @param trailingAssistiveLabelColor The UIColor for the given state.
+ @param state The MDCTextControlState.
+ */
+- (void)setTrailingAssistiveLabelColor:(nonnull UIColor *)trailingAssistiveLabelColor
+                              forState:(MDCTextControlState)state;
+
+/**
+ Returns the trailing assistive label color for a given state.
+ @param state The MDCTextControlState.
+ */
+- (nonnull UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state;
+
 @end
