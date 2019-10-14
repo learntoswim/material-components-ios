@@ -15,9 +15,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "MDCTextControlAssistiveLabelDrawPriority.h"
-#import "MDCTextControlAssistiveLabelViewLayout.h"
-#import "MDCTextControlVerticalPositioningReference.h"
+#import "MDCTextControl.h"
+#import "MDCTextControlAssistiveLabelView.h"
+
+@protocol MDCTextControlStyle;
 
 @interface MDCBaseTextFieldLayout : NSObject
 
@@ -34,7 +35,7 @@
 @property(nonatomic, assign) CGRect rightViewFrame;
 @property(nonatomic, assign) CGRect assistiveLabelViewFrame;
 @property(nonatomic, strong, nonnull)
-    MDCTextControlAssistiveLabelViewLayout *assistiveLabelViewLayout;
+    MDCContainedInputAssistiveLabelViewLayout *assistiveLabelViewLayout;
 
 @property(nonatomic, readonly) CGFloat calculatedHeight;
 @property(nonatomic, assign) CGFloat containerHeight;
@@ -66,6 +67,7 @@
                    assistiveLabelDrawPriority:
                        (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
              customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
+                     preferredContainerHeight:(CGFloat)preferredContainerHeight
                                         isRTL:(BOOL)isRTL
                                     isEditing:(BOOL)isEditing;
 

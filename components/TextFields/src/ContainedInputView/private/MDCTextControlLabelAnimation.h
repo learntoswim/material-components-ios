@@ -16,16 +16,8 @@
 #import <UIKit/UIKit.h>
 #import "MDCTextControlLabelState.h"
 
-/**
- The logic to animate labels is extracted into its own class so that any MDCTextControl can
- make use of it.
- */
 @interface MDCTextControlLabelAnimation : NSObject
 
-/**
- This method lays out the label in an animated fashion, often from normal position to the floating
- position, and vice versa.
- */
 + (void)layOutLabel:(nonnull UILabel *)floatingLabel
                  state:(MDCTextControlLabelState)labelState
       normalLabelFrame:(CGRect)normalLabelFrame

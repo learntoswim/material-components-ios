@@ -16,15 +16,8 @@
 #import <UIKit/UIKit.h>
 
 #import "MDCTextControl.h"
-#import "MDCTextControlAssistiveLabelDrawPriority.h"
 
-/**
- MDCTextControlAssistiveLabelViewLayout objects tell MDCAssistiveLabelViews where to position their
- assistive labels. Instantiating one of these classes is tantamount to calculating a layout.
- Instances of this class are applied to MDCAssistiveLabelViews when MDCTextControls apply their own
- layouts.
- */
-@interface MDCTextControlAssistiveLabelViewLayout : NSObject
+@interface MDCContainedInputAssistiveLabelViewLayout : NSObject
 
 @property(nonatomic, assign, readonly) CGRect leftAssistiveLabelFrame;
 @property(nonatomic, assign, readonly) CGRect rightAssistiveLabelFrame;

@@ -22,7 +22,7 @@
  */
 typedef NS_ENUM(NSInteger, MDCTextControlState) {
   /**
-   The default state of the contained input view, when it is resting and not editing.
+   The default state of the view, when it is resting and not editing.
    */
   MDCTextControlStateNormal,
   /**

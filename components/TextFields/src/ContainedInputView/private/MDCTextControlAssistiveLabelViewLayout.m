@@ -14,7 +14,7 @@
 
 #import "MDCTextControlAssistiveLabelViewLayout.h"
 
-@interface MDCTextControlAssistiveLabelViewLayout ()
+@interface MDCContainedInputAssistiveLabelViewLayout ()
 
 @property(nonatomic, assign) CGRect leftAssistiveLabelFrame;
 @property(nonatomic, assign) CGRect rightAssistiveLabelFrame;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation MDCTextControlAssistiveLabelViewLayout
+@implementation MDCContainedInputAssistiveLabelViewLayout
 
 #pragma mark Object Lifecycle
 
@@ -53,7 +53,6 @@
 }
 
 #pragma mark Layout Calculation
-
 - (void)calculateLayoutWithSuperviewWidth:(CGFloat)superviewWidth
                        leftAssistiveLabel:(UILabel *)leftAssistiveLabel
                       rightAssistiveLabel:(UILabel *)rightAssistiveLabel
@@ -102,8 +101,6 @@
       }
       break;
     case MDCTextControlAssistiveLabelDrawPriorityTrailing:
-      // Pass through (.trailing is the default priority)
-    default:
       trailingAssistiveLabelSize =
           [self assistiveLabelSizeWithLabel:trailingAssistiveLabel
                          constrainedToWidth:assistiveLabelsCombinedMaxWidth];
@@ -115,6 +112,8 @@
                            constrainedToWidth:assistiveLabelsCombinedMaxWidth -
                                               trailingAssistiveLabelSize.width];
       }
+      break;
+    default:
       break;
   }
 

@@ -19,15 +19,15 @@
 
 /**
  This object represents a group of colors that are applied on a state by state basis to
- MDCTextControls. Each property corresponds to a Contained Input View specific subview.
+ MDCTextControls. Each property corresponds to a MDCTextControl specific subview.
  */
 @interface MDCTextControlColorViewModel : NSObject
 /**
- The color of the contained input view's text.
+ The color of the view's text.
  */
 @property(strong, nonatomic, nonnull) UIColor *textColor;
 /**
- The color of the contained input view's leading assistive label.
+ The color of the view's assistive labels.
  */
 @property(strong, nonatomic, nonnull) UIColor *leadingAssistiveLabelColor;
 /**
@@ -35,11 +35,11 @@
  */
 @property(strong, nonatomic, nonnull) UIColor *trailingAssistiveLabelColor;
 /**
- The color of the contained input view's label when it's floating.
+ The color of the view's label when it's floating.
  */
 @property(strong, nonatomic, nonnull) UIColor *floatingLabelColor;
 /**
- The color of the contained input view's label when it's in its normal, i.e. not floating, state.
+ The color of the view's label when it's in its normal, i.e. not floating, state.
  */
 @property(strong, nonatomic, nonnull) UIColor *normalLabelColor;
 

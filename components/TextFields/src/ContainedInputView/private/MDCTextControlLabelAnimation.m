@@ -27,12 +27,15 @@
           floatingFont:(nonnull UIFont *)floatingFont {
   UIFont *targetFont;
   CGRect targetFrame;
+  MDCAnimationTimingFunction mdcTimingFunction;
   if (labelState == MDCTextControlLabelStateFloating) {
     targetFont = floatingFont;
     targetFrame = floatingLabelFrame;
+    mdcTimingFunction = MDCAnimationTimingFunctionAcceleration;
   } else {
     targetFont = normalFont;
     targetFrame = normalLabelFrame;
+    mdcTimingFunction = MDCAnimationTimingFunctionDeceleration;
   }
 
   CGRect currentFrame = label.frame;
@@ -48,7 +51,7 @@
   [UIView mdc_animateWithTimingFunction:timingFunction
                                duration:kMDCTextControlDefaultAnimationDuration
                                   delay:0
-                                options:0
+                                options:UIViewAnimationOptionTransitionNone
                              animations:^{
                                label.transform = CGAffineTransformIdentity;
                              }
