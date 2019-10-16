@@ -148,7 +148,7 @@ static const CGFloat kGradientBlurLength = 6;
   if (labelState == MDCTextControlLabelStateFloating) {
     initialChipRowMinY = initialChipRowMinYWithFloatingLabel;
   }
-  
+
   CGSize scrollViewSize = CGSizeMake(size.width, positioningReference.containerHeight);
   CGSize textSize = [self textSizeWithText:text font:font maxWidth:maxTextWidth];
 
@@ -160,7 +160,6 @@ static const CGFloat kGradientBlurLength = 6;
                                                     globalChipRowMinX:globalChipRowMinX
                                                     globalChipRowMaxX:globalChipRowMaxX
                                                                 isRTL:isRTL];
-
 
   CGRect textFieldFrame = [self textFieldFrameWithSize:scrollViewSize
                                             chipFrames:chipFrames

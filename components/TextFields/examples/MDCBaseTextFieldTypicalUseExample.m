@@ -77,7 +77,7 @@ static NSString *const kExampleTitle = @"MDCBaseTextField";
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
   [self.textField sizeToFit];
-//  self.textField.frame = self.preferredTextFieldFrame;
+  //  self.textField.frame = self.preferredTextFieldFrame;
   self.resignFirstResponderButton.frame =
       CGRectMake(CGRectGetMinX(self.textField.frame), CGRectGetMaxY(self.textField.frame) + 20,
                  CGRectGetWidth(self.resignFirstResponderButton.frame),
