@@ -25,7 +25,7 @@
 #import "private/MDCTextControlColorViewModel.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-#import "private/MDCTextControlStylePathDrawingUtils.h"
+//#import "private/MDCTextControlStylePathDrawingUtils.h"
 #import "private/UITextField+MDCTextControlDefaults.h"
 
 @interface MDCBaseTextField () <MDCTextControl>
@@ -289,14 +289,6 @@
 }
 
 #pragma mark Custom Accessors
-
-- (NSString *)labelText {
-  return self.label.text;
-}
-
-- (void)setLabelText:(nullable NSString *)labelText {
-  self.label.text = [labelText copy];
-}
 
 - (UILabel *)leadingAssistiveLabel {
   if ([self isRTL]) {
