@@ -25,7 +25,6 @@
 #import "private/MDCTextControlColorViewModel.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-//#import "private/MDCTextControlStylePathDrawingUtils.h"
 #import "private/UITextField+MDCTextControlDefaults.h"
 
 @interface MDCBaseTextField () <MDCTextControl>
@@ -37,6 +36,10 @@
 @property(nonatomic, assign) MDCTextControlState textControlState;
 @property(nonatomic, assign) MDCTextControlLabelState labelState;
 
+/**
+This property maps MDCTextControlStates as NSNumbers to
+MDCTextControlColorViewModels.
+*/
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 
@@ -141,6 +144,14 @@
 
 #pragma mark Layout
 
+/**
+UITextField layout methods such as @c -textRectForBounds: and @c -editingRectForBounds: are called
+within @c -layoutSubviews. The exact values of the CGRects MDCBaseTextField returns from these
+methods depend on many factors, and are calculated alongside all the other frames of
+MDCBaseTextField's subviews. To ensure that these values are known before UITextField's layout
+methods expect them, they are determined by this method, which is called before the superclass's @c
+-layoutSubviews in the layout cycle.
+*/
 - (void)preLayoutSubviews {
   self.textControlState = [self determineCurrentTextControlState];
   self.labelState = [self determineCurrentLabelState];
@@ -152,6 +163,7 @@
 }
 
 - (void)postLayoutSubviews {
+  self.label.hidden = self.labelState == MDCTextControlLabelStateNone;
   [MDCTextControlLabelAnimation layOutLabel:self.label
                                       state:self.labelState
                            normalLabelFrame:self.layout.labelFrameNormal
@@ -175,6 +187,17 @@
   return textRect;
 }
 
+/**
+To understand this method one must understand that the CGRect UITextField returns from @c
+-textRectForBounds: does not actually represent the CGRect of visible text in UITextField. It
+represents the CGRect of an internal "field editing" class, which has a height that is
+significantly taller than the text (@c font.lineHeight) itself. Providing a height in @c
+-textRectForBounds: that differs from the height determined by the superclass results in a text
+field with poor text rendering, sometimes to the point of the text not being visible. By taking the
+desired CGRect of the visible text from the layout object, giving it the height preferred by the
+superclass's implementation of @c -textRectForBounds:, and then ensuring that this new CGRect has
+the same midY as the original CGRect, we are able to take control of the text's positioning.
+*/
 - (CGRect)adjustTextAreaFrame:(CGRect)textRect
     withParentClassTextAreaFrame:(CGRect)parentClassTextAreaFrame {
   CGFloat systemDefinedHeight = CGRectGetHeight(parentClassTextAreaFrame);
@@ -446,11 +469,11 @@
       withParentClassTextAreaFrame:[super editingRectForBounds:bounds]];
 }
 
-// The implementations for this method and the method below deserve some context! Unfortunately,
-// Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and
-// you set @c leftView on a standard UITextField. Even though the property that you set is called @c
-// leftView, the method @c -rightViewRectForBounds: will be called. They are treating @c leftView as
-// @c rightView, even though @c rightView is nil. It's bonkers.
+// Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and  // Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and
+// you set @c leftView on a standard UITextField. Even though the property that you set is called @c  // you set @c leftView on a standard UITextField. Even though the property that you set is called @c
+// leftView, the method @c -rightViewRectForBounds: will be called. They are treating @c leftView as  // leftView, the method @c -rightViewRectForBounds: will be called. They are treating @c leftView as
+// @c rightView, even though @c rightView is nil. The RTL-aware wrappers around these APIs that  // @c rightView, even though @c rightView is nil. It's bonkers.
+// MDCBaseTextField introduce handle this situation more accurately.
 - (CGRect)leftViewRectForBounds:(CGRect)bounds {
   if ([self isRTL]) {
     return self.layout.rightViewFrame;
@@ -710,9 +733,9 @@
   [self setNeedsLayout];
 }
 
-- (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
+- (UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.trailingAssistiveLabelColor;
+  return colorViewModel.leadingAssistiveLabelColor;
 }
 
 - (void)setTrailingAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
@@ -722,9 +745,9 @@
   [self setNeedsLayout];
 }
 
-- (UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state {
+- (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.leadingAssistiveLabelColor;
+  return colorViewModel.trailingAssistiveLabelColor;
 }
 
 @end
