@@ -31,6 +31,11 @@
 @property(strong, nonatomic, readonly, nonnull) UILabel *label;
 
 /**
+ The text color of the placeholder. When this property is nonnull, the placeholder will be this color. This property is not compatible with the @c placeholder property's associated property @c attributedPlaceholder. Setting @c attributedPlaceholder when this property is set is unsupported.
+ */
+@property(strong, nonatomic, nonnull) UIColor *placeholderColor;
+
+/**
  This property determines the behavior of the textfield's label during editing.
  @note The default is MDCTextControlLabelBehaviorFloats.
  */

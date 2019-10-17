@@ -287,6 +287,21 @@
   [self mdc_setRightView:rightView];
 }
 
+- (void)setPlaceholder:(NSString *)placeholder {
+  if (self.placeholderColor) {
+    [self setPlaceholder:placeholder withColor:self.placeholderColor];
+  } else {
+    [super setPlaceholder:placeholder];
+  }
+}
+
+- (void)setPlaceholder:(NSString *)placeholder withColor:(UIColor *)color {
+  NSDictionary *attributes = @{NSForegroundColorAttributeName : color};
+  NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:placeholder
+                                                                         attributes:attributes];
+  [self setAttributedPlaceholder:attributedString];
+}
+
 #pragma mark Custom Accessors
 
 - (UILabel *)leadingAssistiveLabel {
@@ -391,6 +406,11 @@
   }
   _layoutDirection = layoutDirection;
   [self setNeedsLayout];
+}
+
+- (void)setPlaceholderColor:(UIColor *)placeholderColor {
+  _placeholderColor = placeholderColor;
+  self.placeholder = self.placeholder;
 }
 
 #pragma mark MDCTextControl accessors
