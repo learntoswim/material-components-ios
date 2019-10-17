@@ -158,7 +158,7 @@
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
-  CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX);
+  CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.bounds), CGFLOAT_MAX);
   self.layout = [self calculateLayoutWithTextFieldSize:fittingSize];
 }
 
