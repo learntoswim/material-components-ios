@@ -46,12 +46,12 @@
 @end
 
 @implementation MDCBaseTextField
-@synthesize preferredContainerHeight = _preferredContainerHeight;
+@synthesize containerStyle = _containerStyle;
 @synthesize assistiveLabelDrawPriority = _assistiveLabelDrawPriority;
 @synthesize customAssistiveLabelDrawPriority = _customAssistiveLabelDrawPriority;
-@synthesize containerStyle = _containerStyle;
 @synthesize labelBehavior = _labelBehavior;
 @synthesize placeholderColor = _placeholderColor;
+@synthesize preferredContainerHeight = _preferredContainerHeight;
 
 #pragma mark Object Lifecycle
 
@@ -206,8 +206,8 @@
 }
 
 - (MDCBaseTextFieldLayout *)calculateLayoutWithTextFieldSize:(CGSize)textFieldSize {
-  CGFloat normalizedCustomAssistiveLabelDrawPriority =
-      [self normalizedCustomAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority];
+  CGFloat clampedCustomAssistiveLabelDrawPriority =
+      [self clampedCustomAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority];
   return [[MDCBaseTextFieldLayout alloc]
                  initWithTextFieldSize:textFieldSize
                   positioningReference:[self createPositioningReference]
@@ -224,7 +224,7 @@
                     leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
                    rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
             assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
-      customAssistiveLabelDrawPriority:normalizedCustomAssistiveLabelDrawPriority
+      customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
               preferredContainerHeight:self.preferredContainerHeight
                                  isRTL:self.isRTL
                              isEditing:self.isEditing];
@@ -240,7 +240,7 @@
                             preferredContainerHeight:self.preferredContainerHeight];
 }
 
-- (CGFloat)normalizedCustomAssistiveLabelDrawPriority:(CGFloat)customPriority {
+- (CGFloat)clampedCustomAssistiveLabelDrawPriority:(CGFloat)customPriority {
   CGFloat value = customPriority;
   if (value < 0) {
     value = 0;
@@ -363,12 +363,10 @@
 
 - (void)mdc_setLeftView:(UIView *)leftView {
   [super setLeftView:leftView];
-  // TODO: Determine if a call to setNeedsLayout is necessary or if super calls it
 }
 
 - (void)mdc_setRightView:(UIView *)rightView {
   [super setRightView:rightView];
-  // TODO: Determine if a call to setNeedsLayout is necessary or if super calls it
 }
 
 - (void)setTrailingViewMode:(UITextFieldViewMode)trailingViewMode {
@@ -469,11 +467,10 @@
       withParentClassTextAreaFrame:[super editingRectForBounds:bounds]];
 }
 
-// The implementations for this method and the method below deserve some context! Unfortunately,
-// Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and  // Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and
-// you set @c leftView on a standard UITextField. Even though the property that you set is called @c  // // Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale
-// leftView, the method @c -rightViewRectForBounds: will be called. They are treating @c leftView as  // and you set @c leftView on a standard UITextField. Even though the property that you set is
-// @c rightView, even though @c rightView is nil. The RTL-aware wrappers around these APIs that  // called @c  // you set @c leftView on a standard UITextField. Even though the property that you
+// Apple's RTL behavior with these methods is very unintuitive. Imagine you're in an RTL locale and
+// you set @c leftView on a standard UITextField. Even though the property that you set is called @c
+// leftView, the method @c -rightViewRectForBounds: will be called. They are treating @c leftView as
+// @c rightView, even though @c rightView is nil. The RTL-aware wrappers around these APIs that
 // MDCBaseTextField introduce handle this situation more accurately.
 - (CGRect)leftViewRectForBounds:(CGRect)bounds {
   if ([self isRTL]) {
@@ -727,10 +724,10 @@
   return colorViewModel.textColor;
 }
 
-- (void)setLeadingAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
+- (void)setLeadingAssistiveLabelColor:(nonnull UIColor *)leadingAssistiveLabelColor
                              forState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  colorViewModel.leadingAssistiveLabelColor = assistiveLabelColor;
+  colorViewModel.leadingAssistiveLabelColor = leadingAssistiveLabelColor;
   [self setNeedsLayout];
 }
 
@@ -739,10 +736,10 @@
   return colorViewModel.leadingAssistiveLabelColor;
 }
 
-- (void)setTrailingAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
+- (void)setTrailingAssistiveLabelColor:(nonnull UIColor *)trailingAssistiveLabelColor
                               forState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  colorViewModel.trailingAssistiveLabelColor = assistiveLabelColor;
+  colorViewModel.trailingAssistiveLabelColor = trailingAssistiveLabelColor;
   [self setNeedsLayout];
 }
 
