@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import <XCTest/XCTest.h>
+#import <Foundation/Foundation.h>
 
 #import <objc/runtime.h>
 #import "MaterialTextFields+ContainedInputView.h"
@@ -39,6 +40,14 @@
   UIView *sideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
   sideView.backgroundColor = [UIColor blueColor];
   return sideView;
+}
+
+- (UIColor *)colorOfAttributedString:(NSAttributedString *)attributedString {
+  NSDictionary *attributes =
+      [attributedString attributesAtIndex:0
+                    longestEffectiveRange:nil
+                                  inRange:NSMakeRange(0, attributedString.length)];
+  return attributes[NSForegroundColorAttributeName];
 }
 
 #pragma mark Tests
@@ -337,6 +346,29 @@
       shouldPlaceholderBeVisibleWithPlaceholder:placeholder
                                            text:nilText
                                      labelState:MDCTextControlLabelStateFloating]);
+}
+
+- (void)testPlaceholderColor {
+  // Given
+  CGRect textFieldFrame = CGRectMake(0, 0, 130, 100);
+  MDCBaseTextField *textField = [[MDCBaseTextField alloc] initWithFrame:textFieldFrame];
+  textField.placeholder = @"placeholder";
+  UIColor *originalPlaceholderColor =
+      [self colorOfAttributedString:textField.attributedPlaceholder];
+  UIColor *newPlaceholderColor = [UIColor blueColor];
+  
+  // When
+  textField.placeholderColor = newPlaceholderColor;
+  UIColor *placeholderColorAfterSettingPlaceholderColor =
+      [self colorOfAttributedString:textField.attributedPlaceholder];
+  textField.placeholderColor = nil;
+  UIColor *placeholderColorAfterUnsettingPlaceholderColor =
+      [self colorOfAttributedString:textField.attributedPlaceholder];
+
+  // Then
+  XCTAssertEqualObjects(placeholderColorAfterSettingPlaceholderColor, newPlaceholderColor);
+  XCTAssertEqualObjects(placeholderColorAfterUnsettingPlaceholderColor, originalPlaceholderColor);
+  XCTAssertNotEqualObjects(placeholderColorAfterSettingPlaceholderColor, placeholderColorAfterUnsettingPlaceholderColor);
 }
 
 @end
