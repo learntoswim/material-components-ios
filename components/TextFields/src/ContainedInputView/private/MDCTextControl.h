@@ -126,6 +126,10 @@ static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
  */
 @property(nonatomic, assign) CGFloat preferredContainerHeight;
 
+/**
+ The number of rows of text the MDCTextControl shows at one time. For textfields, this will always
+ be 1. For other views it can be more than that.
+ */
 @property(nonatomic, assign, readonly) CGFloat numberOfVisibleTextRows;
 
 @end

@@ -49,7 +49,6 @@
 @synthesize containerStyle = _containerStyle;
 @synthesize assistiveLabelDrawPriority = _assistiveLabelDrawPriority;
 @synthesize customAssistiveLabelDrawPriority = _customAssistiveLabelDrawPriority;
-@synthesize labelBehavior = _labelBehavior;
 @synthesize placeholderColor = _placeholderColor;
 @synthesize preferredContainerHeight = _preferredContainerHeight;
 
@@ -225,7 +224,6 @@
                    rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
             assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
       customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
-              preferredContainerHeight:self.preferredContainerHeight
                                  isRTL:self.isRTL
                              isEditing:self.isEditing];
 }

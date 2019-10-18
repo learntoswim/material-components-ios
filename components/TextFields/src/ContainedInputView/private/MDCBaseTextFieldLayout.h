@@ -67,7 +67,6 @@
                    assistiveLabelDrawPriority:
                        (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
              customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
-                     preferredContainerHeight:(CGFloat)preferredContainerHeight
                                         isRTL:(BOOL)isRTL
                                     isEditing:(BOOL)isEditing;
 
