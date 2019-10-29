@@ -16,7 +16,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "MaterialTextFields+ContainedInputView.h"
+#import "../../src/private/MDCTextControl.h"
+#import "MaterialTextControls.h"
+#import "supplemental/MDCBaseTextFieldTestsSnapshotTestHelpers.h"
+#import "supplemental/MDCTextControlSnapshotTestHelpers.h"
 
 // This timeout value is intended to be temporary. These snapshot tests currently take longer than
 // we'd want them to.
