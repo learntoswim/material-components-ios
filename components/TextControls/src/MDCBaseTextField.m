@@ -74,6 +74,7 @@
 - (void)commonMDCBaseTextFieldInit {
   [self initializeProperties];
   [self setUpColorViewModels];
+  [self setUpPlaceholderColor];
   [self setUpLabel];
   [self setUpAssistiveLabels];
   [self observeContentSizeCategoryNotifications];
@@ -576,6 +577,46 @@
     }
   } else {
     return NO;
+  }
+}
+
+- (void)setUpPlaceholderColor {
+  UIColor *placeholderColor = [UIColor lightGrayColor];
+#if defined(__IPHONE_13_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0)
+  if (@available(iOS 13.0, *)) {
+//    placeholderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+//      UIColor *color = [UIColor orangeColor];
+//      if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+//        color = [UIColor greenColor];
+//      }
+//      return color;
+//    }];
+//    placeholderColor = [UIColor secondaryLabelColor];
+//    placeholderColor = []
+  }
+#endif
+  self.placeholderColor = placeholderColor;
+}
+
+-(void)setPlaceholderColor:(UIColor *)placeholderColor {
+  UIColor *newPlaceholderColor = placeholderColor;
+  if (!newPlaceholderColor) {
+    newPlaceholderColor = [UIColor lightGrayColor];
+  }
+  _placeholderColor = newPlaceholderColor;
+  [self setPlaceholder:self.placeholder withColor:newPlaceholderColor];
+}
+
+-(void)setPlaceholder:(NSString *)placeholder {
+  [self setPlaceholder:placeholder withColor:self.placeholderColor];
+}
+
+- (void)setPlaceholder:(NSString *)placeholder withColor:(UIColor *)color {
+  if (placeholder.length > 0) {
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:placeholder attributes:@{NSForegroundColorAttributeName: color}];
+    [super setAttributedPlaceholder:attributedString];
+  } else {
+    [super setPlaceholder:nil];
   }
 }
 

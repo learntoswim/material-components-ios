@@ -83,6 +83,8 @@ static CGFloat const kDefaultPadding = 15.0;
   self.outlinedTextField.placeholder = @"This is placeholder text";
   self.outlinedTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
   self.outlinedTextField.leadingAssistiveLabel.text = @"This is leading assistive text";
+//  self.outlinedTextField.placeholderColor = [UIColor blueColor];
+//  self.outlinedTextField.placeholderColor = [UIColor lightGrayColor];
   [self.view addSubview:self.outlinedTextField];
 }
 

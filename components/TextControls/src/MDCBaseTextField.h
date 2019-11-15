@@ -145,6 +145,21 @@
  */
 - (nonnull UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state;
 
+/**
+ The color of the placeholder text.
+ */
+@property(nonatomic, strong, nonnull) UIColor *placeholderColor;
+
+@end
+
+@interface MDCBaseTextField (Unavailable)
+
+/**
+ If @c accessibilityLabel is not set, this value will be a concatenation of any @c label text, @c
+ leadingAssistiveLabel text, and @c trailingAssistiveLabel text.
+ */
+@property(nullable, nonatomic, copy) NSAttributedString *attributedPlaceholder NS_UNAVAILABLE;
+
 @end
 
 @interface MDCBaseTextField (UIAccessibility)
