@@ -22,10 +22,25 @@
 static NSString *const kExampleTitle = @"MDCTextControl TextFields";
 static CGFloat const kDefaultPadding = 15.0;
 
+@protocol MDCTraitEnvironmentChangeDelegate
+- (void)
+    childViewControllerDidRequestPreferredContentSizeCategoryDecrement:
+        (UIViewController *)childViewController
+                                                        decreaseButton:(MDCButton *)decreaseButton
+                                                        increaseButton:(MDCButton *)increaseButton;
+- (void)
+    childViewControllerDidRequestPreferredContentSizeCategoryIncrement:
+        (UIViewController *)childViewController
+                                                        decreaseButton:(MDCButton *)decreaseButton
+                                                        increaseButton:(MDCButton *)increaseButton;
+@end
+
 /**
  Typical use example showing how to place an @c MDCBaseTextField in a UIViewController.
  */
 @interface MDCTextControlTextFieldTypicalUseExampleContentViewController : UIViewController
+
+@property(nonatomic, weak) id<MDCTraitEnvironmentChangeDelegate> traitEnvironmentChangeDelegate;
 
 /** The MDCBaseTextField for this example. */
 @property(nonatomic, strong) MDCBaseTextField *baseTextField;
@@ -39,6 +54,9 @@ static CGFloat const kDefaultPadding = 15.0;
 /** The UIButton that makes the textfield stop being the first responder. */
 @property(nonatomic, strong) MDCButton *resignFirstResponderButton;
 
+@property(nonatomic, strong) MDCButton *decreaseContentSizeButton;
+@property(nonatomic, strong) MDCButton *increaseContentSizeButton;
+
 /** The container scheme injected into this example. */
 @property(nonatomic, strong) id<MDCContainerScheming> containerScheme;
 
@@ -48,6 +66,11 @@ static CGFloat const kDefaultPadding = 15.0;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+
+  self.increaseContentSizeButton = [self createIncreaseContentSizeButton];
+  [self.view addSubview:self.increaseContentSizeButton];
+  self.decreaseContentSizeButton = [self createDecreaseContentSizeButton];
+  [self.view addSubview:self.decreaseContentSizeButton];
 
   self.resignFirstResponderButton = [self createFirstResponderButton];
   [self.view addSubview:self.resignFirstResponderButton];
@@ -74,6 +97,46 @@ static CGFloat const kDefaultPadding = 15.0;
   self.outlinedTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
   self.outlinedTextField.leadingAssistiveLabel.text = @"This is leading assistive text";
   [self.view addSubview:self.outlinedTextField];
+}
+
+- (MDCButton *)createDecreaseContentSizeButton {
+  return [self createContentSizeButtonWithTitle:@"Decrease size"
+                                       selector:@selector(decreaseContentSizeButtonTapped:)];
+}
+
+- (MDCButton *)createIncreaseContentSizeButton {
+  return [self createContentSizeButtonWithTitle:@"Increase size"
+                                       selector:@selector(increaseContentSizeButtonTapped:)];
+}
+
+- (MDCButton *)createContentSizeButtonWithTitle:(NSString *)title selector:(SEL)selector {
+  MDCButton *button = [[MDCButton alloc] init];
+  [button setTitle:title forState:UIControlStateNormal];
+  [button addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+  [button sizeToFit];
+  button.enabled = NO;
+  if (@available(iOS 10.0, *)) {
+    button.enabled = YES;
+  }
+  return button;
+}
+
+- (void)increaseContentSizeButtonTapped:(id)sender {
+  [self.traitEnvironmentChangeDelegate
+      childViewControllerDidRequestPreferredContentSizeCategoryIncrement:self
+                                                          decreaseButton:
+                                                              self.decreaseContentSizeButton
+                                                          increaseButton:
+                                                              self.increaseContentSizeButton];
+}
+
+- (void)decreaseContentSizeButtonTapped:(id)sender {
+  [self.traitEnvironmentChangeDelegate
+      childViewControllerDidRequestPreferredContentSizeCategoryDecrement:self
+                                                          decreaseButton:
+                                                              self.decreaseContentSizeButton
+                                                          increaseButton:
+                                                              self.increaseContentSizeButton];
 }
 
 - (void)usePreferredFonts {
@@ -152,6 +215,8 @@ static CGFloat const kDefaultPadding = 15.0;
   [self usePreferredFonts];
 
   [self.resignFirstResponderButton sizeToFit];
+  [self.decreaseContentSizeButton sizeToFit];
+  [self.increaseContentSizeButton sizeToFit];
   [self.baseTextField sizeToFit];
   [self.filledTextField sizeToFit];
   [self.outlinedTextField sizeToFit];
@@ -161,8 +226,20 @@ static CGFloat const kDefaultPadding = 15.0;
                  CGRectGetWidth(self.resignFirstResponderButton.frame),
                  CGRectGetHeight(self.resignFirstResponderButton.frame));
 
+  CGFloat padding = (CGFloat)15.0;
+  self.decreaseContentSizeButton.frame =
+      CGRectMake(padding, CGRectGetMaxY(self.resignFirstResponderButton.frame) + kDefaultPadding,
+                 CGRectGetWidth(self.decreaseContentSizeButton.frame),
+                 CGRectGetHeight(self.decreaseContentSizeButton.frame));
+
+  self.increaseContentSizeButton.frame =
+      CGRectMake(CGRectGetMaxX(self.decreaseContentSizeButton.frame) + padding,
+                 CGRectGetMinY(self.decreaseContentSizeButton.frame),
+                 CGRectGetWidth(self.increaseContentSizeButton.frame),
+                 CGRectGetHeight(self.increaseContentSizeButton.frame));
+
   self.filledTextField.frame = CGRectMake(
-      kDefaultPadding, CGRectGetMaxY(self.resignFirstResponderButton.frame) + kDefaultPadding,
+      kDefaultPadding, CGRectGetMaxY(self.increaseContentSizeButton.frame) + kDefaultPadding,
       CGRectGetWidth(self.filledTextField.frame), CGRectGetHeight(self.filledTextField.frame));
 
   self.outlinedTextField.frame = CGRectMake(
@@ -178,7 +255,8 @@ static CGFloat const kDefaultPadding = 15.0;
 
 /** This view controller manages a child view controller that contains the actual example content.
  * It overrides the child view controller's trait collection based off the user's behavior. */
-@interface MDCTextControlTextFieldTypicalUseExample : UIViewController
+@interface MDCTextControlTextFieldTypicalUseExample
+    : UIViewController <MDCTraitEnvironmentChangeDelegate>
 
 /** The container scheme injected into this example. */
 @property(nonatomic, strong) id<MDCContainerScheming> containerScheme;
@@ -186,10 +264,7 @@ static CGFloat const kDefaultPadding = 15.0;
 @end
 
 @interface MDCTextControlTextFieldTypicalUseExample ()
-@property(nonatomic, strong) MDCButton *decreaseContentSizeButton;
-@property(nonatomic, strong) MDCButton *increaseContentSizeButton;
 @property(nonatomic, strong) NSArray *contentSizeCategories;
-@property(nonatomic, strong) UIContentSizeCategory contentSizeCategory;
 @end
 
 @implementation MDCTextControlTextFieldTypicalUseExample
@@ -203,29 +278,16 @@ static CGFloat const kDefaultPadding = 15.0;
   [self setUpChildViewController];
   [self setUpContentSizeCategories];
   [self setUpContainerScheme];
-  [self setUpContentSizeButtons];
   self.view.backgroundColor = self.containerScheme.colorScheme.backgroundColor;
 }
 
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
 
-  [self.decreaseContentSizeButton sizeToFit];
-  [self.increaseContentSizeButton sizeToFit];
   CGFloat viewWidth = CGRectGetWidth(self.view.frame);
   CGFloat viewHeight = CGRectGetHeight(self.view.frame);
-  CGFloat padding = (CGFloat)15.0;
-  self.decreaseContentSizeButton.frame = CGRectMake(
-      padding, self.preferredButtonMinY, CGRectGetWidth(self.decreaseContentSizeButton.frame),
-      CGRectGetHeight(self.decreaseContentSizeButton.frame));
-  self.increaseContentSizeButton.frame =
-      CGRectMake(CGRectGetMaxX(self.decreaseContentSizeButton.frame) + padding,
-                 self.preferredButtonMinY, CGRectGetWidth(self.increaseContentSizeButton.frame),
-                 CGRectGetHeight(self.increaseContentSizeButton.frame));
-  CGFloat buttonMaxY = CGRectGetMaxY(self.increaseContentSizeButton.frame);
-  CGFloat childMinY = buttonMaxY + padding;
   self.contentViewController.view.frame =
-      CGRectMake(0, childMinY, viewWidth, viewHeight - childMinY);
+      CGRectMake(0, self.preferredContentMinY, viewWidth, viewHeight - self.preferredContentMinY);
 }
 
 - (void)viewDidLayoutSubviews {
@@ -240,6 +302,7 @@ static CGFloat const kDefaultPadding = 15.0;
   MDCTextControlTextFieldTypicalUseExampleContentViewController *viewController =
       [[MDCTextControlTextFieldTypicalUseExampleContentViewController alloc] init];
   [self addChildViewController:viewController];
+  viewController.traitEnvironmentChangeDelegate = self;
   [self.view addSubview:viewController.view];
 }
 
@@ -263,82 +326,61 @@ static CGFloat const kDefaultPadding = 15.0;
   ];
 }
 
-- (void)setUpContentSizeButtons {
-  self.increaseContentSizeButton = [self createIncreaseContentSizeButton];
-  [self.view addSubview:self.increaseContentSizeButton];
-  self.decreaseContentSizeButton = [self createDecreaseContentSizeButton];
-  [self.view addSubview:self.decreaseContentSizeButton];
-}
-
-- (MDCButton *)createDecreaseContentSizeButton {
-  return [self createContentSizeButtonWithTitle:@"Decrease size"
-                                       selector:@selector(decreaseContentSize:)];
-}
-
-- (MDCButton *)createIncreaseContentSizeButton {
-  return [self createContentSizeButtonWithTitle:@"Increase size"
-                                       selector:@selector(increaseContentSize:)];
-}
-
-- (void)increaseContentSize:(MDCButton *)button {
-  if (self.contentSizeCategory) {
-    NSInteger idx = [self.contentSizeCategories indexOfObject:self.contentSizeCategory];
+- (void)increaseContentSizeForChildViewController:(UIViewController *)childViewController
+                                   decreaseButton:(MDCButton *)decreaseButton
+                                   increaseButton:(MDCButton *)increaseButton {
+  UIContentSizeCategory contentSizeCategory =
+      [self contentSizeCategoryForViewController:childViewController];
+  if (contentSizeCategory) {
+    NSInteger idx = [self.contentSizeCategories indexOfObject:contentSizeCategory];
     if (idx < (NSInteger)self.contentSizeCategories.count - 1) {
       idx += 1;
       UIContentSizeCategory newContentSizeCategory = self.contentSizeCategories[idx];
-      self.contentSizeCategory = newContentSizeCategory;
-      self.increaseContentSizeButton.enabled =
-          idx != (NSInteger)self.contentSizeCategories.count - 1;
-      self.decreaseContentSizeButton.enabled = idx > 0;
+      [self setContentSizeCategory:newContentSizeCategory
+             onChildViewController:childViewController];
+      increaseButton.enabled = idx != (NSInteger)self.contentSizeCategories.count - 1;
+      decreaseButton.enabled = idx > 0;
     }
   }
 }
 
-- (void)decreaseContentSize:(MDCButton *)button {
-  if (self.contentSizeCategory) {
-    NSInteger idx = [self.contentSizeCategories indexOfObject:self.contentSizeCategory];
+- (void)decreaseContentSizeForChildViewController:(UIViewController *)childViewController
+                                   decreaseButton:(MDCButton *)decreaseButton
+                                   increaseButton:(MDCButton *)increaseButton {
+  UIContentSizeCategory contentSizeCategory =
+      [self contentSizeCategoryForViewController:childViewController];
+  if (contentSizeCategory) {
+    NSInteger idx = [self.contentSizeCategories indexOfObject:contentSizeCategory];
     if (idx > (NSInteger)0) {
       idx -= 1;
       UIContentSizeCategory newContentSizeCategory = self.contentSizeCategories[idx];
-      self.contentSizeCategory = newContentSizeCategory;
-      self.increaseContentSizeButton.enabled =
-          idx != (NSInteger)self.contentSizeCategories.count - 1;
-      self.decreaseContentSizeButton.enabled = idx > 0;
+      [self setContentSizeCategory:newContentSizeCategory
+             onChildViewController:childViewController];
+      increaseButton.enabled = idx != (NSInteger)self.contentSizeCategories.count - 1;
+      decreaseButton.enabled = idx > 0;
     }
   }
-}
-
-- (MDCButton *)createContentSizeButtonWithTitle:(NSString *)title selector:(SEL)selector {
-  MDCButton *button = [[MDCButton alloc] init];
-  [button setTitle:title forState:UIControlStateNormal];
-  [button addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
-  [button sizeToFit];
-  button.enabled = NO;
-  if (@available(iOS 10.0, *)) {
-    button.enabled = YES;
-  }
-  return button;
 }
 
 #pragma mark Accessors
 
-- (void)setContentSizeCategory:(UIContentSizeCategory)contentSizeCategory {
+- (void)setContentSizeCategory:(UIContentSizeCategory)contentSizeCategory
+         onChildViewController:(UIViewController *)viewController {
   if (@available(iOS 10.0, *)) {
     UITraitCollection *contentSizeCategoryTraitCollection =
         [UITraitCollection traitCollectionWithPreferredContentSizeCategory:contentSizeCategory];
-    UITraitCollection *currentTraitCollection = self.contentViewController.traitCollection;
+    UITraitCollection *currentTraitCollection = viewController.traitCollection;
     NSArray *traitCollections = @[ currentTraitCollection, contentSizeCategoryTraitCollection ];
     UITraitCollection *traitCollection =
         [UITraitCollection traitCollectionWithTraitsFromCollections:traitCollections];
-    [self setOverrideTraitCollection:traitCollection
-              forChildViewController:self.contentViewController];
+    [self setOverrideTraitCollection:traitCollection forChildViewController:viewController];
     [self.view setNeedsLayout];
   }
 }
 
-- (UIContentSizeCategory)contentSizeCategory {
+- (UIContentSizeCategory)contentSizeCategoryForViewController:(UIViewController *)viewController {
   if (@available(iOS 10.0, *)) {
-    return self.contentViewController.traitCollection.preferredContentSizeCategory;
+    return viewController.traitCollection.preferredContentSizeCategory;
   }
   return nil;
 }
@@ -357,12 +399,33 @@ static CGFloat const kDefaultPadding = 15.0;
       firstObject];
 }
 
-- (CGFloat)preferredButtonMinY {
+- (CGFloat)preferredContentMinY {
   if (@available(iOS 11.0, *)) {
     return (CGFloat)(self.view.safeAreaInsets.top + kDefaultPadding);
   } else {
     return (CGFloat)self.topLayoutGuide.length;
   }
+}
+
+#pragma mark - MDCTraitEnvironmentChangeDelegate
+
+- (void)
+    childViewControllerDidRequestPreferredContentSizeCategoryDecrement:
+        (UIViewController *)childViewController
+                                                        decreaseButton:(MDCButton *)decreaseButton
+                                                        increaseButton:(MDCButton *)increaseButton {
+  [self decreaseContentSizeForChildViewController:childViewController
+                                   decreaseButton:decreaseButton
+                                   increaseButton:increaseButton];
+}
+- (void)
+    childViewControllerDidRequestPreferredContentSizeCategoryIncrement:
+        (UIViewController *)childViewController
+                                                        decreaseButton:(MDCButton *)decreaseButton
+                                                        increaseButton:(MDCButton *)increaseButton {
+  [self increaseContentSizeForChildViewController:childViewController
+                                   decreaseButton:decreaseButton
+                                   increaseButton:increaseButton];
 }
 
 @end
