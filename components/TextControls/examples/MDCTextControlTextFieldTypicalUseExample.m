@@ -147,8 +147,8 @@ static CGFloat const kDefaultPadding = 15.0;
 - (void)viewWillLayoutSubviews {
   [super viewWillLayoutSubviews];
 
-  [self.filledTextField applyThemeWithScheme:self.containerScheme];
-  [self.outlinedTextField applyThemeWithScheme:self.containerScheme];
+  [self.filledTextField applyErrorThemeWithScheme:self.containerScheme];
+  [self.outlinedTextField applyErrorThemeWithScheme:self.containerScheme];
   [self usePreferredFonts];
 
   [self.resignFirstResponderButton sizeToFit];
