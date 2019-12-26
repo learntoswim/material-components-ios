@@ -189,7 +189,7 @@ static const CGFloat kGradientBlurLength = 6;
                                             textFieldFrame:textFieldFrame
                                                      isRTL:isRTL];
 
-  self.assistiveLabelViewLayout = [[MDCContainedInputAssistiveLabelViewLayout alloc]
+  self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
                     leftAssistiveLabel:leftAssistiveLabel
                    rightAssistiveLabel:rightAssistiveLabel

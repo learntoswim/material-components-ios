@@ -149,7 +149,7 @@ static const CGFloat kGradientBlurLength = 6;
                                              contentOffset:contentOffset
                                              textViewFrame:textViewFrame];
 
-  self.assistiveLabelViewLayout = [[MDCContainedInputAssistiveLabelViewLayout alloc]
+  self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
                     leftAssistiveLabel:leftAssistiveLabel
                    rightAssistiveLabel:rightAssistiveLabel
@@ -168,8 +168,8 @@ static const CGFloat kGradientBlurLength = 6;
   self.scrollViewContentSize = contentSize;
   self.scrollViewContentViewTouchForwardingViewFrame =
       CGRectMake(0, 0, contentSize.width, contentSize.height);
-  self.floatingLabelFrame = floatingLabelFrame;
-  self.normalLabelFrame = normalLabelFrame;
+  self.labelFrameFloating = floatingLabelFrame;
+  self.labelFrameNormal = normalLabelFrame;
   self.globalTextMinX = globalTextMinX;
   self.globalTextMaxX = globalTextMaxX;
   CGRect scrollViewRect = CGRectMake(0, 0, size.width, positioningReference.containerHeight);

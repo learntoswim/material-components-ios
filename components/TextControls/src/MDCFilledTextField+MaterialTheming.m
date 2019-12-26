@@ -96,7 +96,7 @@
       [filledSublayerFillColorNormal colorWithAlphaComponent:disabledOpacity * (CGFloat)0.12];
 
   self.tintColor = colorScheme.primaryColor;
-  self.placeholderColor = normalLabelColorNormal;
+//  self.placeholderColor = normalLabelColorNormal;
 
   [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
@@ -162,7 +162,7 @@
       [filledSublayerFillColorNormal colorWithAlphaComponent:disabledOpacity * (CGFloat)0.12];
 
   self.tintColor = colorScheme.primaryColor;
-  self.placeholderColor = normalLabelColorNormal;
+//  self.placeholderColor = normalLabelColorNormal;
 
   [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];

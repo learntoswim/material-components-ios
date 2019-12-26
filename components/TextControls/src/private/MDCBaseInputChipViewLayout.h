@@ -30,7 +30,7 @@
 
 @property(nonatomic, assign) CGRect assistiveLabelViewFrame;
 @property(nonatomic, strong, nonnull)
-    MDCContainedInputAssistiveLabelViewLayout *assistiveLabelViewLayout;
+    MDCTextControlAssistiveLabelViewLayout *assistiveLabelViewLayout;
 
 @property(nonatomic, assign) CGRect maskedScrollViewContainerViewFrame;
 @property(nonatomic, assign) CGRect scrollViewFrame;
