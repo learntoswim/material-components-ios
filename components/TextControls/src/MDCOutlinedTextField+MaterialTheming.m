@@ -89,7 +89,7 @@
   UIColor *outlineColorDisabled = [outlineColorNormal colorWithAlphaComponent:disabledOpacity];
 
   self.tintColor = colorScheme.primaryColor;
-  self.placeholderColor = normalLabelColorNormal;
+//  self.placeholderColor = normalLabelColorNormal;
 
   [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
@@ -144,7 +144,7 @@
   UIColor *outlineColorDisabled = [outlineColorNormal colorWithAlphaComponent:disabledOpacity];
 
   self.tintColor = colorScheme.primaryColor;
-  self.placeholderColor = normalLabelColorNormal;
+//  self.placeholderColor = normalLabelColorNormal;
 
   [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];

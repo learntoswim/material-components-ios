@@ -21,14 +21,14 @@
 @property(nonatomic, assign) CGFloat globalTextMinX;
 @property(nonatomic, assign) CGFloat globalTextMaxX;
 
-@property(nonatomic, assign) CGRect floatingLabelFrame;
-@property(nonatomic, assign) CGRect normalLabelFrame;
+@property(nonatomic, assign) CGRect labelFrameFloating;
+@property(nonatomic, assign) CGRect labelFrameNormal;
 
 @property(nonatomic, assign) CGRect textViewFrame;
 
 @property(nonatomic, assign) CGRect assistiveLabelViewFrame;
 @property(nonatomic, strong, nonnull)
-    MDCContainedInputAssistiveLabelViewLayout *assistiveLabelViewLayout;
+    MDCTextControlAssistiveLabelViewLayout *assistiveLabelViewLayout;
 
 @property(nonatomic, assign) CGRect maskedScrollViewContainerViewFrame;
 @property(nonatomic, assign) CGRect scrollViewFrame;

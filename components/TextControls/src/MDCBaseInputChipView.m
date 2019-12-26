@@ -28,7 +28,7 @@
 #import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-#import "private/UITextField+MDCTextControlDefaults.h"
+//#import "private/UITextField+MDCTextControlDefaults.h"
 
 @class MDCBaseInputChipViewTextField;
 @protocol MDCBaseInputChipViewTextFieldDelegate <NSObject>
@@ -62,13 +62,13 @@
 }
 
 - (void)commonMDCBaseInputChipViewTextFieldInit {
-  self.font = [UITextField mdc_defaultFont];
+  self.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 }
 
 - (void)setFont:(UIFont *)font {
   UIFont *newFont = font;
   if (!newFont) {
-    newFont = [UITextField mdc_defaultFont];
+    newFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
   }
   [super setFont:newFont];
 }
@@ -160,6 +160,7 @@
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 
 @property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
+@property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @end
 
@@ -237,7 +238,8 @@
 }
 
 - (void)initializeProperties {
-  [self setUpLayoutDirection];
+  self.animationDuration = kMDCTextControlDefaultAnimationDuration;
+  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   [self setUpChipsArray];
   [self setUpChipsToRemoveArray];
 }
@@ -248,10 +250,6 @@
 
 - (void)setUpChipsToRemoveArray {
   self.chipsToRemove = [[NSMutableArray alloc] init];
-}
-
-- (void)setUpLayoutDirection {
-  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
 }
 
 - (void)setUpChipRowHeight {
@@ -289,7 +287,7 @@
     [oldStyle removeStyleFrom:self];
   }
   _containerStyle = containerStyle;
-  [_containerStyle applyStyleToTextControl:self];
+  [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
 }
 
 - (void)setUpAssistiveLabels {
@@ -354,7 +352,7 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
-  [self setUpLayoutDirection];
+  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
@@ -527,25 +525,15 @@
 }
 
 - (void)postLayoutSubviews {
-  [MDCTextControlLabelAnimation layOutLabel:self.label
-                                      state:self.labelState
-                           normalLabelFrame:self.layout.labelFrameNormal
-                         floatingLabelFrame:self.layout.labelFrameFloating
-                                 normalFont:self.normalFont
-                               floatingFont:self.floatingFont];
-  [self.containerStyle applyStyleToTextControl:self];
-
-  //  self.leftAssistiveLabel.frame = self.layout.leftAssistiveLabelFrame;
-  //  self.rightAssistiveLabel.frame = self.layout.rightAssistiveLabelFrame;
-
   self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
   self.scrollView.frame = self.layout.scrollViewFrame;
   self.scrollViewContentViewTouchForwardingView.frame =
       self.layout.scrollViewContentViewTouchForwardingViewFrame;
   self.textField.frame = self.layout.textFieldFrame;
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
-  //  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+
+  self.label.hidden = self.labelState == MDCTextControlLabelStateNone;
 
   NSLog(@"post layout subviews: %@", NSStringFromCGPoint(self.scrollView.contentOffset));
   [self animateChipLayoutChangesWithChips:self.mutableChips
@@ -561,6 +549,9 @@
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
   [self.assistiveLabelView setNeedsLayout];
 
+  [self animateLabel];
+  [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
+  
   [self layOutGradientLayers];
 }
 
@@ -707,6 +698,37 @@
 
 #pragma mark Label
 
+- (void)animateLabel {
+  __weak MDCBaseInputChipView *weakSelf = self;
+  [MDCTextControlLabelAnimation animateLabel:self.label
+                                       state:self.labelState
+                            normalLabelFrame:self.layout.labelFrameNormal
+                          floatingLabelFrame:self.layout.labelFrameFloating
+                                  normalFont:self.normalFont
+                                floatingFont:self.floatingFont
+                           animationDuration:self.animationDuration
+                                  completion:^(BOOL finished) {
+                                    if (finished) {
+                                      // Ensure that the label position is correct in case of
+                                      // competing animations.
+                                      [weakSelf positionLabel];
+                                    }
+                                  }];
+}
+
+- (void)positionLabel {
+  if (self.labelState == MDCTextControlLabelStateFloating) {
+    self.label.frame = self.layout.labelFrameFloating;
+    self.label.hidden = NO;
+  } else if (self.labelState == MDCTextControlLabelStateNormal) {
+    self.label.frame = self.layout.labelFrameNormal;
+    self.label.hidden = NO;
+  } else {
+    self.label.frame = CGRectZero;
+    self.label.hidden = YES;
+  }
+}
+
 - (BOOL)canLabelFloat {
   return self.labelBehavior == MDCTextControlLabelBehaviorFloats;
 }
@@ -801,7 +823,7 @@
 #pragma mark Fonts
 
 - (UIFont *)normalFont {
-  return self.inputChipViewTextField.font ?: [UITextField mdc_defaultFont];
+  return self.inputChipViewTextField.font ?: [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 }
 
 - (UIFont *)floatingFont {
