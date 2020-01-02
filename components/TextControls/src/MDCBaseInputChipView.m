@@ -30,6 +30,10 @@
 #import "private/MDCTextControlStyleBase.h"
 //#import "private/UITextField+MDCTextControlDefaults.h"
 
+static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
+  return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+}
+
 @class MDCBaseInputChipViewTextField;
 @protocol MDCBaseInputChipViewTextFieldDelegate <NSObject>
 - (void)inputChipViewTextFieldDidDeleteBackward:(MDCBaseInputChipViewTextField *)textField
@@ -62,13 +66,16 @@
 }
 
 - (void)commonMDCBaseInputChipViewTextFieldInit {
-  self.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+//  if (@available(iOS 10.0, *)) {
+//    self.adjustsFontForContentSizeCategory = YES;
+//  }
+  self.font = MDCInputChipViewDefaultUITextFieldFont();
 }
 
 - (void)setFont:(UIFont *)font {
   UIFont *newFont = font;
   if (!newFont) {
-    newFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    newFont = MDCInputChipViewDefaultUITextFieldFont();
   }
   [super setFont:newFont];
 }
@@ -171,6 +178,8 @@
 @synthesize containerStyle = _containerStyle;
 @synthesize label = _label;
 
+@synthesize adjustsFontForContentSizeCategory = _adjustsFontForContentSizeCategory;
+
 #pragma mark Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -242,6 +251,8 @@
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   [self setUpChipsArray];
   [self setUpChipsToRemoveArray];
+  
+  self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
 }
 
 - (void)setUpChipsArray {
@@ -256,7 +267,7 @@
   CGFloat textHeight = (CGFloat)ceil((double)self.inputChipViewTextField.font.lineHeight);
   self.chipRowHeight = textHeight * 2;
 
-  self.chipRowSpacing = 7;
+  self.chipRowSpacing = 0;//7;
 }
 
 - (void)createSubviews {
@@ -365,6 +376,12 @@
 
 #pragma mark UIControl Overrides
 
+- (void)setEnabled:(BOOL)enabled {
+  [super setEnabled:enabled];
+  self.textField.enabled = enabled;
+  [self setNeedsLayout];
+}
+
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
   BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
   NSLog(@"self.scrollView.contentOffset = %@", NSStringFromCGPoint(self.scrollView.contentOffset));
@@ -456,7 +473,7 @@
 
 #pragma mark Layout
 
-- (NSInteger)determineNumberOfVisibleRows {
+- (CGFloat)determineNumberOfVisibleRows {
   if (self.chipsWrap) {
     return self.preferredNumberOfVisibleRows;
   } else {
@@ -465,7 +482,7 @@
 }
 
 - (MDCBaseInputChipViewLayout *)calculateLayoutWithSize:(CGSize)size {
-  CGFloat numberOfVisibleRows = (CGFloat)[self determineNumberOfVisibleRows];
+  CGFloat numberOfVisibleRows = [self determineNumberOfVisibleRows];
   id<MDCTextControlVerticalPositioningReference> positioningReference = [self.containerStyle
       positioningReferenceWithFloatingFontLineHeight:self.floatingFont.lineHeight
                                 normalFontLineHeight:self.normalFont.lineHeight
@@ -504,6 +521,12 @@
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
+  for (UIView *chip in self.chips) {
+    CGFloat initialHeight = chip.frame.size.height;
+    [chip sizeToFit];
+    NSLog(@"pre layout subviews: %@ to %@",@(initialHeight),@(chip.frame.size.height));
+    
+  }
   self.layout = [self calculateLayoutWithSize:self.bounds.size];
 }
 
@@ -535,7 +558,7 @@
 
   self.label.hidden = self.labelState == MDCTextControlLabelStateNone;
 
-  NSLog(@"post layout subviews: %@", NSStringFromCGPoint(self.scrollView.contentOffset));
+//  NSLog(@"post layout subviews: %@", NSStringFromCGPoint(self.scrollView.contentOffset));
   [self animateChipLayoutChangesWithChips:self.mutableChips
                                chipFrames:self.layout.chipFrames
                             chipsToRemove:self.chipsToRemove
@@ -624,6 +647,7 @@
           if (self.layout.chipFrames.count > idx) {
             frame = [self.layout.chipFrames[idx] CGRectValue];
           }
+          NSLog(@"chip positioning: %@ to %@",@(chip.frame.size.height),@(frame.size.height));
           chip.frame = frame;
         }
       }
@@ -823,8 +847,9 @@
 #pragma mark Fonts
 
 - (UIFont *)normalFont {
-  return self.inputChipViewTextField.font ?: [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+  return self.inputChipViewTextField.font ?: MDCInputChipViewDefaultUITextFieldFont();
 }
+
 
 - (UIFont *)floatingFont {
   return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
@@ -832,39 +857,15 @@
 
 #pragma mark Dynamic Type
 
-- (void)mdc_setAdjustsFontForContentSizeCategory:(BOOL)adjusts {
-  _mdc_adjustsFontForContentSizeCategory = adjusts;
-  if (_mdc_adjustsFontForContentSizeCategory) {
-    [self startObservingUIContentSizeCategory];
-  } else {
-    [self stopObservingUIContentSizeCategory];
+- (void)setAdjustsFontForContentSizeCategory:(BOOL)adjustsFontForContentSizeCategory {
+  if (@available(iOS 10.0, *)) {
+    _adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory;
+    self.textField.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory;
+    self.leadingAssistiveLabel.adjustsFontForContentSizeCategory =
+        adjustsFontForContentSizeCategory;
+    self.trailingAssistiveLabel.adjustsFontForContentSizeCategory =
+        adjustsFontForContentSizeCategory;
   }
-  [self updateFontsForDynamicType];
-}
-
-- (void)updateFontsForDynamicType {
-  if (self.mdc_adjustsFontForContentSizeCategory) {
-    UIFont *textFont = [UIFont mdc_preferredFontForMaterialTextStyle:MDCFontTextStyleBody1];
-    UIFont *helperFont = [UIFont mdc_preferredFontForMaterialTextStyle:MDCFontTextStyleCaption];
-    self.textField.font = textFont;
-    self.label.font = textFont;
-    self.leadingAssistiveLabel.font = helperFont;
-    self.leadingAssistiveLabel.font = helperFont;
-  }
-  [self setNeedsLayout];
-}
-
-- (void)startObservingUIContentSizeCategory {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(updateFontsForDynamicType)
-                                               name:UIContentSizeCategoryDidChangeNotification
-                                             object:nil];
-}
-
-- (void)stopObservingUIContentSizeCategory {
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:UIContentSizeCategoryDidChangeNotification
-                                                object:nil];
 }
 
 #pragma mark Custom UIView Geometry Methods

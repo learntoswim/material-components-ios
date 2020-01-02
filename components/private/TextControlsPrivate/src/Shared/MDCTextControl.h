@@ -24,6 +24,7 @@
 #import "MDCTextControlVerticalPositioningReference.h"
 
 static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
+static const CGFloat kMDCTextControlDefaultMultilineNumberOfVisibleRows = (CGFloat)2.0;
 
 @protocol MDCTextControlStyle;
 

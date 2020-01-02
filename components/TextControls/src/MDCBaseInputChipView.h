@@ -19,12 +19,23 @@
 
 @class MDCBaseInputChipView;
 @protocol MDCInputChipViewDelegate <NSObject>
+
+
+
 - (void)inputChipViewDidDeleteBackwards:(nonnull MDCBaseInputChipView *)inputChipView
                                 oldText:(nullable NSString *)oldText
                                 newText:(nullable NSString *)newText;
+
+@optional
+
+//- (BOOL)inputChipView:(nonnull MDCBaseInputChipView *)inputChipView
+//    shouldSelectChip:(UIView *)chipToSelect;
+//- (BOOL)inputChipView:(nonnull MDCBaseInputChipView *)inputChipView
+//shouldDeleteChips:(NSArray<UIView *> *chips)chipsToSelect;
+
 @end
 
-@interface MDCBaseInputChipView : UIControl
+@interface MDCBaseInputChipView : UIControl <UIContentSizeCategoryAdjusting>
 
 @property(strong, nonatomic, nonnull, readonly) NSArray<UIView *> *chips;
 
@@ -133,16 +144,9 @@
 - (void)addChip:(nonnull UIView *)chip;
 - (void)removeChips:(nonnull NSArray<UIView *> *)chips;
 @property(nonatomic, assign) CGFloat preferredContainerHeight;
-@property(nonatomic, assign) NSInteger preferredNumberOfVisibleRows;
+@property(nonatomic, assign) CGFloat preferredNumberOfVisibleRows;
 
-/**
- Indicates whether the text field should automatically update its font when the device’s
- UIContentSizeCategory is changed.
- This property is modeled after the adjustsFontForContentSizeCategory property in the
- UIContentSizeCategoryAdjusting protocol added by Apple in iOS 10.0.
- Defaults value is NO.
- */
-@property(nonatomic, setter=mdc_setAdjustsFontForContentSizeCategory:)
-    BOOL mdc_adjustsFontForContentSizeCategory;
+//@property(nonatomic, setter=mdc_setAdjustsFontForContentSizeCategory:)
+//    BOOL mdc_adjustsFontForContentSizeCategory;
 
 @end
