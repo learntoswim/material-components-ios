@@ -16,9 +16,6 @@
 
 #import <MDFInternationalization/MDFInternationalization.h>
 #import "MDCBaseInputChipView.h"
-#import "MaterialMath.h"
-
-static const CGFloat kEstimatedCursorWidth = (CGFloat)2.0;
 
 static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
@@ -34,27 +31,27 @@ static const CGFloat kGradientBlurLength = 6;
 
 @implementation MDCBaseTextAreaLayout
 
-- (instancetype)initWithSize:(CGSize)size
-                      containerStyle:(id<MDCTextControlStyle>)containerStyle
-                                text:(NSString *)text
-                                font:(UIFont *)font
-                        floatingFont:(UIFont *)floatingFont
-                               label:(UILabel *)label
+- (nonnull instancetype)initWithSize:(CGSize)size
+                positioningReference:
+                    (nonnull id<MDCTextControlVerticalPositioningReference>)positioningReference
+                                text:(nullable NSString *)text
+                                font:(nonnull UIFont *)font
+                        floatingFont:(nonnull UIFont *)floatingFont
+                               label:(nonnull UILabel *)label
                           labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
-                  leftAssistiveLabel:(UILabel *)leftAssistiveLabel
-                 rightAssistiveLabel:(UILabel *)rightAssistiveLabel
+                  leftAssistiveLabel:(nonnull UILabel *)leftAssistiveLabel
+                 rightAssistiveLabel:(nonnull UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
-            preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing {
   self = [super init];
   if (self) {
     [self calculateLayoutWithSize:size
-                          containerStyle:containerStyle
+                    positioningReference:positioningReference
                                     text:text
                                     font:font
                             floatingFont:floatingFont
@@ -65,7 +62,6 @@ static const CGFloat kGradientBlurLength = 6;
                      rightAssistiveLabel:rightAssistiveLabel
               assistiveLabelDrawPriority:assistiveLabelDrawPriority
         customAssistiveLabelDrawPriority:normalizedCustomAssistiveLabelDrawPriority
-                preferredContainerHeight:preferredContainerHeight
             preferredNumberOfVisibleRows:preferredNumberOfVisibleRows
                                    isRTL:isRTL
                                isEditing:isEditing];
@@ -74,7 +70,8 @@ static const CGFloat kGradientBlurLength = 6;
 }
 
 - (void)calculateLayoutWithSize:(CGSize)size
-                      containerStyle:(id<MDCTextControlStyle>)containerStyle
+                positioningReference:
+                    (id<MDCTextControlVerticalPositioningReference>)positioningReference
                                 text:(NSString *)text
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
@@ -86,18 +83,9 @@ static const CGFloat kGradientBlurLength = 6;
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
-            preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing {
-  id<MDCTextControlVerticalPositioningReference> positioningReference =
-      [containerStyle positioningReferenceWithFloatingFontLineHeight:floatingFont.lineHeight
-                                                normalFontLineHeight:font.lineHeight
-                                                       textRowHeight:font.lineHeight
-                                                    numberOfTextRows:preferredNumberOfVisibleRows
-                                                             density:0
-                                            preferredContainerHeight:preferredContainerHeight];
-
   CGFloat globalTextMinX = isRTL ? kHorizontalPadding : kHorizontalPadding;
   CGFloat globalTextMaxX =
       isRTL ? size.width - kHorizontalPadding : size.width - kHorizontalPadding;
@@ -128,6 +116,7 @@ static const CGFloat kGradientBlurLength = 6;
   CGFloat textViewMinYWithFloatingLabel =
       floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   if (labelState == MDCTextControlLabelStateFloating) {
+    // TODO: Can we get rid of labelstate from this class?
     textViewMinY = textViewMinYWithFloatingLabel;
   }
 
@@ -246,8 +235,8 @@ static const CGFloat kGradientBlurLength = 6;
                                 attributes:attributes
                                    context:nil];
   CGFloat maxTextFieldHeight = font.lineHeight;
-  CGFloat textFieldWidth = MDCCeil(CGRectGetWidth(rect)) + kEstimatedCursorWidth;
-  CGFloat textFieldHeight = MDCCeil(CGRectGetHeight(rect));
+  CGFloat textFieldWidth = CGRectGetWidth(rect);
+  CGFloat textFieldHeight = CGRectGetHeight(rect);
   if (textFieldWidth > maxWidth) {
     textFieldWidth = maxWidth;
   }
@@ -293,7 +282,7 @@ static const CGFloat kGradientBlurLength = 6;
                chipRowHeight:(CGFloat)chipRowHeight
             interChipSpacing:(CGFloat)interChipSpacing {
   CGFloat viewMidY = CGRectGetMidY(rect);
-  CGFloat midYAdjustedForContentInset = MDCRound(viewMidY - textViewMinY);
+  CGFloat midYAdjustedForContentInset = viewMidY - textViewMinY;
   NSInteger row =
       (NSInteger)midYAdjustedForContentInset / (NSInteger)(chipRowHeight + interChipSpacing);
   return row;

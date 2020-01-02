@@ -551,7 +551,7 @@
 
   [self animateLabel];
   [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
-  
+
   [self layOutGradientLayers];
 }
 

@@ -18,7 +18,7 @@
 #import "MDCTextControlState.h"
 #import "MaterialContainerScheme.h"
 
-@interface MDCBaseTextArea : UIControl
+@interface MDCBaseTextArea : UIControl <UIContentSizeCategoryAdjusting>
 
 /**
  The @c leadingAssistiveLabel is a label below the text on the leading edge of the view. It can be
