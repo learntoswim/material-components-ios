@@ -43,7 +43,8 @@
 @property(nonatomic, strong, nonnull) NSArray<NSNumber *> *horizontalGradientLocations;
 
 - (nonnull instancetype)initWithSize:(CGSize)size
-                      containerStyle:(nonnull id<MDCTextControlStyle>)containerStyle
+                positioningReference:
+                    (nonnull id<MDCTextControlVerticalPositioningReference>)positioningReference
                                 text:(nullable NSString *)text
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
@@ -55,7 +56,6 @@
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
-            preferredContainerHeight:(CGFloat)preferredContainerHeight
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing;

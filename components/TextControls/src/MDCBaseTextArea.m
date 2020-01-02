@@ -29,6 +29,8 @@
 #import "private/MDCTextControlStyleBase.h"
 //#import "private/UITextField+MDCTextControlDefaults.h"
 
+static const CGFloat kDefaultPreferredNumberOfVisibleRows = (CGFloat)2.0;
+
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
 - (void)inputChipViewTextViewDidBecomeFirstResponder:(BOOL)didBecome;
@@ -63,6 +65,9 @@
   self.layoutMargins = UIEdgeInsetsZero;
   self.textContainer.lineFragmentPadding = 0;
   self.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+
+  //  self.layer.borderColor = [UIColor redColor].CGColor;
+  //  self.layer.borderWidth = 1;
 }
 
 - (void)setFont:(UIFont *)font {
@@ -81,9 +86,6 @@
 }
 
 - (BOOL)becomeFirstResponder {
-  //  self.layer.borderColor = [UIColor redColor].CGColor;
-  //  self.layer.borderWidth = 1;
-
   BOOL didBecomeFirstResponder = [super becomeFirstResponder];
   [self.inputChipViewTextViewDelegate
       inputChipViewTextViewDidBecomeFirstResponder:didBecomeFirstResponder];
@@ -99,52 +101,41 @@
 #pragma mark MDCTextControl properties
 @property(strong, nonatomic) UILabel *label;
 @property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
+@property(strong, nonatomic) MDCBaseTextAreaLayout *layout;
+@property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
+@property(nonatomic, assign) MDCTextControlState textControlState;
+@property(nonatomic, assign) MDCTextControlLabelState labelState;
+@property(nonatomic, assign) NSTimeInterval animationDuration;
+
+@property(nonatomic, strong)
+    NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
 @property(strong, nonatomic) UIScrollView *scrollView;
 @property(strong, nonatomic) UIView *scrollViewContentViewTouchForwardingView;
 @property(strong, nonatomic) MDCBaseTextAreaTextView *inputChipViewTextView;
-
-@property(strong, nonatomic) MDCBaseTextAreaLayout *layout;
-
 @property(strong, nonatomic) UITouch *lastTouch;
 @property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
 @property(nonatomic, assign) CGPoint lastTouchInitialLocation;
 
-//@property(strong, nonatomic) UIButton *clearButton;
-//@property(strong, nonatomic) UIImageView *clearButtonImageView;
-//@property(strong, nonatomic) UILabel *floatingLabel;
-//
-//@property(strong, nonatomic) UILabel *leftAssistiveLabel;
-//@property(strong, nonatomic) UILabel *rightAssistiveLabel;
-
-@property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
-
-@property(nonatomic, assign) MDCTextControlState textControlState;
-@property(nonatomic, assign) MDCTextControlLabelState labelState;
-
-@property(nonatomic, strong)
-    NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
-
 @property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
-
-@property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @end
 
 @implementation MDCBaseTextArea
-@synthesize preferredContainerHeight = _preferredContainerHeight;
+@synthesize containerStyle = _containerStyle;
 @synthesize assistiveLabelDrawPriority = _assistiveLabelDrawPriority;
 @synthesize customAssistiveLabelDrawPriority = _customAssistiveLabelDrawPriority;
-@synthesize containerStyle = _containerStyle;
-@synthesize label = _label;
+@synthesize preferredContainerHeight = _preferredContainerHeight;
+
+@synthesize adjustsFontForContentSizeCategory = _adjustsFontForContentSizeCategory;
 
 #pragma mark Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    [self commonInputChipViewInit];
+    [self commonMDCBaseTextAreaInit];
   }
   return self;
 }
@@ -152,22 +143,18 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    [self commonInputChipViewInit];
+    [self commonMDCBaseTextAreaInit];
   }
   return self;
 }
 
-- (void)commonInputChipViewInit {
-  [self addObservers];
+- (void)commonMDCBaseTextAreaInit {
   [self initializeProperties];
-  [self createSubviews];
   [self setUpColorViewModels];
+  [self setUpLabel];
   [self setUpAssistiveLabels];
-  [self setUpContainerStyle];
-}
-
-- (void)setUpContainerStyle {
-  self.containerStyle = [[MDCTextControlStyleBase alloc] init];
+  [self setUpTextAreaSpecificSubviews];
+  [self observeUITextViewNotifications];
 }
 
 - (void)dealloc {
@@ -176,56 +163,17 @@
 
 #pragma mark Setup
 
-- (void)addObservers {
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(textViewDidEndEditingWithNotification:)
-             name:UITextViewTextDidEndEditingNotification
-           object:nil];
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(textFieldDidBeginEditingWithNotification:)
-             name:UITextViewTextDidBeginEditingNotification
-           object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(textViewDidChangeWithNotification:)
-                                               name:UITextViewTextDidChangeNotification
-                                             object:nil];
-}
-
 - (void)initializeProperties {
-  self.gradientManager = [[MDCTextControlGradientManager alloc] init];
+  self.animationDuration = kMDCTextControlDefaultAnimationDuration;
+  self.labelBehavior = MDCTextControlLabelBehaviorFloats;
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
-}
+  self.labelState = [self determineCurrentLabelState];
+  self.textControlState = [self determineCurrentTextControlState];
+  self.containerStyle = [[MDCTextControlStyleBase alloc] init];
+  self.colorViewModels = [[NSMutableDictionary alloc] init];
 
-- (void)createSubviews {
-  self.maskedScrollViewContainerView = [[UIView alloc] init];
-  [self addSubview:self.maskedScrollViewContainerView];
-
-  self.scrollView = [[UIScrollView alloc] init];
-  self.scrollView.bounces = NO;
-  [self.maskedScrollViewContainerView addSubview:self.scrollView];
-
-  self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
-  [self.scrollView addSubview:self.scrollViewContentViewTouchForwardingView];
-
-  self.inputChipViewTextView = [[MDCBaseTextAreaTextView alloc] init];
-  self.inputChipViewTextView.inputChipViewTextViewDelegate = self;
-  self.inputChipViewTextView.showsVerticalScrollIndicator = NO;
-  self.inputChipViewTextView.showsHorizontalScrollIndicator = NO;
-  [self.scrollView addSubview:self.inputChipViewTextView];
-
-  self.label = [[UILabel alloc] init];
-  [self addSubview:self.label];
-}
-
-- (void)setContainerStyle:(id<MDCTextControlStyle>)containerStyle {
-  id<MDCTextControlStyle> oldStyle = _containerStyle;
-  if (oldStyle) {
-    [oldStyle removeStyleFrom:self];
-  }
-  _containerStyle = containerStyle;
-  [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
+  self.preferredNumberOfVisibleRows = kDefaultPreferredNumberOfVisibleRows;
+  self.gradientManager = [[MDCTextControlGradientManager alloc] init];
 }
 
 - (void)setUpColorViewModels {
@@ -248,28 +196,44 @@
   [self addSubview:self.assistiveLabelView];
 }
 
-#pragma mark UIResponder Overrides
-
-- (BOOL)resignFirstResponder {
-  BOOL textFieldDidResign = [self.textView resignFirstResponder];
-  return textFieldDidResign;
+- (void)setUpLabel {
+  self.label = [[UILabel alloc] init];
+  [self addSubview:self.label];
 }
 
-- (BOOL)becomeFirstResponder {
-  BOOL textFieldDidBecome = [self.textView becomeFirstResponder];
-  return textFieldDidBecome;
+- (void)setUpTextAreaSpecificSubviews {
+  self.maskedScrollViewContainerView = [[UIView alloc] init];
+  [self addSubview:self.maskedScrollViewContainerView];
+
+  self.scrollView = [[UIScrollView alloc] init];
+  self.scrollView.bounces = NO;
+  [self.maskedScrollViewContainerView addSubview:self.scrollView];
+
+  self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
+  [self.scrollView addSubview:self.scrollViewContentViewTouchForwardingView];
+
+  self.inputChipViewTextView = [[MDCBaseTextAreaTextView alloc] init];
+  self.inputChipViewTextView.inputChipViewTextViewDelegate = self;
+  self.inputChipViewTextView.showsVerticalScrollIndicator = NO;
+  self.inputChipViewTextView.showsHorizontalScrollIndicator = NO;
+  [self.scrollView addSubview:self.inputChipViewTextView];
 }
 
-- (void)handleResponderChange {
-  [self setNeedsLayout];
-}
-
-- (BOOL)isFirstResponder {
-  return self.textView.isFirstResponder;
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-  [super touchesBegan:touches withEvent:event];
+- (void)observeUITextViewNotifications {
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(textViewDidEndEditingWithNotification:)
+             name:UITextViewTextDidEndEditingNotification
+           object:nil];
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(textFieldDidBeginEditingWithNotification:)
+             name:UITextViewTextDidBeginEditingNotification
+           object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(textViewDidChangeWithNotification:)
+                                               name:UITextViewTextDidChangeNotification
+                                             object:nil];
 }
 
 #pragma mark UIView Overrides
@@ -286,12 +250,6 @@
 
 - (CGSize)intrinsicContentSize {
   return [self preferredSizeWithWidth:CGRectGetWidth(self.bounds)];
-}
-
-- (CGSize)preferredSizeWithWidth:(CGFloat)width {
-  CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
-  MDCBaseTextAreaLayout *layout = [self calculateLayoutWithSize:fittingSize];
-  return CGSizeMake(width, layout.calculatedHeight);
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -363,26 +321,36 @@
   [super cancelTrackingWithEvent:event];
 }
 
-#pragma mark Layout
-
-- (MDCBaseTextAreaLayout *)calculateLayoutWithSize:(CGSize)size {
-  return [[MDCBaseTextAreaLayout alloc] initWithSize:size
-                                      containerStyle:self.containerStyle
-                                                text:self.inputChipViewTextView.text
-                                                font:self.normalFont
-                                        floatingFont:self.floatingFont
-                                               label:self.label
-                                          labelState:self.labelState
-                                       labelBehavior:self.labelBehavior
-                                  leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
-                                 rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
-                          assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
-                    customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
-                            preferredContainerHeight:self.preferredContainerHeight
-                        preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
-                                               isRTL:self.isRTL
-                                           isEditing:self.isFirstResponder];
+- (void)setEnabled:(BOOL)enabled {
+  [super setEnabled:enabled];
+  self.textView.editable = enabled;
 }
+
+#pragma mark UIResponder Overrides
+
+- (BOOL)resignFirstResponder {
+  BOOL textFieldDidResign = [self.textView resignFirstResponder];
+  return textFieldDidResign;
+}
+
+- (BOOL)becomeFirstResponder {
+  BOOL textFieldDidBecome = [self.textView becomeFirstResponder];
+  return textFieldDidBecome;
+}
+
+- (void)handleResponderChange {
+  [self setNeedsLayout];
+}
+
+- (BOOL)isFirstResponder {
+  return self.textView.isFirstResponder;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+  [super touchesBegan:touches withEvent:event];
+}
+
+#pragma mark Layout
 
 - (void)preLayoutSubviews {
   self.textControlState = [self determineCurrentTextControlState];
@@ -393,6 +361,116 @@
   CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX);
   self.layout = [self calculateLayoutWithSize:fittingSize];
 }
+
+- (void)postLayoutSubviews {
+  self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
+  self.scrollView.frame = self.layout.scrollViewFrame;
+  self.scrollViewContentViewTouchForwardingView.frame =
+      self.layout.scrollViewContentViewTouchForwardingViewFrame;
+  self.textView.frame = self.layout.textViewFrame;
+  //  CGRect frame = self.layout.textViewFrame;
+  //  CGSize size = [self.textView sizeThatFits:frame.size];
+  //  frame.size = size;
+  //  self.textView.frame = frame;
+  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+  self.scrollView.contentSize = self.layout.scrollViewContentSize;
+  [self.scrollView setNeedsLayout];
+  self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
+  self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
+  [self.assistiveLabelView setNeedsLayout];
+  //  NSLog(@"inset: %@",NSStringFromUIEdgeInsets(self.scrollView.contentInset));
+  //  NSLog(@"offset: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
+  //  NSLog(@"size: %@\n\n",NSStringFromCGSize(self.scrollView.contentSize));
+
+  [self animateLabel];
+  [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
+
+  [self layOutGradientLayers];
+}
+
+- (MDCBaseTextAreaLayout *)calculateLayoutWithSize:(CGSize)size {
+  CGFloat clampedCustomAssistiveLabelDrawPriority =
+      [self clampedCustomAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority];
+  id<MDCTextControlVerticalPositioningReference> positioningReference =
+      [self createPositioningReference];
+  return [[MDCBaseTextAreaLayout alloc] initWithSize:size
+                                positioningReference:positioningReference
+                                                text:self.inputChipViewTextView.text
+                                                font:self.normalFont
+                                        floatingFont:self.floatingFont
+                                               label:self.label
+                                          labelState:self.labelState
+                                       labelBehavior:self.labelBehavior
+                                  leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
+                                 rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
+                          assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
+                    customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
+                        preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
+                                               isRTL:self.isRTL
+                                           isEditing:self.isFirstResponder];
+}
+
+- (id<MDCTextControlVerticalPositioningReference>)createPositioningReference {
+  return [self.containerStyle
+      positioningReferenceWithFloatingFontLineHeight:self.floatingFont.lineHeight
+                                normalFontLineHeight:self.normalFont.lineHeight
+                                       textRowHeight:(self.normalFont.lineHeight +
+                                                      self.normalFont.leading)
+                                    numberOfTextRows:self.numberOfVisibleTextRows
+                                             density:0
+                            preferredContainerHeight:self.preferredContainerHeight];
+}
+
+- (CGFloat)clampedCustomAssistiveLabelDrawPriority:(CGFloat)customPriority {
+  CGFloat value = customPriority;
+  if (value < 0) {
+    value = 0;
+  } else if (value > 1) {
+    value = 1;
+  }
+  return value;
+}
+
+- (CGSize)preferredSizeWithWidth:(CGFloat)width {
+  CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
+  MDCBaseTextAreaLayout *layout = [self calculateLayoutWithSize:fittingSize];
+  return CGSizeMake(width, layout.calculatedHeight);
+}
+
+- (void)layOutGradientLayers {
+  CGRect gradientLayerFrame = self.layout.maskedScrollViewContainerViewFrame;
+  self.gradientManager.horizontalGradient.frame = gradientLayerFrame;
+  self.gradientManager.verticalGradient.frame = gradientLayerFrame;
+  self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
+  self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
+  self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
+}
+
+#pragma mark Dynamic Type
+
+- (void)setAdjustsFontForContentSizeCategory:(BOOL)adjustsFontForContentSizeCategory {
+  if (@available(iOS 10.0, *)) {
+    _adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory;
+    self.textView.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory;
+    self.leadingAssistiveLabel.adjustsFontForContentSizeCategory =
+        adjustsFontForContentSizeCategory;
+    self.trailingAssistiveLabel.adjustsFontForContentSizeCategory =
+        adjustsFontForContentSizeCategory;
+  }
+}
+
+- (void)observeContentSizeCategoryNotifications {
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(contentSizeCategoryDidChange:)
+                                               name:UIContentSizeCategoryDidChangeNotification
+                                             object:nil];
+}
+
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification {
+  [self setNeedsLayout];
+}
+
+#pragma mark MDCTextControlState
 
 - (MDCTextControlState)determineCurrentTextControlState {
   return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextView.isEditable)
@@ -411,65 +489,10 @@
   }
 }
 
-- (void)postLayoutSubviews {
-
-  self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
-  self.scrollView.frame = self.layout.scrollViewFrame;
-  self.scrollViewContentViewTouchForwardingView.frame =
-      self.layout.scrollViewContentViewTouchForwardingViewFrame;
-  self.textView.frame = self.layout.textViewFrame;
-  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-  self.scrollView.contentSize = self.layout.scrollViewContentSize;
-  [self.scrollView setNeedsLayout];
-  self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
-  self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
-  [self.assistiveLabelView setNeedsLayout];
-  //  NSLog(@"inset: %@",NSStringFromUIEdgeInsets(self.scrollView.contentInset));
-  //  NSLog(@"offset: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
-  //  NSLog(@"size: %@\n\n",NSStringFromCGSize(self.scrollView.contentSize));
-
-  [self animateLabel];
-  [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
-
-  [self layOutGradientLayers];
-}
+#pragma mark MDCTextControl accessors
 
 - (CGRect)containerFrame {
   return CGRectMake(0, 0, CGRectGetWidth(self.frame), self.layout.containerHeight);
-}
-
-- (void)layOutGradientLayers {
-  CGRect gradientLayerFrame = self.layout.maskedScrollViewContainerViewFrame;
-  self.gradientManager.horizontalGradient.frame = gradientLayerFrame;
-  self.gradientManager.verticalGradient.frame = gradientLayerFrame;
-  self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
-  self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
-  self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
-}
-
-#pragma mark Notification Listener Methods
-
-- (void)textViewDidEndEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
-}
-
-- (void)textViewDidChangeWithNotification:(NSNotification *)notification {
-  if (notification.object != self.textView) {
-    return;
-  }
-  //  NSLog(@"text did change");
-  [self setNeedsLayout];
-  // get size needed to display text.
-  // size text field accordingly
-  // alter text field frame and scroll view offset accordingly
-}
-
-- (void)textFieldDidBeginEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
 }
 
 #pragma mark Label
@@ -545,7 +568,7 @@
   }
 }
 
-#pragma mark Accessors
+#pragma mark Custom Accessors
 
 - (UITextView *)textView {
   return self.inputChipViewTextView;
@@ -571,16 +594,43 @@
   return self.preferredNumberOfVisibleRows;
 }
 
+#pragma mark Notification Listener Methods
+
+- (void)textViewDidEndEditingWithNotification:(NSNotification *)notification {
+  if (notification.object != self) {
+    return;
+  }
+}
+
+- (void)textViewDidChangeWithNotification:(NSNotification *)notification {
+  if (notification.object != self.textView) {
+    return;
+  }
+  //  NSLog(@"text did change");
+  //  [self setNeedsLayout];
+}
+
+- (void)textFieldDidBeginEditingWithNotification:(NSNotification *)notification {
+  if (notification.object != self) {
+    return;
+  }
+}
+
+#pragma mark MDCTextControl Accessors
+
+- (void)setContainerStyle:(id<MDCTextControlStyle>)containerStyle {
+  id<MDCTextControlStyle> oldStyle = _containerStyle;
+  if (oldStyle) {
+    [oldStyle removeStyleFrom:self];
+  }
+  _containerStyle = containerStyle;
+  [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
+}
+
 #pragma mark User Interaction
 
 - (void)enforceCalculatedScrollViewContentOffset {
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-}
-
-#pragma mark Internationalization
-
-- (BOOL)isRTL {
-  return self.layoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
 }
 
 #pragma mark Fonts
@@ -656,7 +706,13 @@
   [self handleResponderChange];
 }
 
-#pragma mark Theming
+#pragma mark Internationalization
+
+- (BOOL)isRTL {
+  return self.layoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+}
+
+#pragma mark Coloring
 
 - (void)applyColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
              withLabelState:(MDCTextControlLabelState)labelState {
@@ -728,9 +784,9 @@
   [self setNeedsLayout];
 }
 
-- (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
+- (UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.trailingAssistiveLabelColor;
+  return colorViewModel.leadingAssistiveLabelColor;
 }
 
 - (void)setTrailingAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
@@ -740,9 +796,9 @@
   [self setNeedsLayout];
 }
 
-- (UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state {
+- (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.leadingAssistiveLabelColor;
+  return colorViewModel.trailingAssistiveLabelColor;
 }
 
 @end
