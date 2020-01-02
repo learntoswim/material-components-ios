@@ -19,7 +19,7 @@
 
 static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
-static const CGFloat kGradientBlurLength = 6;
+static const CGFloat kGradientBlurLength = 4;
 
 @interface MDCBaseTextAreaLayout ()
 

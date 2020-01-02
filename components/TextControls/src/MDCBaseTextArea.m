@@ -29,7 +29,6 @@
 #import "private/MDCTextControlStyleBase.h"
 //#import "private/UITextField+MDCTextControlDefaults.h"
 
-static const CGFloat kDefaultPreferredNumberOfVisibleRows = (CGFloat)2.0;
 
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
@@ -65,7 +64,7 @@ static const CGFloat kDefaultPreferredNumberOfVisibleRows = (CGFloat)2.0;
   self.layoutMargins = UIEdgeInsetsZero;
   self.textContainer.lineFragmentPadding = 0;
   self.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-
+  self.clipsToBounds = NO;
   //  self.layer.borderColor = [UIColor redColor].CGColor;
   //  self.layer.borderWidth = 1;
 }
@@ -172,7 +171,7 @@ static const CGFloat kDefaultPreferredNumberOfVisibleRows = (CGFloat)2.0;
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
   self.colorViewModels = [[NSMutableDictionary alloc] init];
 
-  self.preferredNumberOfVisibleRows = kDefaultPreferredNumberOfVisibleRows;
+  self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
   self.gradientManager = [[MDCTextControlGradientManager alloc] init];
 }
 

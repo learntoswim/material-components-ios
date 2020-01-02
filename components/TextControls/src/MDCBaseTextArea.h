@@ -40,7 +40,6 @@
 
 @property(strong, nonatomic, readonly, nonnull) UITextView *textView;
 @property(strong, nonatomic, readonly, nonnull) UILabel *label;
-@property(nonatomic, assign) NSInteger numberOfVisibleLines;
 @property(nonatomic, assign) CGFloat preferredContainerHeight;
 @property(nonatomic, assign) CGFloat preferredNumberOfVisibleRows;
 

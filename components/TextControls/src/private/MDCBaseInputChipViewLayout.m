@@ -22,7 +22,7 @@ static const CGFloat kEstimatedCursorWidth = (CGFloat)2.0;
 
 static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
-static const CGFloat kGradientBlurLength = 6;
+static const CGFloat kGradientBlurLength = 4;
 
 @interface MDCBaseInputChipViewLayout ()
 
@@ -414,7 +414,7 @@ static const CGFloat kGradientBlurLength = 6;
       }
       return contentSize;
     } else {
-      NSLog(@"co: %@", @(contentOffset.x));
+//      NSLog(@"co: %@", @(contentOffset.x));
       if (contentOffset.x < 0) {
         contentSize.width += (contentOffset.x * -1);
         NSLog(@"size.width: %@", @(contentSize.width));
@@ -428,7 +428,7 @@ static const CGFloat kGradientBlurLength = 6;
       }
       return contentSize;
     } else {
-      NSLog(@"co: %@", @(contentOffset.x));
+//      NSLog(@"co: %@", @(contentOffset.x));
       if (contentOffset.x > 0) {
         contentSize.width += contentOffset.x;
         NSLog(@"size.width: %@", @(contentSize.width));
