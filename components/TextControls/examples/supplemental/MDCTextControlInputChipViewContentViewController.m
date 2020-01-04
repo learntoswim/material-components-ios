@@ -61,21 +61,23 @@
 
 #pragma mark UIViewController Overrides
 
--(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
-  [self.allInputChipViews enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView, NSUInteger idx, BOOL *stop) {
+  [self.allInputChipViews enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView,
+                                                       NSUInteger idx, BOOL *stop) {
     for (UIView *chip in inputChipView.chips) {
       if ([chip isKindOfClass:[MDCChipView class]]) {
         MDCChipView *chipView = (MDCChipView *)chip;
         if (@available(iOS 10.0, *)) {
-          chipView.titleFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody compatibleWithTraitCollection:self.traitCollection];
+          chipView.titleFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody
+                                   compatibleWithTraitCollection:self.traitCollection];
         }
       }
       [chip sizeToFit];
-      NSLog(@"chip.height = %@",@(chip.frame.size.height));
+      NSLog(@"chip.height = %@", @(chip.frame.size.height));
     }
     inputChipView.chipRowHeight = self.chipHeight;
-    NSLog(@"inputChipView.chipRowHeight = %@",@(inputChipView.chipRowHeight));
+    NSLog(@"inputChipView.chipRowHeight = %@", @(inputChipView.chipRowHeight));
   }];
 }
 
@@ -92,7 +94,8 @@
   nonWrappingFilledInputChipView.delegate = self;
   nonWrappingFilledInputChipView.textField.delegate = self;
 
-  MDCFilledInputChipView *wrappingOutlinedInputChipView = [self createMaterialFilledInputChipView];
+  MDCOutlinedInputChipView *wrappingOutlinedInputChipView =
+      [self createMaterialOutlinedInputChipView];
   wrappingOutlinedInputChipView.chipsWrap = YES;
   wrappingOutlinedInputChipView.delegate = self;
   wrappingOutlinedInputChipView.textField.delegate = self;
@@ -115,8 +118,8 @@
     [self createDefaultBaseInputChipView],
   ];
   NSMutableArray *mutableScrollViewSubviews = [self.scrollViewSubviews mutableCopy];
-  self.scrollViewSubviews =
-      [mutableScrollViewSubviews arrayByAddingObjectsFromArray:inputChipViewRelatedScrollViewSubviews];
+  self.scrollViewSubviews = [mutableScrollViewSubviews
+      arrayByAddingObjectsFromArray:inputChipViewRelatedScrollViewSubviews];
 }
 
 - (void)applyThemesToScrollViewSubviews {
@@ -135,28 +138,29 @@
   [super enforcePreferredFonts];
 
   if (@available(iOS 10.0, *)) {
-    [self.allInputChipViews
-        enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView, NSUInteger idx, BOOL *stop) {
-          inputChipView.textField.adjustsFontForContentSizeCategory = YES;
-          inputChipView.textField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody
-                                        compatibleWithTraitCollection:inputChipView.traitCollection];
-          inputChipView.leadingAssistiveLabel.font =
-              [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2
-                  compatibleWithTraitCollection:inputChipView.traitCollection];
-          inputChipView.trailingAssistiveLabel.font =
-              [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2
-                  compatibleWithTraitCollection:inputChipView.traitCollection];
-        }];
+    [self.allInputChipViews enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView,
+                                                         NSUInteger idx, BOOL *stop) {
+      inputChipView.textField.adjustsFontForContentSizeCategory = YES;
+      inputChipView.textField.font =
+          [UIFont preferredFontForTextStyle:UIFontTextStyleBody
+              compatibleWithTraitCollection:inputChipView.traitCollection];
+      inputChipView.leadingAssistiveLabel.font =
+          [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2
+              compatibleWithTraitCollection:inputChipView.traitCollection];
+      inputChipView.trailingAssistiveLabel.font =
+          [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2
+              compatibleWithTraitCollection:inputChipView.traitCollection];
+    }];
   }
 }
 
 - (void)handleResignFirstResponderTapped {
   [super handleResignFirstResponderTapped];
 
-  [self.allInputChipViews
-      enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView, NSUInteger idx, BOOL *stop) {
-        [inputChipView resignFirstResponder];
-      }];
+  [self.allInputChipViews enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView,
+                                                       NSUInteger idx, BOOL *stop) {
+    [inputChipView resignFirstResponder];
+  }];
 }
 
 - (void)handleDisableButtonTapped {
@@ -172,51 +176,52 @@
 
 - (void)resizeInputChipViews {
   CGFloat inputChipViewWidth = CGRectGetWidth(self.view.frame) - (2 * self.defaultPadding);
-  [self.allInputChipViews
-      enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView, NSUInteger idx, BOOL *stop) {
-        CGFloat inputChipViewMinX = CGRectGetMinX(inputChipView.frame);
-        CGFloat inputChipViewMinY = CGRectGetMinY(inputChipView.frame);
-        CGFloat viewHeight = CGRectGetHeight(inputChipView.frame);
-        CGRect viewFrame = CGRectMake(inputChipViewMinX, inputChipViewMinY, inputChipViewWidth, viewHeight);
-        inputChipView.frame = viewFrame;
-        [inputChipView sizeToFit];
-      }];
+  [self.allInputChipViews enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView,
+                                                       NSUInteger idx, BOOL *stop) {
+    CGFloat inputChipViewMinX = CGRectGetMinX(inputChipView.frame);
+    CGFloat inputChipViewMinY = CGRectGetMinY(inputChipView.frame);
+    CGFloat viewHeight = CGRectGetHeight(inputChipView.frame);
+    CGRect viewFrame =
+        CGRectMake(inputChipViewMinX, inputChipViewMinY, inputChipViewWidth, viewHeight);
+    inputChipView.frame = viewFrame;
+    [inputChipView sizeToFit];
+  }];
 }
 
 - (void)applyThemesToInputChipViews {
-  [self.allInputChipViews
-      enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView, NSUInteger idx, BOOL *stop) {
-        BOOL isEven = idx % 2 == 0;
-        if (self.isErrored) {
-          if ([inputChipView isKindOfClass:[MDCFilledInputChipView class]]) {
-            MDCFilledInputChipView *filledInputChipView = (MDCFilledInputChipView *)inputChipView;
-            [filledInputChipView applyErrorThemeWithScheme:self.containerScheme];
-          } else if ([inputChipView isKindOfClass:[MDCOutlinedInputChipView class]]) {
-            MDCOutlinedInputChipView *outlinedInputChipView = (MDCOutlinedInputChipView *)inputChipView;
-            [outlinedInputChipView applyErrorThemeWithScheme:self.containerScheme];
-          }
-          if (isEven) {
-            inputChipView.leadingAssistiveLabel.text = @"Suspendisse quam elit, mattis sit amet justo "
-                                                  @"vel, venenatis lobortis massa. Donec metus "
-                                                  @"dolor.";
-          } else {
-            inputChipView.leadingAssistiveLabel.text = @"This is an error.";
-          }
-        } else {
-          if ([inputChipView isKindOfClass:[MDCFilledInputChipView class]]) {
-            MDCFilledInputChipView *filledInputChipView = (MDCFilledInputChipView *)inputChipView;
-            [filledInputChipView applyThemeWithScheme:self.containerScheme];
-          } else if ([inputChipView isKindOfClass:[MDCOutlinedInputChipView class]]) {
-            MDCOutlinedInputChipView *outlinedInputChipView = (MDCOutlinedInputChipView *)inputChipView;
-            [outlinedInputChipView applyThemeWithScheme:self.containerScheme];
-          }
-          if (isEven) {
-            inputChipView.leadingAssistiveLabel.text = @"This is helper text.";
-          } else {
-            inputChipView.leadingAssistiveLabel.text = nil;
-          }
-        }
-      }];
+  [self.allInputChipViews enumerateObjectsUsingBlock:^(MDCBaseInputChipView *inputChipView,
+                                                       NSUInteger idx, BOOL *stop) {
+    BOOL isEven = idx % 2 == 0;
+    if (self.isErrored) {
+      if ([inputChipView isKindOfClass:[MDCFilledInputChipView class]]) {
+        MDCFilledInputChipView *filledInputChipView = (MDCFilledInputChipView *)inputChipView;
+        [filledInputChipView applyErrorThemeWithScheme:self.containerScheme];
+      } else if ([inputChipView isKindOfClass:[MDCOutlinedInputChipView class]]) {
+        MDCOutlinedInputChipView *outlinedInputChipView = (MDCOutlinedInputChipView *)inputChipView;
+        [outlinedInputChipView applyErrorThemeWithScheme:self.containerScheme];
+      }
+      if (isEven) {
+        inputChipView.leadingAssistiveLabel.text = @"Suspendisse quam elit, mattis sit amet justo "
+                                                   @"vel, venenatis lobortis massa. Donec metus "
+                                                   @"dolor.";
+      } else {
+        inputChipView.leadingAssistiveLabel.text = @"This is an error.";
+      }
+    } else {
+      if ([inputChipView isKindOfClass:[MDCFilledInputChipView class]]) {
+        MDCFilledInputChipView *filledInputChipView = (MDCFilledInputChipView *)inputChipView;
+        [filledInputChipView applyThemeWithScheme:self.containerScheme];
+      } else if ([inputChipView isKindOfClass:[MDCOutlinedInputChipView class]]) {
+        MDCOutlinedInputChipView *outlinedInputChipView = (MDCOutlinedInputChipView *)inputChipView;
+        [outlinedInputChipView applyThemeWithScheme:self.containerScheme];
+      }
+      if (isEven) {
+        inputChipView.leadingAssistiveLabel.text = @"This is helper text.";
+      } else {
+        inputChipView.leadingAssistiveLabel.text = nil;
+      }
+    }
+  }];
 }
 
 - (NSArray<MDCBaseInputChipView *> *)allInputChipViews {
@@ -228,10 +233,10 @@
 - (CGFloat)chipHeight {
   UIFont *chipFont = self.allInputChipViews.firstObject.textField.font;
   if (@available(iOS 10.0, *)) {
-    chipFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody compatibleWithTraitCollection:self.traitCollection];
+    chipFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody
+                   compatibleWithTraitCollection:self.traitCollection];
   }
-  MDCChipView *chip = [self createChipWithText:@"Test"
-                                          font:chipFont];
+  MDCChipView *chip = [self createChipWithText:@"Test" font:chipFont];
   return CGRectGetHeight(chip.frame) + (CGFloat)0;
 }
 

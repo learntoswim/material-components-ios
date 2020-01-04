@@ -20,8 +20,6 @@
 @class MDCBaseInputChipView;
 @protocol MDCInputChipViewDelegate <NSObject>
 
-
-
 - (void)inputChipViewDidDeleteBackwards:(nonnull MDCBaseInputChipView *)inputChipView
                                 oldText:(nullable NSString *)oldText
                                 newText:(nullable NSString *)newText;
@@ -31,7 +29,7 @@
 //- (BOOL)inputChipView:(nonnull MDCBaseInputChipView *)inputChipView
 //    shouldSelectChip:(UIView *)chipToSelect;
 //- (BOOL)inputChipView:(nonnull MDCBaseInputChipView *)inputChipView
-//shouldDeleteChips:(NSArray<UIView *> *chips)chipsToSelect;
+// shouldDeleteChips:(NSArray<UIView *> *chips)chipsToSelect;
 
 @end
 

@@ -28,7 +28,6 @@
 #import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-//#import "private/UITextField+MDCTextControlDefaults.h"
 
 static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
@@ -66,9 +65,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 }
 
 - (void)commonMDCBaseInputChipViewTextFieldInit {
-//  if (@available(iOS 10.0, *)) {
-//    self.adjustsFontForContentSizeCategory = YES;
-//  }
   self.font = MDCInputChipViewDefaultUITextFieldFont();
 }
 
@@ -172,12 +168,10 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 @end
 
 @implementation MDCBaseInputChipView
-@synthesize preferredContainerHeight = _preferredContainerHeight;
+@synthesize containerStyle = _containerStyle;
 @synthesize assistiveLabelDrawPriority = _assistiveLabelDrawPriority;
 @synthesize customAssistiveLabelDrawPriority = _customAssistiveLabelDrawPriority;
-@synthesize containerStyle = _containerStyle;
-@synthesize label = _label;
-
+@synthesize preferredContainerHeight = _preferredContainerHeight;
 @synthesize adjustsFontForContentSizeCategory = _adjustsFontForContentSizeCategory;
 
 #pragma mark Object Lifecycle
@@ -199,18 +193,37 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 }
 
 - (void)commonMDCBaseInputChipViewInit {
-  [self addObservers];
   [self initializeProperties];
+  [self setUpColorViewModels];
+  [self setUpLabel];
+  [self setUpAssistiveLabels];
   [self createSubviews];
   [self setUpChipRowHeight];
-  [self setUpGradientManager];
-  [self setUpColorViewModels];
-  [self setUpAssistiveLabels];
-  [self setUpContainerStyle];
+  [self observeUITextFieldNotifications];
+}
+
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark View Setup
+
+- (void)initializeProperties {
+  self.animationDuration = kMDCTextControlDefaultAnimationDuration;
+  self.labelBehavior = MDCTextControlLabelBehaviorFloats;
+  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
+  self.labelState = [self determineCurrentLabelState];
+  self.textControlState = [self determineCurrentTextControlState];
+  self.containerStyle = [[MDCTextControlStyleBase alloc] init];
+  self.colorViewModels = [[NSMutableDictionary alloc] init];
+
+  self.gradientManager = [[MDCTextControlGradientManager alloc] init];
+  self.mutableChips = [[NSMutableArray alloc] init];
+  self.chipsToRemove = [[NSMutableArray alloc] init];
+  self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
 }
 
 - (void)setUpColorViewModels {
-  self.colorViewModels = [[NSMutableDictionary alloc] init];
   self.colorViewModels[@(MDCTextControlStateNormal)] =
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateNormal];
   self.colorViewModels[@(MDCTextControlStateEditing)] =
@@ -219,17 +232,22 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
       [[MDCTextControlColorViewModel alloc] initWithState:MDCTextControlStateDisabled];
 }
 
-- (void)setUpContainerStyle {
-  self.containerStyle = [[MDCTextControlStyleBase alloc] init];
+- (void)setUpAssistiveLabels {
+  self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
+  self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
+  CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
+  UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
+  self.assistiveLabelView.leftAssistiveLabel.font = assistiveFont;
+  self.assistiveLabelView.rightAssistiveLabel.font = assistiveFont;
+  [self addSubview:self.assistiveLabelView];
 }
 
-- (void)dealloc {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void)setUpLabel {
+  self.label = [[UILabel alloc] init];
+  [self addSubview:self.label];
 }
 
-#pragma mark Setup
-
-- (void)addObservers {
+- (void)observeUITextFieldNotifications {
   [[NSNotificationCenter defaultCenter]
       addObserver:self
          selector:@selector(textFieldDidEndEditingWithNotification:)
@@ -246,28 +264,11 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
                                              object:nil];
 }
 
-- (void)initializeProperties {
-  self.animationDuration = kMDCTextControlDefaultAnimationDuration;
-  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
-  [self setUpChipsArray];
-  [self setUpChipsToRemoveArray];
-  
-  self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
-}
-
-- (void)setUpChipsArray {
-  self.mutableChips = [[NSMutableArray alloc] init];
-}
-
-- (void)setUpChipsToRemoveArray {
-  self.chipsToRemove = [[NSMutableArray alloc] init];
-}
-
 - (void)setUpChipRowHeight {
   CGFloat textHeight = (CGFloat)ceil((double)self.inputChipViewTextField.font.lineHeight);
   self.chipRowHeight = textHeight * 2;
 
-  self.chipRowSpacing = 0;//7;
+  self.chipRowSpacing = 4;
 }
 
 - (void)createSubviews {
@@ -278,7 +279,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   self.scrollView.bounces = NO;
   self.scrollView.delegate = self;
   self.scrollView.scrollsToTop = NO;
-  //  self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
   [self.maskedScrollViewContainerView addSubview:self.scrollView];
 
   self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
@@ -287,32 +287,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   self.inputChipViewTextField = [[MDCBaseInputChipViewTextField alloc] init];
   self.inputChipViewTextField.inputChipViewTextFieldDelegate = self;
   [self.scrollView addSubview:self.inputChipViewTextField];
-
-  self.label = [[UILabel alloc] init];
-  [self addSubview:self.label];
-}
-
-- (void)setContainerStyle:(id<MDCTextControlStyle>)containerStyle {
-  id<MDCTextControlStyle> oldStyle = _containerStyle;
-  if (oldStyle) {
-    [oldStyle removeStyleFrom:self];
-  }
-  _containerStyle = containerStyle;
-  [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
-}
-
-- (void)setUpAssistiveLabels {
-  self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
-  self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
-  CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
-  UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
-  self.assistiveLabelView.leftAssistiveLabel.font = assistiveFont;
-  self.assistiveLabelView.rightAssistiveLabel.font = assistiveFont;
-  [self addSubview:self.assistiveLabelView];
-}
-
-- (void)setUpGradientManager {
-  self.gradientManager = [[MDCTextControlGradientManager alloc] init];
 }
 
 #pragma mark UIResponder Overrides
@@ -389,8 +363,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   NSLog(@"self.lastTouchInitialContentOffset = %@",
         NSStringFromCGPoint(self.lastTouchInitialContentOffset));
   self.lastTouchInitialLocation = [touch locationInView:self];
-  //  NSLog(@"begin tracking: %@, radius: %@, pointInside: %@",@(result), @(touch.majorRadius),
-  //  NSStringFromCGPoint([touch locationInView:self]));
   return result;
 }
 
@@ -399,11 +371,11 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 
   CGPoint location = [touch locationInView:self];
   CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  //  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
+  NSLog(@"offset from start: %@", NSStringFromCGPoint(offsetFromStart));
 
   CGPoint newContentOffset = self.lastTouchInitialContentOffset;
   if (self.chipsWrap) {
-    CGFloat height = CGRectGetHeight(self.frame);
+    CGFloat height = CGRectGetHeight(self.scrollView.frame);
     newContentOffset.y -= offsetFromStart.y;
     if (newContentOffset.y < 0) {
       newContentOffset.y = 0;
@@ -411,26 +383,33 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
     if (newContentOffset.y + height > self.scrollView.contentSize.height) {
       newContentOffset.y = self.scrollView.contentSize.height - height;
     }
-    //    self.scrollView.contentOffset = newContentOffset;
   } else {
     if (self.isRTL) {
-      CGFloat width = CGRectGetWidth(self.frame);
+      CGFloat width = CGRectGetWidth(self.scrollView.frame);
       newContentOffset.x -= offsetFromStart.x;
-      //      NSLog(@"offset.x = %@",@(newContentOffset.x));
-      CGFloat maxOffset = 0;
+      //      NSLog(@"new: %@",@())
+      NSLog(@"offset.x = %@, cs: %@, w: %@", @(newContentOffset.x),
+            @(self.scrollView.contentSize.width), @(width));
+      CGFloat minOffset = 0;
+      CGFloat maxOffset = self.scrollView.contentSize.width - width;
+      //      - CGRectGetWidth(self.textField.frame);
       if (newContentOffset.x > maxOffset) {
-        //        NSLog(@"max offset: %@",@(maxOffset));
+        NSLog(@"a");
+        ////                NSLog(@"max offset: %@",@(maxOffset));
         newContentOffset.x = maxOffset;
       }
-      CGFloat minOffset = (CGFloat)-1.0 * (self.scrollView.contentSize.width - width);
       if (newContentOffset.x < minOffset) {
+        NSLog(@"b");
         //        NSLog(@"min offset: %@",@(minOffset));
         newContentOffset.x = minOffset;
       }
     } else {
       CGFloat width = CGRectGetWidth(self.frame);
       newContentOffset.x -= offsetFromStart.x;
-      //      NSLog(@"offset.x = %@",@(newContentOffset.x));
+      NSLog(@"offset.x = %@, cs: %@, w: %@", @(newContentOffset.x),
+            @(self.scrollView.contentSize.width), @(width));
+
+      //            NSLog(@"offset.x = %@",@(newContentOffset.x));
       CGFloat minOffset = 0;
       if (newContentOffset.x < minOffset) {
         //        NSLog(@"min offset: %@",@(minOffset));
@@ -473,6 +452,24 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 
 #pragma mark Layout
 
+- (void)enforceCalculatedScrollViewContentOffset {
+  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+}
+
+- (CGPoint)absoluteOffsetOfOffset:(CGPoint)offset {
+  if (offset.x < 0) {
+    offset.x = offset.x * -1;
+  }
+  if (offset.y < 0) {
+    offset.y = offset.y * -1;
+  }
+  return offset;
+}
+
+- (CGPoint)offsetOfPoint:(CGPoint)point1 fromPoint:(CGPoint)point2 {
+  return CGPointMake(point1.x - point2.x, point1.y - point2.y);
+}
+
 - (CGFloat)determineNumberOfVisibleRows {
   if (self.chipsWrap) {
     return self.preferredNumberOfVisibleRows;
@@ -491,28 +488,29 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
                                              density:0
                             preferredContainerHeight:self.preferredContainerHeight];
 
-  return [[MDCBaseInputChipViewLayout alloc] initWithSize:size
-                                     positioningReference:positioningReference
-                                                     text:self.inputChipViewTextField.text
-                                              placeholder:self.inputChipViewTextField.placeholder
-                                                     font:self.normalFont
-                                             floatingFont:self.floatingFont
-                                                    label:self.label
-                                               labelState:self.labelState
-                                            labelBehavior:self.labelBehavior
-                                                    chips:self.mutableChips
-                                           staleChipViews:self.mutableChips
-                                                chipsWrap:self.chipsWrap
-                                            chipRowHeight:self.chipRowHeight
-                                         interChipSpacing:self.chipRowSpacing
-                                       leftAssistiveLabel:self.leftAssistiveLabel
-                                      rightAssistiveLabel:self.rightAssistiveLabel
-                               assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
-                         customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
-                                 preferredContainerHeight:self.preferredContainerHeight
-                             preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
-                                                    isRTL:self.isRTL
-                                                isEditing:self.inputChipViewTextField.isEditing];
+  return
+      [[MDCBaseInputChipViewLayout alloc] initWithSize:size
+                                  positioningReference:positioningReference
+                                                  text:self.inputChipViewTextField.text
+                                           placeholder:self.inputChipViewTextField.placeholder
+                                                  font:self.normalFont
+                                          floatingFont:self.floatingFont
+                                                 label:self.label
+                                            labelState:self.labelState
+                                         labelBehavior:self.labelBehavior
+                                                 chips:self.mutableChips
+                                        staleChipViews:self.mutableChips
+                                             chipsWrap:self.chipsWrap
+                                         chipRowHeight:self.chipRowHeight
+                              interChipVerticalSpacing:self.chipRowSpacing
+                                    leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
+                                   rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
+                            assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
+                      customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
+                              preferredContainerHeight:self.preferredContainerHeight
+                          preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
+                                                 isRTL:self.isRTL
+                                             isEditing:self.inputChipViewTextField.isEditing];
 }
 
 - (void)preLayoutSubviews {
@@ -521,30 +519,7 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
-  for (UIView *chip in self.chips) {
-    CGFloat initialHeight = chip.frame.size.height;
-    [chip sizeToFit];
-    NSLog(@"pre layout subviews: %@ to %@",@(initialHeight),@(chip.frame.size.height));
-    
-  }
   self.layout = [self calculateLayoutWithSize:self.bounds.size];
-}
-
-- (MDCTextControlState)determineCurrentTextControlState {
-  return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextField.enabled)
-                                   isEditing:self.inputChipViewTextField.isEditing];
-}
-
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
-  if (isEnabled) {
-    if (isEditing) {
-      return MDCTextControlStateEditing;
-    } else {
-      return MDCTextControlStateNormal;
-    }
-  } else {
-    return MDCTextControlStateDisabled;
-  }
 }
 
 - (void)postLayoutSubviews {
@@ -558,15 +533,11 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 
   self.label.hidden = self.labelState == MDCTextControlLabelStateNone;
 
-//  NSLog(@"post layout subviews: %@", NSStringFromCGPoint(self.scrollView.contentOffset));
   [self animateChipLayoutChangesWithChips:self.mutableChips
                                chipFrames:self.layout.chipFrames
                             chipsToRemove:self.chipsToRemove
                                chipsToAdd:self.chipsToAdd];
   [self.scrollView setNeedsLayout];
-  //  NSLog(@"inset: %@",NSStringFromUIEdgeInsets(self.scrollView.contentInset));
-  //  NSLog(@"offset: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
-  //  NSLog(@"size: %@\n\n",NSStringFromCGSize(self.scrollView.contentSize));
 
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
@@ -591,24 +562,10 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
-- (NSArray<UIView *> *)chipsToAdd {
-  NSMutableArray *chips = [[NSMutableArray alloc] init];
-  for (UIView *chip in self.mutableChips) {
-    if (!chip.superview) {
-      [chips addObject:chip];
-    }
-  }
-  return [chips copy];
-}
-
 - (void)animateChipLayoutChangesWithChips:(NSArray<UIView *> *)chips
                                chipFrames:(NSArray<NSValue *> *)frames
                             chipsToRemove:(NSArray<UIView *> *)chipsToRemove
                                chipsToAdd:(NSArray<UIView *> *)chipsToAdd {
-  // iterate through views, calculate a frame and an isHidden value for each.
-  // If the chip is going to be removed don't change the frame.
-  // go through and animate each views new status
-
   [self performChipRemovalOnCompletion:^{
     [self performChipPositioningOnCompletion:^{
       [self performChipAdditionsOnCompletion:nil];
@@ -647,7 +604,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
           if (self.layout.chipFrames.count > idx) {
             frame = [self.layout.chipFrames[idx] CGRectValue];
           }
-          NSLog(@"chip positioning: %@ to %@",@(chip.frame.size.height),@(frame.size.height));
           chip.frame = frame;
         }
       }
@@ -681,7 +637,7 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   }
 }
 
-#pragma mark Chip Adding
+#pragma mark Chip Adding/Removing
 
 - (void)addChip:(UIView *)chipView {
   [self.mutableChips addObject:chipView];
@@ -695,29 +651,14 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   [self setNeedsLayout];
 }
 
-#pragma mark Notification Listener Methods
-
-- (void)textFieldDidEndEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
+- (NSArray<UIView *> *)chipsToAdd {
+  NSMutableArray *chips = [[NSMutableArray alloc] init];
+  for (UIView *chip in self.mutableChips) {
+    if (!chip.superview) {
+      [chips addObject:chip];
+    }
   }
-}
-
-- (void)textFieldDidChangeWithNotification:(NSNotification *)notification {
-  if (notification.object != self.textField) {
-    return;
-  }
-  //  NSLog(@"text did change");
-  [self setNeedsLayout];
-  // get size needed to display text.
-  // size text field accordingly
-  // alter text field frame and scroll view offset accordingly
-}
-
-- (void)textFieldDidBeginEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
+  return [chips copy];
 }
 
 #pragma mark Label
@@ -796,52 +737,60 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   }
 }
 
-#pragma mark Accessors
+#pragma mark MDCTextControlState
+
+- (MDCTextControlState)determineCurrentTextControlState {
+  return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextField.enabled)
+                                   isEditing:self.inputChipViewTextField.isEditing];
+}
+
+- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
+  if (isEnabled) {
+    if (isEditing) {
+      return MDCTextControlStateEditing;
+    } else {
+      return MDCTextControlStateNormal;
+    }
+  } else {
+    return MDCTextControlStateDisabled;
+  }
+}
+
+#pragma mark MDCTextControl Accessors
+
+- (void)setContainerStyle:(id<MDCTextControlStyle>)containerStyle {
+  id<MDCTextControlStyle> oldStyle = _containerStyle;
+  if (oldStyle) {
+    [oldStyle removeStyleFrom:self];
+  }
+  _containerStyle = containerStyle;
+  [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
+}
 
 - (CGFloat)numberOfVisibleTextRows {
   return self.preferredNumberOfVisibleRows;
 }
 
-- (UITextField *)textField {
-  return self.inputChipViewTextField;
-}
-
-- (UILabel *)leftAssistiveLabel {
-  return self.assistiveLabelView.leftAssistiveLabel;
-}
-
-- (UILabel *)rightAssistiveLabel {
-  return self.assistiveLabelView.rightAssistiveLabel;
-}
-
 - (UILabel *)leadingAssistiveLabel {
   if ([self isRTL]) {
-    return self.rightAssistiveLabel;
+    return self.assistiveLabelView.rightAssistiveLabel;
   } else {
-    return self.leftAssistiveLabel;
+    return self.assistiveLabelView.leftAssistiveLabel;
   }
 }
 
 - (UILabel *)trailingAssistiveLabel {
   if ([self isRTL]) {
-    return self.leftAssistiveLabel;
+    return self.assistiveLabelView.leftAssistiveLabel;
   } else {
-    return self.rightAssistiveLabel;
+    return self.assistiveLabelView.rightAssistiveLabel;
   }
 }
 
-#pragma mark User Interaction
+#pragma mark Misc Accessors
 
-- (void)enforceCalculatedScrollViewContentOffset {
-  NSLog(@"enforce!!!!");
-  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-  //  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-}
-
-#pragma mark Internationalization
-
-- (BOOL)isRTL {
-  return self.layoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+- (UITextField *)textField {
+  return self.inputChipViewTextField;
 }
 
 #pragma mark Fonts
@@ -849,7 +798,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 - (UIFont *)normalFont {
   return self.inputChipViewTextField.font ?: MDCInputChipViewDefaultUITextFieldFont();
 }
-
 
 - (UIFont *)floatingFont {
   return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
@@ -868,46 +816,13 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   }
 }
 
-#pragma mark Custom UIView Geometry Methods
+#pragma mark Internationalization
 
-- (CGPoint)offsetOfPoint:(CGPoint)point1 fromPoint:(CGPoint)point2 {
-  return CGPointMake(point1.x - point2.x, point1.y - point2.y);
+- (BOOL)isRTL {
+  return self.layoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
 }
 
-- (CGPoint)absoluteOffsetOfOffset:(CGPoint)offset {
-  if (offset.x < 0) {
-    offset.x = offset.x * -1;
-  }
-  if (offset.y < 0) {
-    offset.y = offset.y * -1;
-  }
-  return offset;
-}
-
-#pragma mark InputChipViewTextFieldDelegate
-
-- (void)inputChipViewTextFieldDidDeleteBackward:(MDCBaseInputChipViewTextField *)textField
-                                        oldText:(NSString *)oldText
-                                        newText:(NSString *)newText {
-  if ([self.delegate respondsToSelector:@selector(inputChipViewDidDeleteBackwards:
-                                                                          oldText:newText:)]) {
-    [self.delegate inputChipViewDidDeleteBackwards:self oldText:oldText newText:newText];
-  }
-}
-
-- (void)inputChipViewTextFieldDidResignFirstResponder:(BOOL)didBecome {
-  [self handleResponderChange];
-}
-
-- (void)inputChipViewTextFieldDidBecomeFirstResponder:(BOOL)didBecome {
-  [self handleResponderChange];
-}
-
-- (NSArray<UIView *> *)chips {
-  return [self.mutableChips copy];
-}
-
-#pragma mark Theming
+#pragma mark Coloring
 
 - (void)applyColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
              withLabelState:(MDCTextControlLabelState)labelState {
@@ -936,6 +851,8 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   }
   return colorViewModel;
 }
+
+#pragma mark Color Accessors
 
 - (void)setNormalLabelColor:(nonnull UIColor *)labelColor forState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
@@ -977,9 +894,9 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   [self setNeedsLayout];
 }
 
-- (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
+- (UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.trailingAssistiveLabelColor;
+  return colorViewModel.leadingAssistiveLabelColor;
 }
 
 - (void)setTrailingAssistiveLabelColor:(nonnull UIColor *)assistiveLabelColor
@@ -989,9 +906,53 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
   [self setNeedsLayout];
 }
 
-- (UIColor *)leadingAssistiveLabelColorForState:(MDCTextControlState)state {
+- (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
-  return colorViewModel.leadingAssistiveLabelColor;
+  return colorViewModel.trailingAssistiveLabelColor;
+}
+
+#pragma mark InputChipViewTextFieldDelegate
+
+- (void)inputChipViewTextFieldDidDeleteBackward:(MDCBaseInputChipViewTextField *)textField
+                                        oldText:(NSString *)oldText
+                                        newText:(NSString *)newText {
+  if ([self.delegate respondsToSelector:@selector(inputChipViewDidDeleteBackwards:
+                                                                          oldText:newText:)]) {
+    [self.delegate inputChipViewDidDeleteBackwards:self oldText:oldText newText:newText];
+  }
+}
+
+- (void)inputChipViewTextFieldDidResignFirstResponder:(BOOL)didBecome {
+  [self handleResponderChange];
+}
+
+- (void)inputChipViewTextFieldDidBecomeFirstResponder:(BOOL)didBecome {
+  [self handleResponderChange];
+}
+
+- (NSArray<UIView *> *)chips {
+  return [self.mutableChips copy];
+}
+
+#pragma mark UITextField Notifications
+
+- (void)textFieldDidEndEditingWithNotification:(NSNotification *)notification {
+  if (notification.object != self) {
+    return;
+  }
+}
+
+- (void)textFieldDidChangeWithNotification:(NSNotification *)notification {
+  if (notification.object != self.textField) {
+    return;
+  }
+  [self setNeedsLayout];
+}
+
+- (void)textFieldDidBeginEditingWithNotification:(NSNotification *)notification {
+  if (notification.object != self) {
+    return;
+  }
 }
 
 @end

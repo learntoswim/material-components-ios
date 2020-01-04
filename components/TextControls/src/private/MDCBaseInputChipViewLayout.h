@@ -58,7 +58,7 @@
                       staleChipViews:(nonnull NSArray<UIView *> *)staleChipViews
                            chipsWrap:(BOOL)chipsWrap
                        chipRowHeight:(CGFloat)chipRowHeight
-                    interChipSpacing:(CGFloat)interChipSpacing
+            interChipVerticalSpacing:(CGFloat)interChipVerticalSpacing
                   leftAssistiveLabel:(nonnull UILabel *)leftAssistiveLabel
                  rightAssistiveLabel:(nonnull UILabel *)rightAssistiveLabel
           assistiveLabelDrawPriority:

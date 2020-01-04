@@ -29,7 +29,6 @@
 #import "private/MDCTextControlStyleBase.h"
 //#import "private/UITextField+MDCTextControlDefaults.h"
 
-
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
 - (void)inputChipViewTextViewDidBecomeFirstResponder:(BOOL)didBecome;
