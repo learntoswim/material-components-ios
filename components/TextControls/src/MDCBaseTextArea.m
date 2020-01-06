@@ -89,11 +89,6 @@
   [self setUpLabel];
   [self setUpAssistiveLabels];
   [self setUpTextAreaSpecificSubviews];
-  [self observeUITextViewNotifications];
-}
-
-- (void)dealloc {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Setup
@@ -152,23 +147,6 @@
   self.inputChipViewTextView.showsVerticalScrollIndicator = NO;
   self.inputChipViewTextView.showsHorizontalScrollIndicator = NO;
   [self.scrollView addSubview:self.inputChipViewTextView];
-}
-
-- (void)observeUITextViewNotifications {
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(textViewDidEndEditingWithNotification:)
-             name:UITextViewTextDidEndEditingNotification
-           object:nil];
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(textFieldDidBeginEditingWithNotification:)
-             name:UITextViewTextDidBeginEditingNotification
-           object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(textViewDidChangeWithNotification:)
-                                               name:UITextViewTextDidChangeNotification
-                                             object:nil];
 }
 
 #pragma mark UIView Overrides
@@ -529,28 +507,6 @@
   return self.preferredNumberOfVisibleRows;
 }
 
-#pragma mark Notification Listener Methods
-
-- (void)textViewDidEndEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
-}
-
-- (void)textViewDidChangeWithNotification:(NSNotification *)notification {
-  if (notification.object != self.textView) {
-    return;
-  }
-  //  NSLog(@"text did change");
-  //  [self setNeedsLayout];
-}
-
-- (void)textFieldDidBeginEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
-}
-
 #pragma mark MDCTextControl Accessors
 
 - (void)setContainerStyle:(id<MDCTextControlStyle>)containerStyle {
@@ -633,11 +589,11 @@
 
 #pragma mark InputChipViewTextViewDelegate
 
-- (void)inputChipViewTextViewDidResignFirstResponder:(BOOL)didBecome {
+- (void)textAreaTextViewWillResignFirstResponder:(BOOL)didBecome {
   [self handleResponderChange];
 }
 
-- (void)inputChipViewTextViewDidBecomeFirstResponder:(BOOL)didBecome {
+- (void)textAreaTextViewWillBecomeFirstResponder:(BOOL)didBecome {
   [self handleResponderChange];
 }
 

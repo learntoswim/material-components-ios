@@ -55,14 +55,14 @@
 - (BOOL)resignFirstResponder {
   BOOL didResignFirstResponder = [super resignFirstResponder];
   [self.inputChipViewTextViewDelegate
-      inputChipViewTextViewDidResignFirstResponder:didResignFirstResponder];
+      textAreaTextViewWillResignFirstResponder:didResignFirstResponder];
   return didResignFirstResponder;
 }
 
 - (BOOL)becomeFirstResponder {
   BOOL didBecomeFirstResponder = [super becomeFirstResponder];
   [self.inputChipViewTextViewDelegate
-      inputChipViewTextViewDidBecomeFirstResponder:didBecomeFirstResponder];
+      textAreaTextViewWillBecomeFirstResponder:didBecomeFirstResponder];
   return didBecomeFirstResponder;
 }
 
