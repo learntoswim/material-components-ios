@@ -38,33 +38,25 @@
 #pragma mark MDCTextControl properties
 
 @property(strong, nonatomic) UILabel *label;
-
 @property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
+@property(strong, nonatomic) MDCBaseInputChipViewLayout *layout;
+@property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
+@property(nonatomic, assign) MDCTextControlState textControlState;
+@property(nonatomic, assign) MDCTextControlLabelState labelState;
+@property(nonatomic, strong)
+NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
+@property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
 @property(strong, nonatomic) UIScrollView *scrollView;
 @property(strong, nonatomic) UIView *scrollViewContentViewTouchForwardingView;
 @property(strong, nonatomic) MDCBaseInputChipViewTextField *inputChipViewTextField;
+@property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
+@property(nonatomic, assign) CGPoint lastTouchInitialLocation;
+@property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
 
 @property(strong, nonatomic) NSMutableArray *mutableChips;
 @property(strong, nonatomic) NSMutableArray *chipsToRemove;
-
-@property(strong, nonatomic) MDCBaseInputChipViewLayout *layout;
-
-@property(strong, nonatomic) UITouch *lastTouch;
-@property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
-@property(nonatomic, assign) CGPoint lastTouchInitialLocation;
-
-@property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
-
-@property(nonatomic, assign) MDCTextControlState textControlState;
-@property(nonatomic, assign) MDCTextControlLabelState labelState;
-
-@property(nonatomic, strong)
-    NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
-
-@property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
-@property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @end
 
@@ -149,16 +141,6 @@
 }
 
 - (void)observeUITextFieldNotifications {
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(textFieldDidEndEditingWithNotification:)
-             name:UITextFieldTextDidEndEditingNotification
-           object:nil];
-  [[NSNotificationCenter defaultCenter]
-      addObserver:self
-         selector:@selector(textFieldDidBeginEditingWithNotification:)
-             name:UITextFieldTextDidBeginEditingNotification
-           object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(textFieldDidChangeWithNotification:)
                                                name:UITextFieldTextDidChangeNotification
@@ -169,7 +151,7 @@
   CGFloat textHeight = (CGFloat)ceil((double)self.inputChipViewTextField.font.lineHeight);
   self.chipRowHeight = textHeight * 2;
 
-  self.chipRowSpacing = 4;
+//  self.chipRowSpacing = 4;
 }
 
 - (void)createSubviews {
@@ -827,23 +809,11 @@
 
 #pragma mark UITextField Notifications
 
-- (void)textFieldDidEndEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
-}
-
 - (void)textFieldDidChangeWithNotification:(NSNotification *)notification {
   if (notification.object != self.textField) {
     return;
   }
   [self setNeedsLayout];
-}
-
-- (void)textFieldDidBeginEditingWithNotification:(NSNotification *)notification {
-  if (notification.object != self) {
-    return;
-  }
 }
 
 @end

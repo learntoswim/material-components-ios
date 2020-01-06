@@ -16,8 +16,8 @@
 
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
-- (void)inputChipViewTextViewDidBecomeFirstResponder:(BOOL)didBecome;
-- (void)inputChipViewTextViewDidResignFirstResponder:(BOOL)didResign;
+- (void)textAreaTextViewWillBecomeFirstResponder:(BOOL)didBecome;
+- (void)textAreaTextViewWillResignFirstResponder:(BOOL)didResign;
 @end
 
 @interface MDCBaseTextAreaTextView : UITextView
