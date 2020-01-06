@@ -27,70 +27,7 @@
 #import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-//#import "private/UITextField+MDCTextControlDefaults.h"
-
-@class MDCBaseTextAreaTextView;
-@protocol MDCBaseTextAreaTextViewDelegate <NSObject>
-- (void)inputChipViewTextViewDidBecomeFirstResponder:(BOOL)didBecome;
-- (void)inputChipViewTextViewDidResignFirstResponder:(BOOL)didResign;
-@end
-
-@interface MDCBaseTextAreaTextView : UITextView
-@property(nonatomic, weak) id<MDCBaseTextAreaTextViewDelegate> inputChipViewTextViewDelegate;
-@end
-
-@implementation MDCBaseTextAreaTextView
-
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    [self commonMDCBaseTextAreaTextViewInit];
-  }
-  return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-  self = [super initWithFrame:frame];
-  if (self) {
-    [self commonMDCBaseTextAreaTextViewInit];
-  }
-  return self;
-}
-
-- (void)commonMDCBaseTextAreaTextViewInit {
-  self.backgroundColor = [UIColor clearColor];
-  self.textContainerInset = UIEdgeInsetsZero;
-  self.layoutMargins = UIEdgeInsetsZero;
-  self.textContainer.lineFragmentPadding = 0;
-  self.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-  self.clipsToBounds = NO;
-  //  self.layer.borderColor = [UIColor redColor].CGColor;
-  //  self.layer.borderWidth = 1;
-}
-
-- (void)setFont:(UIFont *)font {
-  [super setFont:font];
-}
-
-- (UIFont *)font {
-  return [super font] ?: [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-}
-
-- (BOOL)resignFirstResponder {
-  BOOL didResignFirstResponder = [super resignFirstResponder];
-  [self.inputChipViewTextViewDelegate
-      inputChipViewTextViewDidResignFirstResponder:didResignFirstResponder];
-  return didResignFirstResponder;
-}
-
-- (BOOL)becomeFirstResponder {
-  BOOL didBecomeFirstResponder = [super becomeFirstResponder];
-  [self.inputChipViewTextViewDelegate
-      inputChipViewTextViewDidBecomeFirstResponder:didBecomeFirstResponder];
-  return didBecomeFirstResponder;
-}
-
-@end
+#import "private/MDCBaseTextAreaTextView.h"
 
 @interface MDCBaseTextArea () <MDCTextControl,
                                MDCBaseTextAreaTextViewDelegate,
@@ -634,7 +571,7 @@
 #pragma mark Fonts
 
 - (UIFont *)normalFont {
-  return self.inputChipViewTextView.font ?: [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+  return self.inputChipViewTextView.font ?: MDCTextControlDefaultUITextFieldFont();
 }
 
 - (UIFont *)floatingFont {
