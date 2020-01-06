@@ -28,106 +28,7 @@
 #import "private/MDCTextControlGradientManager.h"
 #import "private/MDCTextControlLabelAnimation.h"
 #import "private/MDCTextControlStyleBase.h"
-
-static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
-  return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-}
-
-@class MDCBaseInputChipViewTextField;
-@protocol MDCBaseInputChipViewTextFieldDelegate <NSObject>
-- (void)inputChipViewTextFieldDidDeleteBackward:(MDCBaseInputChipViewTextField *)textField
-                                        oldText:(NSString *)oldText
-                                        newText:(NSString *)newText;
-- (void)inputChipViewTextFieldDidBecomeFirstResponder:(BOOL)didBecome;
-- (void)inputChipViewTextFieldDidResignFirstResponder:(BOOL)didResign;
-@end
-
-@interface MDCBaseInputChipViewTextField : UITextField
-@property(nonatomic, weak) id<MDCBaseInputChipViewTextFieldDelegate> inputChipViewTextFieldDelegate;
-@end
-
-@implementation MDCBaseInputChipViewTextField
-
-- (instancetype)initWithFrame:(CGRect)frame {
-  self = [super initWithFrame:frame];
-  if (self) {
-    [self commonMDCBaseInputChipViewTextFieldInit];
-  }
-  return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  self = [super initWithCoder:aDecoder];
-  if (self) {
-    [self commonMDCBaseInputChipViewTextFieldInit];
-  }
-  return self;
-}
-
-- (void)commonMDCBaseInputChipViewTextFieldInit {
-  self.font = MDCInputChipViewDefaultUITextFieldFont();
-}
-
-- (void)setFont:(UIFont *)font {
-  UIFont *newFont = font;
-  if (!newFont) {
-    newFont = MDCInputChipViewDefaultUITextFieldFont();
-  }
-  [super setFont:newFont];
-}
-
-- (void)deleteBackward {
-  NSString *oldText = self.text;
-  [super deleteBackward];
-  if ([self.inputChipViewTextFieldDelegate
-          respondsToSelector:@selector(inputChipViewTextFieldDidDeleteBackward:oldText:newText:)]) {
-    [self.inputChipViewTextFieldDelegate inputChipViewTextFieldDidDeleteBackward:self
-                                                                         oldText:oldText
-                                                                         newText:self.text];
-  }
-}
-
-- (BOOL)resignFirstResponder {
-  BOOL didResignFirstResponder = [super resignFirstResponder];
-  [self.inputChipViewTextFieldDelegate
-      inputChipViewTextFieldDidResignFirstResponder:didResignFirstResponder];
-  return didResignFirstResponder;
-}
-
-- (BOOL)becomeFirstResponder {
-  BOOL didBecomeFirstResponder = [super becomeFirstResponder];
-  [self.inputChipViewTextFieldDelegate
-      inputChipViewTextFieldDidBecomeFirstResponder:didBecomeFirstResponder];
-  return didBecomeFirstResponder;
-}
-
-- (CGRect)editingRectForBounds:(CGRect)bounds {
-  CGRect rect = [super editingRectForBounds:bounds];
-  return rect;
-}
-
-- (CGRect)textRectForBounds:(CGRect)bounds {
-  CGRect rect = [super textRectForBounds:bounds];
-  return rect;
-}
-
-- (CGRect)placeholderRectForBounds:(CGRect)bounds {
-  return CGRectZero;
-}
-
-- (CGRect)clearButtonRectForBounds:(CGRect)bounds {
-  return CGRectZero;
-}
-
-- (CGRect)leftViewRectForBounds:(CGRect)bounds {
-  return CGRectZero;
-}
-
-- (CGRect)rightViewRectForBounds:(CGRect)bounds {
-  return CGRectZero;
-}
-
-@end
+#import "private/MDCBaseInputChipViewTextField.h"
 
 @interface MDCBaseInputChipView () <MDCTextControl,
                                     MDCBaseInputChipViewTextFieldDelegate,
@@ -292,25 +193,15 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 #pragma mark UIResponder Overrides
 
 - (BOOL)resignFirstResponder {
-  BOOL textFieldDidResign = [self.textField resignFirstResponder];
-  return textFieldDidResign;
+  return [self.textField resignFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder {
-  BOOL textFieldDidBecome = [self.textField becomeFirstResponder];
-  return textFieldDidBecome;
-}
-
-- (void)handleResponderChange {
-  [self setNeedsLayout];
+  return [self.textField becomeFirstResponder];
 }
 
 - (BOOL)isFirstResponder {
   return self.textField.isFirstResponder;
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-  [super touchesBegan:touches withEvent:event];
 }
 
 #pragma mark UIView Overrides
@@ -451,32 +342,6 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 }
 
 #pragma mark Layout
-
-- (void)enforceCalculatedScrollViewContentOffset {
-  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-}
-
-- (CGPoint)absoluteOffsetOfOffset:(CGPoint)offset {
-  if (offset.x < 0) {
-    offset.x = offset.x * -1;
-  }
-  if (offset.y < 0) {
-    offset.y = offset.y * -1;
-  }
-  return offset;
-}
-
-- (CGPoint)offsetOfPoint:(CGPoint)point1 fromPoint:(CGPoint)point2 {
-  return CGPointMake(point1.x - point2.x, point1.y - point2.y);
-}
-
-- (CGFloat)determineNumberOfVisibleRows {
-  if (self.chipsWrap) {
-    return self.preferredNumberOfVisibleRows;
-  } else {
-    return 1;
-  }
-}
 
 - (MDCBaseInputChipViewLayout *)calculateLayoutWithSize:(CGSize)size {
   CGFloat numberOfVisibleRows = [self determineNumberOfVisibleRows];
@@ -634,6 +499,32 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
         }];
   } else if (completion) {
     completion();
+  }
+}
+
+- (void)enforceCalculatedScrollViewContentOffset {
+  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
+}
+
+- (CGPoint)absoluteOffsetOfOffset:(CGPoint)offset {
+  if (offset.x < 0) {
+    offset.x = offset.x * -1;
+  }
+  if (offset.y < 0) {
+    offset.y = offset.y * -1;
+  }
+  return offset;
+}
+
+- (CGPoint)offsetOfPoint:(CGPoint)point1 fromPoint:(CGPoint)point2 {
+  return CGPointMake(point1.x - point2.x, point1.y - point2.y);
+}
+
+- (CGFloat)determineNumberOfVisibleRows {
+  if (self.chipsWrap) {
+    return self.preferredNumberOfVisibleRows;
+  } else {
+    return 1;
   }
 }
 
@@ -796,7 +687,7 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 #pragma mark Fonts
 
 - (UIFont *)normalFont {
-  return self.inputChipViewTextField.font ?: MDCInputChipViewDefaultUITextFieldFont();
+  return self.inputChipViewTextField.font ?: MDCTextControlDefaultUITextFieldFont();
 }
 
 - (UIFont *)floatingFont {
@@ -923,11 +814,11 @@ static inline UIFont *MDCInputChipViewDefaultUITextFieldFont() {
 }
 
 - (void)inputChipViewTextFieldDidResignFirstResponder:(BOOL)didBecome {
-  [self handleResponderChange];
+  [self setNeedsLayout];
 }
 
 - (void)inputChipViewTextFieldDidBecomeFirstResponder:(BOOL)didBecome {
-  [self handleResponderChange];
+  [self setNeedsLayout];
 }
 
 - (NSArray<UIView *> *)chips {
