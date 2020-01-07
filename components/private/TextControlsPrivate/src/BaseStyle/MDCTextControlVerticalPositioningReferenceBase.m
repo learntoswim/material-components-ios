@@ -14,6 +14,7 @@
 
 #import "MDCTextControlVerticalPositioningReferenceBase.h"
 #import "MaterialMath.h"
+#import "MDCTextControl.h"
 
 static const CGFloat kMinPaddingBetweenContainerTopAndFloatingLabel = (CGFloat)6.0;
 static const CGFloat kMaxPaddingBetweenContainerTopAndFloatingLabel = (CGFloat)10.0;
@@ -66,32 +67,32 @@ static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
                                                 density:(CGFloat)density
                                preferredContainerHeight:(CGFloat)preferredContainerHeight {
   BOOL isMultiline = numberOfTextRows > 1 || numberOfTextRows == 0;
-  CGFloat normalizedDensity = [self normalizeDensity:density];
+  CGFloat normalizedDensity = MDCTextControlNormalizeDensity(density);
 
   _paddingBetweenContainerTopAndFloatingLabel =
-      [self paddingValueWithMinimumPadding:kMinPaddingBetweenContainerTopAndFloatingLabel
-                            maximumPadding:kMaxPaddingBetweenContainerTopAndFloatingLabel
-                                   density:normalizedDensity];
+      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenContainerTopAndFloatingLabel,
+                                                   kMaxPaddingBetweenContainerTopAndFloatingLabel,
+                                                   normalizedDensity);
 
   _paddingBetweenFloatingLabelAndEditingText =
-      [self paddingValueWithMinimumPadding:kMinPaddingBetweenFloatingLabelAndEditingText
-                            maximumPadding:kMaxPaddingBetweenFloatingLabelAndEditingText
-                                   density:normalizedDensity];
+      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenFloatingLabelAndEditingText,
+                                                   kMaxPaddingBetweenFloatingLabelAndEditingText,
+                                                   normalizedDensity);
 
   _paddingBetweenEditingTextAndContainerBottom =
-      [self paddingValueWithMinimumPadding:kMinPaddingBetweenEditingTextAndContainerBottom
-                            maximumPadding:kMaxPaddingBetweenEditingTextAndContainerBottom
-                                   density:normalizedDensity];
+      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenEditingTextAndContainerBottom,
+                                                   kMaxPaddingBetweenEditingTextAndContainerBottom,
+                                                   normalizedDensity);
 
   _paddingAboveAssistiveLabels =
-      [self paddingValueWithMinimumPadding:kMinPaddingAboveAssistiveLabels
-                            maximumPadding:kMaxPaddingAboveAssistiveLabels
-                                   density:normalizedDensity];
+      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingAboveAssistiveLabels,
+                                                   kMaxPaddingAboveAssistiveLabels,
+                                                   normalizedDensity);
 
   _paddingBelowAssistiveLabels =
-      [self paddingValueWithMinimumPadding:kMinPaddingBelowAssistiveLabels
-                            maximumPadding:kMaxPaddingBelowAssistiveLabels
-                                   density:normalizedDensity];
+      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBelowAssistiveLabels,
+                                                   kMaxPaddingBelowAssistiveLabels,
+                                                   normalizedDensity);
 
   // The container height below is the "default" container height, given the density. This height
   // will be used if the client has not specified a preferredContainerHeight.
@@ -148,30 +149,6 @@ static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
     CGFloat halfOfContainerHeight = (CGFloat)0.5 * _containerHeight;
     _paddingBetweenContainerTopAndNormalLabel = halfOfContainerHeight - halfOfNormalFontLineHeight;
   }
-}
-
-- (CGFloat)paddingValueWithMinimumPadding:(CGFloat)minimumPadding
-                           maximumPadding:(CGFloat)maximumPadding
-                                  density:(CGFloat)density {
-  if (minimumPadding > maximumPadding) {
-    return 0;
-  } else if (minimumPadding == maximumPadding) {
-    return minimumPadding;
-  } else {
-    CGFloat minMaxPaddingDifference = maximumPadding - minimumPadding;
-    CGFloat additionToMinPadding = minMaxPaddingDifference * (1 - density);
-    return minimumPadding + additionToMinPadding;
-  }
-}
-
-- (CGFloat)normalizeDensity:(CGFloat)density {
-  CGFloat normalizedDensity = density;
-  if (normalizedDensity < 0) {
-    normalizedDensity = 0;
-  } else if (normalizedDensity > 1) {
-    normalizedDensity = 1;
-  }
-  return normalizedDensity;
 }
 
 - (CGFloat)calculateContainerHeightWithFoatingLabelHeight:(CGFloat)floatingLabelHeight

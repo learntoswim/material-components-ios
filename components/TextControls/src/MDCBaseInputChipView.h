@@ -138,7 +138,6 @@
 @property(strong, nonatomic, readonly, nonnull) UITextField *textField;
 @property(nonatomic, assign) BOOL chipsWrap;
 @property(nonatomic, assign) CGFloat chipRowHeight;
-@property(nonatomic, assign) CGFloat chipRowSpacing;
 - (void)addChip:(nonnull UIView *)chip;
 - (void)removeChips:(nonnull NSArray<UIView *> *)chips;
 @property(nonatomic, assign) CGFloat preferredContainerHeight;
