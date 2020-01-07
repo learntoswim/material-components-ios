@@ -55,6 +55,8 @@
 
 @property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
 
+@property(strong, nonatomic) UITapGestureRecognizer *tapGesture;
+
 @end
 
 @implementation MDCBaseTextArea
@@ -85,6 +87,7 @@
 
 - (void)commonMDCBaseTextAreaInit {
   [self initializeProperties];
+  [self setUpTapGesture];
   [self setUpColorViewModels];
   [self setUpLabel];
   [self setUpAssistiveLabels];
@@ -104,6 +107,11 @@
 
   self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
   self.gradientManager = [[MDCTextControlGradientManager alloc] init];
+}
+
+- (void)setUpTapGesture {
+  self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+  [self addGestureRecognizer:self.tapGesture];
 }
 
 - (void)setUpColorViewModels {
@@ -184,8 +192,6 @@
   BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
   self.lastTouchInitialContentOffset = self.scrollView.contentOffset;
   self.lastTouchInitialLocation = [touch locationInView:self];
-  //  NSLog(@"begin tracking: %@, radius: %@, pointInside: %@",@(result), @(touch.majorRadius),
-  //  NSStringFromCGPoint([touch locationInView:self]));
   return result;
 }
 
@@ -194,7 +200,6 @@
 
   CGPoint location = [touch locationInView:self];
   CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  //  NSLog(@"offset from start: %@",NSStringFromCGPoint(offsetFromStart));
 
   CGPoint offset = self.lastTouchInitialContentOffset;
   CGFloat height = CGRectGetHeight(self.frame);
@@ -210,26 +215,6 @@
   return result;
 }
 
-- (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-  [super endTrackingWithTouch:touch withEvent:event];
-
-  CGPoint location = [touch locationInView:self];
-  CGPoint offset = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  CGPoint absoluteOffset = [self absoluteOffsetOfOffset:offset];
-  BOOL isProbablyTap = absoluteOffset.x < 15 && absoluteOffset.y < 15;
-  if (isProbablyTap) {
-    if (!self.isFirstResponder) {
-      [self becomeFirstResponder];
-    }
-    [self enforceCalculatedScrollViewContentOffset];
-    //    NSLog(@"ended a tap!");
-  } else {
-    //    NSLog(@"ended a scroll at %@",NSStringFromCGPoint(self.scrollView.contentOffset));
-  }
-  //  NSLog(@"end tracking, radius: %@, pointInside: %@", @(touch.majorRadius),
-  //  NSStringFromCGPoint([touch locationInView:self]));
-}
-
 - (void)cancelTrackingWithEvent:(UIEvent *)event {
   [super cancelTrackingWithEvent:event];
 }
@@ -237,6 +222,7 @@
 - (void)setEnabled:(BOOL)enabled {
   [super setEnabled:enabled];
   self.textView.editable = enabled;
+  [self setNeedsLayout];
 }
 
 #pragma mark UIResponder Overrides
@@ -690,6 +676,17 @@
 - (UIColor *)trailingAssistiveLabelColorForState:(MDCTextControlState)state {
   MDCTextControlColorViewModel *colorViewModel = [self textControlColorViewModelForState:state];
   return colorViewModel.trailingAssistiveLabelColor;
+}
+
+#pragma mark User Actions
+
+- (void)handleTap:(UITapGestureRecognizer *)tap {
+  if (tap.state == UIGestureRecognizerStateEnded) {
+    if (!self.isFirstResponder) {
+      [self becomeFirstResponder];
+    }
+    [self enforceCalculatedScrollViewContentOffset];
+  }
 }
 
 @end

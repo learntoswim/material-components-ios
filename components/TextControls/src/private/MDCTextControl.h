@@ -27,6 +27,30 @@ static inline UIFont * _Nonnull MDCTextControlDefaultUITextFieldFont() {
   return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 }
 
+static inline CGFloat MDCTextControlPaddingValueWithMinimumPadding(CGFloat minimumPadding,
+                                                                   CGFloat maximumPadding,
+                                                                   CGFloat density) {
+  if (minimumPadding > maximumPadding) {
+    return 0;
+  } else if (minimumPadding == maximumPadding) {
+    return minimumPadding;
+  } else {
+    CGFloat minMaxPaddingDifference = maximumPadding - minimumPadding;
+    CGFloat additionToMinPadding = minMaxPaddingDifference * (1 - density);
+    return minimumPadding + additionToMinPadding;
+  }
+}
+
+static inline CGFloat MDCTextControlNormalizeDensity(CGFloat density) {
+  CGFloat normalizedDensity = density;
+  if (normalizedDensity < 0) {
+    normalizedDensity = 0;
+  } else if (normalizedDensity > 1) {
+    normalizedDensity = 1;
+  }
+  return normalizedDensity;
+}
+
 static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
 static const CGFloat kMDCTextControlDefaultMultilineNumberOfVisibleRows = (CGFloat)2.0;
 

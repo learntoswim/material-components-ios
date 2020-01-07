@@ -26,7 +26,7 @@ static const CGFloat kGradientBlurLength = 4;
 
 static const CGFloat kTextFieldMinimumTouchTarget = 46;
 
-static const CGFloat kInterChipHorizontalSpacing = 3;
+static const CGFloat kInterChipHorizontalSpacing = 5;
 
 @interface MDCBaseInputChipViewLayout ()
 

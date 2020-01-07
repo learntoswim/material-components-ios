@@ -30,6 +30,9 @@
 #import "private/MDCTextControlStyleBase.h"
 #import "private/MDCBaseInputChipViewTextField.h"
 
+static const CGFloat kMinInterChipVerticalSpacing = (CGFloat)3.0;
+static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
+
 @interface MDCBaseInputChipView () <MDCTextControl,
                                     MDCBaseInputChipViewTextFieldDelegate,
                                     UIGestureRecognizerDelegate,
@@ -57,6 +60,11 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 
 @property(strong, nonatomic) NSMutableArray *mutableChips;
 @property(strong, nonatomic) NSMutableArray *chipsToRemove;
+
+@property(strong, nonatomic) UITapGestureRecognizer *tapGesture;
+
+@property(nonatomic, assign) CGFloat interChipVerticalSpacing;
+@property(nonatomic, assign) CGFloat density;
 
 @end
 
@@ -87,6 +95,7 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 
 - (void)commonMDCBaseInputChipViewInit {
   [self initializeProperties];
+  [self setUpTapGesture];
   [self setUpColorViewModels];
   [self setUpLabel];
   [self setUpAssistiveLabels];
@@ -114,6 +123,11 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
   self.mutableChips = [[NSMutableArray alloc] init];
   self.chipsToRemove = [[NSMutableArray alloc] init];
   self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
+}
+
+- (void)setUpTapGesture {
+  self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+  [self addGestureRecognizer:self.tapGesture];
 }
 
 - (void)setUpColorViewModels {
@@ -150,8 +164,6 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 - (void)setUpChipRowHeight {
   CGFloat textHeight = (CGFloat)ceil((double)self.inputChipViewTextField.font.lineHeight);
   self.chipRowHeight = textHeight * 2;
-
-//  self.chipRowSpacing = 4;
 }
 
 - (void)createSubviews {
@@ -231,10 +243,7 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
   BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
-  NSLog(@"self.scrollView.contentOffset = %@", NSStringFromCGPoint(self.scrollView.contentOffset));
   self.lastTouchInitialContentOffset = self.scrollView.contentOffset;
-  NSLog(@"self.lastTouchInitialContentOffset = %@",
-        NSStringFromCGPoint(self.lastTouchInitialContentOffset));
   self.lastTouchInitialLocation = [touch locationInView:self];
   return result;
 }
@@ -244,7 +253,6 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 
   CGPoint location = [touch locationInView:self];
   CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  NSLog(@"offset from start: %@", NSStringFromCGPoint(offsetFromStart));
 
   CGPoint newContentOffset = self.lastTouchInitialContentOffset;
   if (self.chipsWrap) {
@@ -260,67 +268,30 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
     if (self.isRTL) {
       CGFloat width = CGRectGetWidth(self.scrollView.frame);
       newContentOffset.x -= offsetFromStart.x;
-      //      NSLog(@"new: %@",@())
-      NSLog(@"offset.x = %@, cs: %@, w: %@", @(newContentOffset.x),
-            @(self.scrollView.contentSize.width), @(width));
       CGFloat minOffset = 0;
       CGFloat maxOffset = self.scrollView.contentSize.width - width;
-      //      - CGRectGetWidth(self.textField.frame);
       if (newContentOffset.x > maxOffset) {
-        NSLog(@"a");
-        ////                NSLog(@"max offset: %@",@(maxOffset));
         newContentOffset.x = maxOffset;
       }
       if (newContentOffset.x < minOffset) {
-        NSLog(@"b");
-        //        NSLog(@"min offset: %@",@(minOffset));
         newContentOffset.x = minOffset;
       }
     } else {
       CGFloat width = CGRectGetWidth(self.frame);
       newContentOffset.x -= offsetFromStart.x;
-      NSLog(@"offset.x = %@, cs: %@, w: %@", @(newContentOffset.x),
-            @(self.scrollView.contentSize.width), @(width));
-
-      //            NSLog(@"offset.x = %@",@(newContentOffset.x));
       CGFloat minOffset = 0;
       if (newContentOffset.x < minOffset) {
-        //        NSLog(@"min offset: %@",@(minOffset));
         newContentOffset.x = minOffset;
       }
       CGFloat maxOffset = self.scrollView.contentSize.width - width;
       if (newContentOffset.x > maxOffset) {
-        //        NSLog(@"max offset: %@",@(maxOffset));
         newContentOffset.x = maxOffset;
       }
     }
-    //    NSLog(@"set content offset");
   }
   self.scrollView.contentOffset = newContentOffset;
 
   return result;
-}
-
-- (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-  [super endTrackingWithTouch:touch withEvent:event];
-  if ([self isTouchMostLikelyTap:touch]) {
-    if (!self.isFirstResponder) {
-      [self becomeFirstResponder];
-    }
-    [self enforceCalculatedScrollViewContentOffset];
-    //    NSLog(@"ended a tap!");
-  } else {
-    //    NSLog(@"ended a scroll at %@",NSStringFromCGPoint(self.scrollView.contentOffset));
-  }
-  //  NSLog(@"end tracking, radius: %@, pointInside: %@", @(touch.majorRadius),
-  //  NSStringFromCGPoint([touch locationInView:self]));
-}
-
-- (BOOL)isTouchMostLikelyTap:(UITouch *)touch {
-  CGPoint location = [touch locationInView:self];
-  CGPoint offset = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-  CGPoint absoluteOffset = [self absoluteOffsetOfOffset:offset];
-  return absoluteOffset.x < 15 && absoluteOffset.y < 15;
 }
 
 #pragma mark Layout
@@ -332,7 +303,7 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
                                 normalFontLineHeight:self.normalFont.lineHeight
                                        textRowHeight:self.chipRowHeight
                                     numberOfTextRows:numberOfVisibleRows
-                                             density:0
+                                             density:self.density
                             preferredContainerHeight:self.preferredContainerHeight];
 
   return
@@ -349,7 +320,7 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
                                         staleChipViews:self.mutableChips
                                              chipsWrap:self.chipsWrap
                                          chipRowHeight:self.chipRowHeight
-                              interChipVerticalSpacing:self.chipRowSpacing
+                              interChipVerticalSpacing:self.interChipVerticalSpacing
                                     leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
                                    rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
                             assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
@@ -363,6 +334,7 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 - (void)preLayoutSubviews {
   self.textControlState = [self determineCurrentTextControlState];
   self.labelState = [self determineCurrentLabelState];
+  self.interChipVerticalSpacing = [self determineInterChipVerticalSpacing];
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
@@ -503,11 +475,17 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 }
 
 - (CGFloat)determineNumberOfVisibleRows {
-  if (self.chipsWrap) {
+  if (self.chipsWrap && self.preferredNumberOfVisibleRows >= 1) {
     return self.preferredNumberOfVisibleRows;
   } else {
     return 1;
   }
+}
+
+- (CGFloat)determineInterChipVerticalSpacing {
+  return MDCTextControlPaddingValueWithMinimumPadding(kMinInterChipVerticalSpacing,
+                                                      kMaxInterChipVerticalSpacing,
+                                                      self.density);
 }
 
 #pragma mark Chip Adding/Removing
@@ -814,6 +792,17 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
     return;
   }
   [self setNeedsLayout];
+}
+
+#pragma mark User Actions
+
+- (void)handleTap:(UITapGestureRecognizer *)tap {
+  if (tap.state == UIGestureRecognizerStateEnded) {
+    if (!self.isFirstResponder) {
+      [self becomeFirstResponder];
+    }
+    [self enforceCalculatedScrollViewContentOffset];
+  }
 }
 
 @end
