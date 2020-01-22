@@ -19,9 +19,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "MaterialMath.h"
+#import "MaterialTextControlsPrivate+Shared.h"
 #import "MaterialTypography.h"
 #import "private/MDCBaseInputChipViewLayout.h"
-#import "MaterialTextControlsPrivate+Shared.h"
 //#import "private/MDCTextControlAssistiveLabelView.h"
 //#import "private/MDCTextControlColorViewModel.h"
 //#import "private/MDCTextControlGradientManager.h"
@@ -47,7 +47,7 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
 @property(nonatomic, assign) MDCTextControlState textControlState;
 @property(nonatomic, assign) MDCTextControlLabelState labelState;
 @property(nonatomic, strong)
-NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
+    NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 @property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
@@ -126,7 +126,8 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 }
 
 - (void)setUpTapGesture {
-  self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+  self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(handleTap:)];
   [self addGestureRecognizer:self.tapGesture];
 }
 
@@ -484,8 +485,7 @@ NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels
 
 - (CGFloat)determineInterChipVerticalSpacing {
   return MDCTextControlPaddingValueWithMinimumPadding(kMinInterChipVerticalSpacing,
-                                                      kMaxInterChipVerticalSpacing,
-                                                      self.density);
+                                                      kMaxInterChipVerticalSpacing, self.density);
 }
 
 #pragma mark Chip Adding/Removing

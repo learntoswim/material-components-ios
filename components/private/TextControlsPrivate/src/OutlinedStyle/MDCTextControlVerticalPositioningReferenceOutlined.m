@@ -74,19 +74,16 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
 
   _paddingBetweenContainerTopAndFloatingLabel = (CGFloat)0 - halfOfFloatingLabelHeight;
 
-  _paddingBetweenFloatingLabelAndEditingText =
-  MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenFloatingLabelAndEditingText,
-                                               kMaxPaddingBetweenFloatingLabelAndEditingText,
-                                               density);
+  _paddingBetweenFloatingLabelAndEditingText = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingBetweenFloatingLabelAndEditingText, kMaxPaddingBetweenFloatingLabelAndEditingText,
+      density);
 
   _paddingBetweenContainerTopAndNormalLabel =
       halfOfFloatingLabelHeight + _paddingBetweenFloatingLabelAndEditingText;
   _paddingBetweenEditingTextAndContainerBottom = _paddingBetweenContainerTopAndNormalLabel;
 
-  _paddingAroundAssistiveLabels =
-      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingAroundAssistiveLabels,
-                                                   kMaxPaddingAroundAssistiveLabels,
-                                                   normalizedDensity);
+  _paddingAroundAssistiveLabels = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingAroundAssistiveLabels, kMaxPaddingAroundAssistiveLabels, normalizedDensity);
 
   CGFloat containerHeightWithPaddingsDeterminedByDensity = [self
       calculateContainerHeightWithFoatingLabelHeight:floatingLabelHeight

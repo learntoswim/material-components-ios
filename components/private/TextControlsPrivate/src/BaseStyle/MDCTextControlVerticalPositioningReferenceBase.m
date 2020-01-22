@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "MDCTextControlVerticalPositioningReferenceBase.h"
-#import "MaterialMath.h"
 #import "MDCTextControl.h"
+#import "MaterialMath.h"
 
 static const CGFloat kMinPaddingBetweenContainerTopAndFloatingLabel = (CGFloat)6.0;
 static const CGFloat kMaxPaddingBetweenContainerTopAndFloatingLabel = (CGFloat)10.0;
@@ -69,30 +69,23 @@ static const CGFloat kMaxPaddingBelowAssistiveLabels = (CGFloat)6.0;
   BOOL isMultiline = numberOfTextRows > 1 || numberOfTextRows == 0;
   CGFloat normalizedDensity = MDCTextControlNormalizeDensity(density);
 
-  _paddingBetweenContainerTopAndFloatingLabel =
-      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenContainerTopAndFloatingLabel,
-                                                   kMaxPaddingBetweenContainerTopAndFloatingLabel,
-                                                   normalizedDensity);
+  _paddingBetweenContainerTopAndFloatingLabel = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingBetweenContainerTopAndFloatingLabel,
+      kMaxPaddingBetweenContainerTopAndFloatingLabel, normalizedDensity);
 
-  _paddingBetweenFloatingLabelAndEditingText =
-      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenFloatingLabelAndEditingText,
-                                                   kMaxPaddingBetweenFloatingLabelAndEditingText,
-                                                   normalizedDensity);
+  _paddingBetweenFloatingLabelAndEditingText = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingBetweenFloatingLabelAndEditingText, kMaxPaddingBetweenFloatingLabelAndEditingText,
+      normalizedDensity);
 
-  _paddingBetweenEditingTextAndContainerBottom =
-      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBetweenEditingTextAndContainerBottom,
-                                                   kMaxPaddingBetweenEditingTextAndContainerBottom,
-                                                   normalizedDensity);
+  _paddingBetweenEditingTextAndContainerBottom = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingBetweenEditingTextAndContainerBottom,
+      kMaxPaddingBetweenEditingTextAndContainerBottom, normalizedDensity);
 
-  _paddingAboveAssistiveLabels =
-      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingAboveAssistiveLabels,
-                                                   kMaxPaddingAboveAssistiveLabels,
-                                                   normalizedDensity);
+  _paddingAboveAssistiveLabels = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingAboveAssistiveLabels, kMaxPaddingAboveAssistiveLabels, normalizedDensity);
 
-  _paddingBelowAssistiveLabels =
-      MDCTextControlPaddingValueWithMinimumPadding(kMinPaddingBelowAssistiveLabels,
-                                                   kMaxPaddingBelowAssistiveLabels,
-                                                   normalizedDensity);
+  _paddingBelowAssistiveLabels = MDCTextControlPaddingValueWithMinimumPadding(
+      kMinPaddingBelowAssistiveLabels, kMaxPaddingBelowAssistiveLabels, normalizedDensity);
 
   // The container height below is the "default" container height, given the density. This height
   // will be used if the client has not specified a preferredContainerHeight.

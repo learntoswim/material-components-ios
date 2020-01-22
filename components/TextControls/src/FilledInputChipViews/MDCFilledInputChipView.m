@@ -16,8 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "MaterialTextControlsPrivate+Shared.h"
 #import "MaterialTextControlsPrivate+FilledStyle.h"
+#import "MaterialTextControlsPrivate+Shared.h"
 
 @interface MDCFilledInputChipView (Private) <MDCTextControl>
 @end

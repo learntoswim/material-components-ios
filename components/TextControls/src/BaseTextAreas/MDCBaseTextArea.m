@@ -19,10 +19,10 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "MaterialMath.h"
+#import "MaterialTextControlsPrivate+BaseStyle.h"
+#import "MaterialTextControlsPrivate+Shared.h"
 #import "MaterialTypography.h"
 #import "private/MDCBaseTextAreaLayout.h"
-#import "MaterialTextControlsPrivate+Shared.h"
-#import "MaterialTextControlsPrivate+BaseStyle.h"
 #import "private/MDCBaseTextAreaTextView.h"
 
 @interface MDCBaseTextArea () <MDCTextControl,
@@ -106,7 +106,8 @@
 }
 
 - (void)setUpTapGesture {
-  self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+  self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(handleTap:)];
   [self addGestureRecognizer:self.tapGesture];
 }
 
