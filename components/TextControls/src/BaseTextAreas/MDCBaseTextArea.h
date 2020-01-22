@@ -18,7 +18,23 @@
 #import "MDCTextControlState.h"
 #import "MaterialContainerScheme.h"
 
+/**
+ A UIControl subclass that leverages UITextView to provide multi-line text input
+*/
 @interface MDCBaseTextArea : UIControl <UIContentSizeCategoryAdjusting>
+
+/**
+ The @c label is a label that occupies the area the text usually occupies when there is no
+ text. It is distinct from the placeholder in that it can move above the text area or disappear to
+ reveal the placeholder when editing begins.
+ */
+@property(strong, nonatomic, readonly, nonnull) UILabel *label;
+
+/**
+ This property determines the behavior of the textfield's label during editing.
+ @note The default is MDCTextControlLabelBehaviorFloats.
+ */
+@property(nonatomic, assign) MDCTextControlLabelBehavior labelBehavior;
 
 /**
  The @c leadingAssistiveLabel is a label below the text on the leading edge of the view. It can be
@@ -33,25 +49,14 @@
 @property(strong, nonatomic, readonly, nonnull) UILabel *trailingAssistiveLabel;
 
 /**
- This property determines the behavior of the textfield's label during editing.
- @note The default is MDCTextControlLabelBehaviorFloats.
+The UITextView contained within the text area.
  */
-@property(nonatomic, assign) MDCTextControlLabelBehavior labelBehavior;
-
 @property(strong, nonatomic, readonly, nonnull) UITextView *textView;
-@property(strong, nonatomic, readonly, nonnull) UILabel *label;
-@property(nonatomic, assign) CGFloat preferredContainerHeight;
-@property(nonatomic, assign) CGFloat preferredNumberOfVisibleRows;
 
 /**
- Indicates whether the text field should automatically update its font when the device’s
- UIContentSizeCategory is changed.
- This property is modeled after the adjustsFontForContentSizeCategory property in the
- UIContentSizeCategoryAdjusting protocol added by Apple in iOS 10.0.
- Defaults value is NO.
+The preferred number of simultaneously visible lines.
  */
-@property(nonatomic, setter=mdc_setAdjustsFontForContentSizeCategory:)
-    BOOL mdc_adjustsFontForContentSizeCategory;
+@property(nonatomic, assign) CGFloat preferredNumberOfVisibleRows;
 
 /**
  Sets the floating label color for a given state. Floating label color refers to the color of the

@@ -264,23 +264,14 @@
   self.scrollViewContentViewTouchForwardingView.frame =
       self.layout.scrollViewContentViewTouchForwardingViewFrame;
   self.textView.frame = self.layout.textViewFrame;
-  //  CGRect frame = self.layout.textViewFrame;
-  //  CGSize size = [self.textView sizeThatFits:frame.size];
-  //  frame.size = size;
-  //  self.textView.frame = frame;
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
   [self.scrollView setNeedsLayout];
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
   [self.assistiveLabelView setNeedsLayout];
-  //  NSLog(@"inset: %@",NSStringFromUIEdgeInsets(self.scrollView.contentInset));
-  //  NSLog(@"offset: %@",NSStringFromCGPoint(self.scrollView.contentOffset));
-  //  NSLog(@"size: %@\n\n",NSStringFromCGSize(self.scrollView.contentSize));
-
   [self animateLabel];
   [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
-
   [self layOutGradientLayers];
 }
 
@@ -353,17 +344,6 @@
     self.trailingAssistiveLabel.adjustsFontForContentSizeCategory =
         adjustsFontForContentSizeCategory;
   }
-}
-
-- (void)observeContentSizeCategoryNotifications {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(contentSizeCategoryDidChange:)
-                                               name:UIContentSizeCategoryDidChangeNotification
-                                             object:nil];
-}
-
-- (void)contentSizeCategoryDidChange:(NSNotification *)notification {
-  [self setNeedsLayout];
 }
 
 #pragma mark MDCTextControlState
@@ -515,43 +495,6 @@
 
 - (UIFont *)floatingFont {
   return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
-}
-
-#pragma mark Dynamic Type
-
-- (void)mdc_setAdjustsFontForContentSizeCategory:(BOOL)adjusts {
-  _mdc_adjustsFontForContentSizeCategory = adjusts;
-  if (_mdc_adjustsFontForContentSizeCategory) {
-    [self startObservingUIContentSizeCategory];
-  } else {
-    [self stopObservingUIContentSizeCategory];
-  }
-  [self updateFontsForDynamicType];
-}
-
-- (void)updateFontsForDynamicType {
-  if (self.mdc_adjustsFontForContentSizeCategory) {
-    UIFont *textFont = [UIFont mdc_preferredFontForMaterialTextStyle:MDCFontTextStyleBody1];
-    UIFont *helperFont = [UIFont mdc_preferredFontForMaterialTextStyle:MDCFontTextStyleCaption];
-    self.textView.font = textFont;
-    self.label.font = textFont;
-    self.leadingAssistiveLabel.font = helperFont;
-    self.leadingAssistiveLabel.font = helperFont;
-  }
-  [self setNeedsLayout];
-}
-
-- (void)startObservingUIContentSizeCategory {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(updateFontsForDynamicType)
-                                               name:UIContentSizeCategoryDidChangeNotification
-                                             object:nil];
-}
-
-- (void)stopObservingUIContentSizeCategory {
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:UIContentSizeCategoryDidChangeNotification
-                                                object:nil];
 }
 
 #pragma mark Custom UIView Geometry Methods
