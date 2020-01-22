@@ -1579,6 +1579,48 @@ Pod::Spec.new do |mdc|
     end
   end
 
+  # TextControls+BaseTextAreas
+
+  mdc.subspec "TextControls+BaseTextAreas" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [ "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+    "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/private/TextControlsPrivate+Shared"
+    component.dependency "MaterialComponents/private/TextControlsPrivate+BaseStyle"
+    component.dependency "MDFInternationalization"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+      unit_tests.dependency "MaterialComponents/schemes/Container"
+    end
+  end
+
+  # TextControls+BaseInputChipViews
+
+  mdc.subspec "TextControls+BaseInputChipViews" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [ "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+    "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/private/TextControlsPrivate+Shared"
+    component.dependency "MaterialComponents/private/TextControlsPrivate+BaseStyle"
+    component.dependency "MDFInternationalization"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+      unit_tests.dependency "MaterialComponents/schemes/Container"
+    end
+  end
+
   # TextControls+FilledTextFields
 
   mdc.subspec "TextControls+FilledTextFields" do |component|
@@ -1620,6 +1662,88 @@ Pod::Spec.new do |mdc|
     end
   end
 
+  # TextControls+FilledTextAreas
+
+  mdc.subspec "TextControls+FilledTextAreas" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+BaseTextAreas"
+    component.dependency "MaterialComponents/private/TextControlsPrivate+FilledStyle"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+      unit_tests.dependency "MaterialComponents/schemes/Container"
+    end
+  end
+
+  # TextControls+FilledTextAreasTheming
+
+  mdc.subspec "TextControls+FilledTextAreasTheming" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+FilledTextAreas"
+    component.dependency "MaterialComponents/schemes/Container"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+    end
+  end
+
+  # TextControls+FilledInputChipViews
+
+  mdc.subspec "TextControls+FilledInputChipViews" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+BaseInputChipViews"
+    component.dependency "MaterialComponents/private/TextControlsPrivate+FilledStyle"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+      unit_tests.dependency "MaterialComponents/schemes/Container"
+    end
+  end
+
+  # TextControls+FilledInputChipViewsTheming
+
+  mdc.subspec "TextControls+FilledInputChipViewsTheming" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+FilledInputChipViews"
+    component.dependency "MaterialComponents/schemes/Container"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+    end
+  end
+
   # TextControls+OutlinedTextFields
 
   mdc.subspec "TextControls+OutlinedTextFields" do |component|
@@ -1652,6 +1776,105 @@ Pod::Spec.new do |mdc|
     ]
 
     component.dependency "MaterialComponents/TextControls+OutlinedTextFields"
+    component.dependency "MaterialComponents/schemes/Container"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+    end
+  end
+
+  # TextControls+OutlinedTextAreas
+
+  mdc.subspec "TextControls+OutlinedTextAreas" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+BaseTextAreas"
+    component.dependency "MaterialComponents/private/TextControlsPrivate+OutlinedStyle"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+      unit_tests.dependency "MaterialComponents/schemes/Container"
+    end
+  end
+
+  # TextControls+OutlinedTextAreasTheming
+
+  mdc.subspec "TextControls+OutlinedTextAreasTheming" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+OutlinedTextAreas"
+    component.dependency "MaterialComponents/schemes/Container"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+    end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # TextControls+OutlinedInputChipViews
+
+  mdc.subspec "TextControls+OutlinedInputChipViews" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+BaseInputChipViews"
+    component.dependency "MaterialComponents/private/TextControlsPrivate+OutlinedStyle"
+
+    component.test_spec 'UnitTests' do |unit_tests|
+      unit_tests.source_files = [
+      "components/#{component.base_name.split('+')[0]}/tests/unit/#{component.base_name.split('+')[1]}/*.{h,m,swift}"
+      ]
+      unit_tests.dependency "MaterialComponents/schemes/Container"
+    end
+  end
+
+  # TextControls+OutlinedInputChipViewsTheming
+
+  mdc.subspec "TextControls+OutlinedInputChipViewsTheming" do |component|
+    component.ios.deployment_target = '9.0'
+    component.public_header_files = "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.h"
+    component.source_files = [
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/*.{h,m}",
+      "components/#{component.base_name.split('+')[0]}/src/#{component.base_name.split('+')[1]}/private/*.{h,m}"
+    ]
+
+    component.dependency "MaterialComponents/TextControls+OutlinedInputChipViews"
     component.dependency "MaterialComponents/schemes/Container"
 
     component.test_spec 'UnitTests' do |unit_tests|

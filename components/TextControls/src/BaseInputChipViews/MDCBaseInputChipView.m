@@ -20,14 +20,14 @@
 
 #import "MaterialMath.h"
 #import "MaterialTypography.h"
-#import "private/MDCBaseInputChipView+MDCTextControl.h"
 #import "private/MDCBaseInputChipViewLayout.h"
-#import "private/MDCTextControl.h"
-#import "private/MDCTextControlAssistiveLabelView.h"
-#import "private/MDCTextControlColorViewModel.h"
-#import "private/MDCTextControlGradientManager.h"
-#import "private/MDCTextControlLabelAnimation.h"
-#import "private/MDCTextControlStyleBase.h"
+#import "MaterialTextControlsPrivate+Shared.h"
+//#import "private/MDCTextControlAssistiveLabelView.h"
+//#import "private/MDCTextControlColorViewModel.h"
+//#import "private/MDCTextControlGradientManager.h"
+//#import "private/MDCTextControlLabelAnimation.h"
+#import "MaterialTextControlsPrivate+BaseStyle.h"
+//#import "private/MDCTextControlStyleBase.h"
 #import "private/MDCBaseInputChipViewTextField.h"
 
 static const CGFloat kMinInterChipVerticalSpacing = (CGFloat)3.0;

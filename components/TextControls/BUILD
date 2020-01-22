@@ -51,10 +51,47 @@ mdc_extension_objc_library(
     ],
 )
 
+
+mdc_extension_objc_library(
+    name = "BaseTextAreas",
+    deps = [
+        "//components/private/TextControlsPrivate:BaseStyle",
+        "//components/private/TextControlsPrivate:Shared",
+        "@material_internationalization_ios//:MDFInternationalization",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "BaseInputChipViews",
+    deps = [
+        "//components/private/TextControlsPrivate:BaseStyle",
+        "//components/private/TextControlsPrivate:Shared",
+        "@material_internationalization_ios//:MDFInternationalization",
+    ],
+)
+
 mdc_objc_library(
     name = "BaseTextFieldsPrivate",
     hdrs = native.glob(["src/BaseTextFields/private/*.h"]),
     includes = ["src/BaseTextFields/private"],
+    visibility = [
+        ":TextControlsPackageGroup",
+    ],
+)
+
+mdc_objc_library(
+    name = "BaseTextAreasPrivate",
+    hdrs = native.glob(["src/BaseTextAreas/private/*.h"]),
+    includes = ["src/BaseTextAreas/private"],
+    visibility = [
+        ":TextControlsPackageGroup",
+    ],
+)
+
+mdc_objc_library(
+    name = "BaseInputChipViewsPrivate",
+    hdrs = native.glob(["src/BaseInputChipViews/private/*.h"]),
+    includes = ["src/BaseInputChipViews/private"],
     visibility = [
         ":TextControlsPackageGroup",
     ],
@@ -92,14 +129,89 @@ mdc_extension_objc_library(
     ],
 )
 
+mdc_extension_objc_library(
+    name = "FilledTextAreas",
+    deps = [
+        ":BaseTextAreas",
+        "//components/private/TextControlsPrivate:FilledStyle",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "FilledTextAreasTheming",
+    deps = [
+        ":FilledTextAreas",
+        "//components/schemes/Container",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "OutlinedTextAreas",
+    deps = [
+        ":BaseTextAreas",
+        "//components/private/TextControlsPrivate:OutlinedStyle",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "OutlinedTextAreasTheming",
+    deps = [
+        ":OutlinedTextAreas",
+        "//components/schemes/Container",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "FilledInputChipViews",
+    deps = [
+        ":BaseInputChipViews",
+        "//components/private/TextControlsPrivate:FilledStyle",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "FilledInputChipViewsTheming",
+    deps = [
+        ":FilledInputChipViews",
+        "//components/schemes/Container",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "OutlinedInputChipViews",
+    deps = [
+        ":BaseInputChipViews",
+        "//components/private/TextControlsPrivate:OutlinedStyle",
+    ],
+)
+
+mdc_extension_objc_library(
+    name = "OutlinedInputChipViewsTheming",
+    deps = [
+        ":OutlinedInputChipViews",
+        "//components/schemes/Container",
+    ],
+)
+
+
 mdc_examples_objc_library(
     name = "ObjcExamples",
     deps = [
         ":BaseTextFields",
+        ":BaseInputChipViews",
+        ":BaseTextAreas",
         ":FilledTextFields",
         ":FilledTextFieldsTheming",
+        ":FilledInputChipViews",
+        ":FilledInputChipViewsTheming",
+        ":FilledTextAreas",
+        ":FilledTextAreasTheming",
         ":OutlinedTextFields",
         ":OutlinedTextFieldsTheming",
+        ":OutlinedInputChipViews",
+        ":OutlinedInputChipViewsTheming",
+        ":OutlinedTextAreas",
+        ":OutlinedTextAreasTheming",
         "//components/Buttons",
         "//components/Buttons:Theming",
         "//components/schemes/Container",
@@ -110,10 +222,20 @@ mdc_examples_swift_library(
     name = "SwiftExamples",
     deps = [
         ":BaseTextFields",
+        ":BaseInputChipViews",
+        ":BaseTextAreas",
         ":FilledTextFields",
         ":FilledTextFieldsTheming",
+        ":FilledInputChipViews",
+        ":FilledInputChipViewsTheming",
+        ":FilledTextAreas",
+        ":FilledTextAreasTheming",
         ":OutlinedTextFields",
         ":OutlinedTextFieldsTheming",
+        ":OutlinedInputChipViews",
+        ":OutlinedInputChipViewsTheming",
+        ":OutlinedTextAreas",
+        ":OutlinedTextAreasTheming",
     ],
 )
 
@@ -125,10 +247,22 @@ mdc_unit_test_objc_library(
     deps = [
         ":BaseTextFields",
         ":BaseTextFieldsPrivate",
+        ":BaseInputChipViews",
+        ":BaseInputChipViewsPrivate",
+        ":BaseTextAreas",
+        ":BaseTextAreasPrivate",
         ":FilledTextFields",
         ":FilledTextFieldsTheming",
+        ":FilledInputChipViews",
+        ":FilledInputChipViewsTheming",
+        ":FilledTextAreas",
+        ":FilledTextAreasTheming",
         ":OutlinedTextFields",
         ":OutlinedTextFieldsTheming",
+        ":OutlinedInputChipViews",
+        ":OutlinedInputChipViewsTheming",
+        ":OutlinedTextAreas",
+        ":OutlinedTextAreasTheming",
     ],
 )
 
@@ -138,12 +272,22 @@ mdc_snapshot_objc_library(
         "CoreGraphics",
     ],
     deps = [
-        ":BaseTextFields",
         ":Enums",
+        ":BaseTextFields",
+        ":BaseInputChipViews",
+        ":BaseTextAreas",
         ":FilledTextFields",
         ":FilledTextFieldsTheming",
+        ":FilledInputChipViews",
+        ":FilledInputChipViewsTheming",
+        ":FilledTextAreas",
+        ":FilledTextAreasTheming",
         ":OutlinedTextFields",
         ":OutlinedTextFieldsTheming",
+        ":OutlinedInputChipViews",
+        ":OutlinedInputChipViewsTheming",
+        ":OutlinedTextAreas",
+        ":OutlinedTextAreasTheming",
         "//components/private/TextControlsPrivate:FilledStyle",
         "//components/private/TextControlsPrivate:OutlinedStyle",
         "//components/private/TextControlsPrivate:Shared",

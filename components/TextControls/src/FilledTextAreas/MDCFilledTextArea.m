@@ -12,23 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCFilledInputChipView.h"
+#import "MDCFilledTextArea.h"
 
 #import <Foundation/Foundation.h>
 
-#import "private/MDCBaseInputChipView+MDCTextControl.h"
-#import "private/MDCTextControl.h"
-#import "private/MDCTextControlStyleFilled.h"
+#import "MaterialTextControlsPrivate+Shared.h"
+#import "MaterialTextControlsPrivate+FilledStyle.h"
 
-@interface MDCFilledInputChipView ()
+@interface MDCFilledTextArea (Private) <MDCTextControl>
 @end
 
-@implementation MDCFilledInputChipView
+@interface MDCFilledTextArea ()
+@end
+
+@implementation MDCFilledTextArea
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    [self commonMDCFilledInputChipViewInit];
+    [self commonMDCFilledTextAreaInit];
   }
   return self;
 }
@@ -36,12 +38,12 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    [self commonMDCFilledInputChipViewInit];
+    [self commonMDCFilledTextAreaInit];
   }
   return self;
 }
 
-- (void)commonMDCFilledInputChipViewInit {
+- (void)commonMDCFilledTextAreaInit {
   MDCTextControlStyleFilled *filledStyle = [[MDCTextControlStyleFilled alloc] init];
   self.containerStyle = filledStyle;
 }

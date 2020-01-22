@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "MDCFilledInputChipView+MaterialTheming.h"
+#import "MDCFilledTextArea+MaterialTheming.h"
 
 #import <Foundation/Foundation.h>
 
-#import "private/MDCBaseInputChipView+MDCTextControl.h"
-#import "private/MDCTextControl.h"
-#import "private/MDCTextControlStyleFilled.h"
-
-@implementation MDCFilledInputChipView (MaterialTheming)
+@implementation MDCFilledTextArea (MaterialTheming)
 
 - (void)applyThemeWithScheme:(nonnull id<MDCContainerScheming>)containerScheme {
   [self applyTypographyScheme:[self typographySchemeWithContainerScheme:containerScheme]];
@@ -53,7 +49,7 @@
 }
 
 - (void)applyTypographyScheme:(id<MDCTypographyScheming>)mdcTypographyScheming {
-  self.textField.font = mdcTypographyScheming.subtitle1;
+  self.textView.font = mdcTypographyScheming.subtitle1;
   self.leadingAssistiveLabel.font = mdcTypographyScheming.caption;
   self.trailingAssistiveLabel.font = mdcTypographyScheming.caption;
 }
@@ -95,7 +91,7 @@
   UIColor *filledSublayerFillColorDisabled =
       [filledSublayerFillColorNormal colorWithAlphaComponent:disabledOpacity * (CGFloat)0.12];
 
-  self.textField.tintColor = colorScheme.primaryColor;
+  self.textView.tintColor = colorScheme.primaryColor;
 
   [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
@@ -160,7 +156,7 @@
   UIColor *filledSublayerFillColorDisabled =
       [filledSublayerFillColorNormal colorWithAlphaComponent:disabledOpacity * (CGFloat)0.12];
 
-  self.textField.tintColor = colorScheme.primaryColor;
+  self.textView.tintColor = colorScheme.primaryColor;
 
   [self setFloatingLabelColor:floatingLabelColorNormal forState:MDCTextControlStateNormal];
   [self setFloatingLabelColor:floatingLabelColorEditing forState:MDCTextControlStateEditing];
@@ -191,5 +187,4 @@
   [self setTrailingAssistiveLabelColor:assistiveLabelColorDisabled
                               forState:MDCTextControlStateDisabled];
 }
-
 @end

@@ -16,9 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "private/MDCBaseInputChipView+MDCTextControl.h"
-#import "private/MDCTextControl.h"
-#import "private/MDCTextControlStyleOutlined.h"
+#import "MaterialTextControlsPrivate+Shared.h"
+#import "MaterialTextControlsPrivate+OutlinedStyle.h"
+
+@interface MDCOutlinedInputChipView (Private) <MDCTextControl>
+@end
 
 @interface MDCOutlinedInputChipView ()
 @end

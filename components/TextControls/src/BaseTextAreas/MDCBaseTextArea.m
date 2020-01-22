@@ -20,13 +20,9 @@
 
 #import "MaterialMath.h"
 #import "MaterialTypography.h"
-#import "private/MDCBaseTextArea+MDCTextControl.h"
 #import "private/MDCBaseTextAreaLayout.h"
-#import "private/MDCTextControl.h"
-#import "private/MDCTextControlAssistiveLabelView.h"
-#import "private/MDCTextControlGradientManager.h"
-#import "private/MDCTextControlLabelAnimation.h"
-#import "private/MDCTextControlStyleBase.h"
+#import "MaterialTextControlsPrivate+Shared.h"
+#import "MaterialTextControlsPrivate+BaseStyle.h"
 #import "private/MDCBaseTextAreaTextView.h"
 
 @interface MDCBaseTextArea () <MDCTextControl,

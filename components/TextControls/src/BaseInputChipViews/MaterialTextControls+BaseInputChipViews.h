@@ -12,9 +12,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <UIKit/UIKit.h>
-#import "MDCBaseTextArea.h"
-#import "MDCTextControl.h"
-
-@interface MDCBaseTextArea (Private) <MDCTextControl>
-@end
+#import "MDCBaseTextField.h"
