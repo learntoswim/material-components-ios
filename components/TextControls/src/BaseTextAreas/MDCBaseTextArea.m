@@ -88,6 +88,11 @@
   [self setUpLabel];
   [self setUpAssistiveLabels];
   [self setUpTextAreaSpecificSubviews];
+  [self observeTextViewNotifications];
+}
+
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Setup
@@ -627,6 +632,35 @@
     }
     [self enforceCalculatedScrollViewContentOffset];
   }
+}
+
+#pragma mark Notifications
+
+- (void)textViewChanged:(NSNotification *)notification {
+  [self setNeedsLayout];
+}
+
+- (void)textViewStartedEditing:(NSNotification *)notification {
+  [self setNeedsLayout];
+}
+
+- (void)textViewEndedEditing:(NSNotification *)notification {
+  [self setNeedsLayout];
+}
+
+- (void)observeTextViewNotifications {
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(textViewChanged:)
+                                               name:UITextViewTextDidChangeNotification
+                                             object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(textViewStartedEditing:)
+                                               name:UITextViewTextDidBeginEditingNotification
+                                             object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(textViewEndedEditing:)
+                                               name:UITextViewTextDidBeginEditingNotification
+                                             object:nil];
 }
 
 @end
