@@ -247,6 +247,7 @@
   [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
   CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX);
   self.layout = [self calculateLayoutWithSize:fittingSize];
+  self.labelFrame = [self.layout labelFrameWithLabelState:self.labelState];
 }
 
 - (void)postLayoutSubviews {
@@ -377,22 +378,9 @@
                                     if (finished) {
                                       // Ensure that the label position is correct in case of
                                       // competing animations.
-                                      [weakSelf positionLabel];
+                                      weakSelf.label.frame = weakSelf.labelFrame;
                                     }
                                   }];
-}
-
-- (void)positionLabel {
-  if (self.labelState == MDCTextControlLabelStateFloating) {
-    self.label.frame = self.layout.labelFrameFloating;
-    self.label.hidden = NO;
-  } else if (self.labelState == MDCTextControlLabelStateNormal) {
-    self.label.frame = self.layout.labelFrameNormal;
-    self.label.hidden = NO;
-  } else {
-    self.label.frame = CGRectZero;
-    self.label.hidden = YES;
-  }
 }
 
 - (BOOL)canLabelFloat {

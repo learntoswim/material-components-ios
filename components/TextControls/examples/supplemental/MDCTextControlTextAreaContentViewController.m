@@ -108,7 +108,7 @@
 
   [self.allTextAreas
       enumerateObjectsUsingBlock:^(MDCBaseTextArea *textArea, NSUInteger idx, BOOL *stop) {
-        [textArea resignFirstResponder];
+        [textArea.textView resignFirstResponder];
       }];
 }
 

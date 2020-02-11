@@ -357,4 +357,14 @@ static const CGFloat kGradientBlurLength = 4;
   ];
 }
 
+- (CGRect)labelFrameWithLabelState:(MDCTextControlLabelState)labelState {
+  if (labelState == MDCTextControlLabelStateFloating) {
+    return self.labelFrameFloating;
+  } else if (labelState == MDCTextControlLabelStateNormal) {
+    return self.labelFrameNormal;
+  } else {
+    return CGRectZero;
+  }
+}
+
 @end
