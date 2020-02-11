@@ -48,6 +48,7 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
 @property(nonatomic, assign) MDCTextControlLabelState labelState;
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
+@property(nonatomic, assign) CGRect labelFrame;
 @property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
@@ -145,8 +146,8 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
   self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
   CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
   UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
-  self.assistiveLabelView.leftAssistiveLabel.font = assistiveFont;
-  self.assistiveLabelView.rightAssistiveLabel.font = assistiveFont;
+  self.assistiveLabelView.leadingAssistiveLabel.font = assistiveFont;
+  self.assistiveLabelView.trailingAssistiveLabel.font = assistiveFont;
   [self addSubview:self.assistiveLabelView];
 }
 
@@ -322,8 +323,8 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
                                              chipsWrap:self.chipsWrap
                                          chipRowHeight:self.chipRowHeight
                               interChipVerticalSpacing:self.interChipVerticalSpacing
-                                    leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
-                                   rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
+                                     leadingAssistiveLabel:self.leadingAssistiveLabel
+                                    trailingAssistiveLabel:self.trailingAssistiveLabel
                             assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
                       customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
                               preferredContainerHeight:self.preferredContainerHeight
@@ -623,19 +624,11 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
 }
 
 - (UILabel *)leadingAssistiveLabel {
-  if ([self isRTL]) {
-    return self.assistiveLabelView.rightAssistiveLabel;
-  } else {
-    return self.assistiveLabelView.leftAssistiveLabel;
-  }
+  return self.assistiveLabelView.leadingAssistiveLabel;
 }
 
 - (UILabel *)trailingAssistiveLabel {
-  if ([self isRTL]) {
-    return self.assistiveLabelView.leftAssistiveLabel;
-  } else {
-    return self.assistiveLabelView.rightAssistiveLabel;
-  }
+  return self.assistiveLabelView.trailingAssistiveLabel;
 }
 
 #pragma mark Misc Accessors

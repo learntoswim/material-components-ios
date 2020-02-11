@@ -33,9 +33,9 @@
 @property(strong, nonatomic) UILabel *label;
 @property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
 @property(strong, nonatomic) MDCBaseTextAreaLayout *layout;
-@property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 @property(nonatomic, assign) MDCTextControlState textControlState;
 @property(nonatomic, assign) MDCTextControlLabelState labelState;
+@property(nonatomic, assign) CGRect labelFrame;
 @property(nonatomic, assign) NSTimeInterval animationDuration;
 
 @property(nonatomic, strong)
@@ -100,7 +100,6 @@
 - (void)initializeProperties {
   self.animationDuration = kMDCTextControlDefaultAnimationDuration;
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
-  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   self.labelState = [self determineCurrentLabelState];
   self.textControlState = [self determineCurrentTextControlState];
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
@@ -131,8 +130,8 @@
   self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
   CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
   UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
-  self.assistiveLabelView.leftAssistiveLabel.font = assistiveFont;
-  self.assistiveLabelView.rightAssistiveLabel.font = assistiveFont;
+  self.assistiveLabelView.leadingAssistiveLabel.font = assistiveFont;
+  self.assistiveLabelView.trailingAssistiveLabel.font = assistiveFont;
   [self addSubview:self.assistiveLabelView];
 }
 
@@ -153,7 +152,7 @@
   [self.scrollView addSubview:self.scrollViewContentViewTouchForwardingView];
 
   self.inputChipViewTextView = [[MDCBaseTextAreaTextView alloc] init];
-  self.inputChipViewTextView.inputChipViewTextViewDelegate = self;
+  self.inputChipViewTextView.textAreaTextViewDelegate = self;
   self.inputChipViewTextView.showsVerticalScrollIndicator = NO;
   self.inputChipViewTextView.showsHorizontalScrollIndicator = NO;
   [self.scrollView addSubview:self.inputChipViewTextView];
@@ -177,7 +176,12 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
-  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
+  [self setNeedsLayout];
+}
+
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute {
+  [super setSemanticContentAttribute:semanticContentAttribute];
+  [self setNeedsLayout];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
@@ -229,24 +233,6 @@
 
 #pragma mark UIResponder Overrides
 
-- (BOOL)resignFirstResponder {
-  BOOL textFieldDidResign = [self.textView resignFirstResponder];
-  return textFieldDidResign;
-}
-
-- (BOOL)becomeFirstResponder {
-  BOOL textFieldDidBecome = [self.textView becomeFirstResponder];
-  return textFieldDidBecome;
-}
-
-- (void)handleResponderChange {
-  [self setNeedsLayout];
-}
-
-- (BOOL)isFirstResponder {
-  return self.textView.isFirstResponder;
-}
-
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
   [super touchesBegan:touches withEvent:event];
 }
@@ -293,13 +279,13 @@
                                                label:self.label
                                           labelState:self.labelState
                                        labelBehavior:self.labelBehavior
-                                  leftAssistiveLabel:self.assistiveLabelView.leftAssistiveLabel
-                                 rightAssistiveLabel:self.assistiveLabelView.rightAssistiveLabel
+                               leadingAssistiveLabel:self.assistiveLabelView.leadingAssistiveLabel
+                              trailingAssistiveLabel:self.assistiveLabelView.trailingAssistiveLabel
                           assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
                     customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
                         preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
-                                               isRTL:self.isRTL
-                                           isEditing:self.isFirstResponder];
+                                               isRTL:self.shouldLayoutForRTL
+                                           isEditing:self.textView.isFirstResponder];
 }
 
 - (id<MDCTextControlVerticalPositioningReference>)createPositioningReference {
@@ -355,7 +341,7 @@
 
 - (MDCTextControlState)determineCurrentTextControlState {
   return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextView.isEditable)
-                                   isEditing:self.isFirstResponder];
+                                   isEditing:self.textView.isFirstResponder];
 }
 
 - (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
@@ -417,7 +403,7 @@
   return [self labelStateWithLabelText:self.label.text
                                   text:self.textView.text
                          canLabelFloat:self.canLabelFloat
-                             isEditing:self.isFirstResponder];
+                             isEditing:self.textView.isFirstResponder];
 }
 
 - (MDCTextControlLabelState)labelStateWithLabelText:(NSString *)labelText
@@ -456,19 +442,11 @@
 }
 
 - (UILabel *)leadingAssistiveLabel {
-  if ([self isRTL]) {
-    return self.assistiveLabelView.rightAssistiveLabel;
-  } else {
-    return self.assistiveLabelView.leftAssistiveLabel;
-  }
+  return self.assistiveLabelView.leadingAssistiveLabel;
 }
 
 - (UILabel *)trailingAssistiveLabel {
-  if ([self isRTL]) {
-    return self.assistiveLabelView.leftAssistiveLabel;
-  } else {
-    return self.assistiveLabelView.rightAssistiveLabel;
-  }
+  return self.assistiveLabelView.trailingAssistiveLabel;
 }
 
 - (CGFloat)numberOfVisibleTextRows {
@@ -520,18 +498,25 @@
 
 #pragma mark InputChipViewTextViewDelegate
 
-- (void)textAreaTextViewWillResignFirstResponder:(BOOL)didBecome {
-  [self handleResponderChange];
+-(void)textAreaTextView:(MDCBaseTextAreaTextView *)textView willBecomeFirstResponder:(BOOL)didBecome {
+  [self setNeedsLayout];
 }
 
-- (void)textAreaTextViewWillBecomeFirstResponder:(BOOL)didBecome {
-  [self handleResponderChange];
+-(void)textAreaTextView:(MDCBaseTextAreaTextView *)textView willResignFirstResponder:(BOOL)didResign {
+  [self setNeedsLayout];
 }
 
 #pragma mark Internationalization
 
-- (BOOL)isRTL {
-  return self.layoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+- (BOOL)shouldLayoutForRTL {
+  if (self.semanticContentAttribute == UISemanticContentAttributeForceRightToLeft) {
+    return YES;
+  } else if (self.semanticContentAttribute == UISemanticContentAttributeForceLeftToRight) {
+    return NO;
+  } else {
+    return self.mdf_effectiveUserInterfaceLayoutDirection ==
+           UIUserInterfaceLayoutDirectionRightToLeft;
+  }
 }
 
 #pragma mark Coloring
@@ -627,8 +612,8 @@
 
 - (void)handleTap:(UITapGestureRecognizer *)tap {
   if (tap.state == UIGestureRecognizerStateEnded) {
-    if (!self.isFirstResponder) {
-      [self becomeFirstResponder];
+    if (!self.textView.isFirstResponder) {
+      [self.textView becomeFirstResponder];
     }
     [self enforceCalculatedScrollViewContentOffset];
   }
@@ -640,26 +625,10 @@
   [self setNeedsLayout];
 }
 
-- (void)textViewStartedEditing:(NSNotification *)notification {
-  [self setNeedsLayout];
-}
-
-- (void)textViewEndedEditing:(NSNotification *)notification {
-  [self setNeedsLayout];
-}
-
 - (void)observeTextViewNotifications {
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(textViewChanged:)
                                                name:UITextViewTextDidChangeNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(textViewStartedEditing:)
-                                               name:UITextViewTextDidBeginEditingNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(textViewEndedEditing:)
-                                               name:UITextViewTextDidBeginEditingNotification
                                              object:nil];
 }
 

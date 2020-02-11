@@ -59,8 +59,8 @@
                            chipsWrap:(BOOL)chipsWrap
                        chipRowHeight:(CGFloat)chipRowHeight
             interChipVerticalSpacing:(CGFloat)interChipVerticalSpacing
-                  leftAssistiveLabel:(nonnull UILabel *)leftAssistiveLabel
-                 rightAssistiveLabel:(nonnull UILabel *)rightAssistiveLabel
+                  leadingAssistiveLabel:(nonnull UILabel *)leadingAssistiveLabel
+                 trailingAssistiveLabel:(nonnull UILabel *)trailingAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority

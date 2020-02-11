@@ -51,8 +51,8 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
                            chipsWrap:(BOOL)chipsWrap
                        chipRowHeight:(CGFloat)chipRowHeight
             interChipVerticalSpacing:(CGFloat)interChipVerticalSpacing
-                  leftAssistiveLabel:(UILabel *)leftAssistiveLabel
-                 rightAssistiveLabel:(UILabel *)rightAssistiveLabel
+                   leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
+                  trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
@@ -76,8 +76,8 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
                                chipsWrap:chipsWrap
                            chipRowHeight:chipRowHeight
                 interChipVerticalSpacing:interChipVerticalSpacing
-                      leftAssistiveLabel:leftAssistiveLabel
-                     rightAssistiveLabel:rightAssistiveLabel
+                       leadingAssistiveLabel:leadingAssistiveLabel
+                      trailingAssistiveLabel:trailingAssistiveLabel
               assistiveLabelDrawPriority:assistiveLabelDrawPriority
         customAssistiveLabelDrawPriority:normalizedCustomAssistiveLabelDrawPriority
                 preferredContainerHeight:preferredContainerHeight
@@ -103,8 +103,8 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
                            chipsWrap:(BOOL)chipsWrap
                        chipRowHeight:(CGFloat)chipRowHeight
             interChipVerticalSpacing:(CGFloat)interChipVerticalSpacing
-                  leftAssistiveLabel:(UILabel *)leftAssistiveLabel
-                 rightAssistiveLabel:(UILabel *)rightAssistiveLabel
+                  leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
+                 trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
@@ -199,8 +199,8 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
 
   self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
-                    leftAssistiveLabel:leftAssistiveLabel
-                   rightAssistiveLabel:rightAssistiveLabel
+                    leadingAssistiveLabel:leadingAssistiveLabel
+                   trailingAssistiveLabel:trailingAssistiveLabel
             assistiveLabelDrawPriority:assistiveLabelDrawPriority
       customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
                      horizontalPadding:kHorizontalPadding

@@ -16,10 +16,12 @@
 
 @class MDCBaseTextAreaTextView;
 @protocol MDCBaseTextAreaTextViewDelegate <NSObject>
-- (void)textAreaTextViewWillBecomeFirstResponder:(BOOL)didBecome;
-- (void)textAreaTextViewWillResignFirstResponder:(BOOL)didResign;
+- (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
+willBecomeFirstResponder:(BOOL)didBecome;
+- (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
+willResignFirstResponder:(BOOL)didResign;
 @end
 
 @interface MDCBaseTextAreaTextView : UITextView
-@property(nonatomic, weak) id<MDCBaseTextAreaTextViewDelegate> inputChipViewTextViewDelegate;
+@property(nonatomic, weak) id<MDCBaseTextAreaTextViewDelegate> textAreaTextViewDelegate;
 @end

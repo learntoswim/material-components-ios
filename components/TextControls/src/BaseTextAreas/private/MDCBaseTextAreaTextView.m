@@ -17,8 +17,8 @@
 
 @implementation MDCBaseTextAreaTextView
 
-- (instancetype)init {
-  self = [super init];
+- (instancetype)initWithCoder:(NSCoder *)coder {
+  self = [super initWithCoder:coder];
   if (self) {
     [self commonMDCBaseTextAreaTextViewInit];
   }
@@ -40,12 +40,10 @@
   self.textContainer.lineFragmentPadding = 0;
   self.font = MDCTextControlDefaultUITextFieldFont();
   self.clipsToBounds = NO;
-  //  self.layer.borderColor = [UIColor redColor].CGColor;
-  //  self.layer.borderWidth = 1;
 }
 
 - (void)setFont:(UIFont *)font {
-  [super setFont:font];
+  [super setFont:font ?: MDCTextControlDefaultUITextFieldFont()];
 }
 
 - (UIFont *)font {
@@ -53,17 +51,21 @@
 }
 
 - (BOOL)resignFirstResponder {
-  BOOL didResignFirstResponder = [super resignFirstResponder];
-  [self.inputChipViewTextViewDelegate
-      textAreaTextViewWillResignFirstResponder:didResignFirstResponder];
-  return didResignFirstResponder;
+  BOOL superclassDidResignFirstResponder = [super resignFirstResponder];
+  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:willResignFirstResponder:)]) {
+    [self.textAreaTextViewDelegate
+     textAreaTextView:self willResignFirstResponder:superclassDidResignFirstResponder];
+  }
+  return superclassDidResignFirstResponder;
 }
 
 - (BOOL)becomeFirstResponder {
-  BOOL didBecomeFirstResponder = [super becomeFirstResponder];
-  [self.inputChipViewTextViewDelegate
-      textAreaTextViewWillBecomeFirstResponder:didBecomeFirstResponder];
-  return didBecomeFirstResponder;
+  BOOL superclassDidBecomeFirstResponder = [super becomeFirstResponder];
+  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:willBecomeFirstResponder:)]) {
+    [self.textAreaTextViewDelegate
+     textAreaTextView:self willBecomeFirstResponder:superclassDidBecomeFirstResponder];
+  }
+  return superclassDidBecomeFirstResponder;
 }
 
 @end
