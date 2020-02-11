@@ -18,8 +18,6 @@
 #import "MDCTextControlAssistiveLabelView.h"
 
 @interface MDCBaseTextAreaLayout : NSObject
-@property(nonatomic, assign) CGFloat globalTextMinX;
-@property(nonatomic, assign) CGFloat globalTextMaxX;
 
 @property(nonatomic, assign) CGRect labelFrameFloating;
 @property(nonatomic, assign) CGRect labelFrameNormal;

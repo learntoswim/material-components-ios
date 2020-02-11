@@ -127,16 +127,8 @@ static const CGFloat kGradientBlurLength = 4;
   CGRect textViewFrame = CGRectMake(globalTextMinX, textViewMinYWithFloatingLabel,
                                     globalTextMaxX - globalTextMinX, textViewHeight);
 
-  CGPoint contentOffset = [self scrollViewContentOffsetWithSize:scrollViewSize
-                                                  textViewFrame:textViewFrame
-                                                   textViewMinY:textViewMinY
-                                                 globalTextMinX:globalTextMinX
-                                                 globalTextMaxX:globalTextMaxX
-                                                  bottomPadding:bottomPadding
-                                                          isRTL:isRTL];
-  CGSize contentSize = [self scrollViewContentSizeWithSize:scrollViewSize
-                                             contentOffset:contentOffset
-                                             textViewFrame:textViewFrame];
+  CGPoint contentOffset = CGPointZero;
+  CGSize contentSize = scrollViewSize;
 
   self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
@@ -159,8 +151,6 @@ static const CGFloat kGradientBlurLength = 4;
       CGRectMake(0, 0, contentSize.width, contentSize.height);
   self.labelFrameFloating = floatingLabelFrame;
   self.labelFrameNormal = normalLabelFrame;
-  self.globalTextMinX = globalTextMinX;
-  self.globalTextMaxX = globalTextMaxX;
   CGRect scrollViewRect = CGRectMake(0, 0, size.width, positioningReference.containerHeight);
   self.maskedScrollViewContainerViewFrame = scrollViewRect;
   self.scrollViewFrame = scrollViewRect;
@@ -246,46 +236,6 @@ static const CGFloat kGradientBlurLength = 4;
   rect.size.width = textFieldWidth;
   rect.size.height = textFieldHeight;
   return rect.size;
-}
-
-- (CGSize)scrollViewContentSizeWithSize:(CGSize)scrollViewSize
-                          contentOffset:(CGPoint)contentOffset
-                          textViewFrame:(CGRect)textViewFrame {
-  if (contentOffset.y > 0) {
-    scrollViewSize.height += contentOffset.y;
-  }
-  return scrollViewSize;
-}
-
-- (CGPoint)scrollViewContentOffsetWithSize:(CGSize)size
-                             textViewFrame:(CGRect)textViewFrame
-                              textViewMinY:(CGFloat)textViewMinY
-                            globalTextMinX:(CGFloat)globalTextMinX
-                            globalTextMaxX:(CGFloat)globalTextMaxX
-                             bottomPadding:(CGFloat)bottomPadding
-                                     isRTL:(BOOL)isRTL {
-  CGPoint contentOffset = CGPointZero;
-  //  if (isRTL) {
-  //  } else {
-  //    CGFloat textViewMaxY = CGRectGetMaxY(textViewFrame);
-  //    CGFloat boundsMaxY = size.height;
-  //    if (textViewMaxY > boundsMaxY) {
-  //      CGFloat difference = textViewMaxY - boundsMaxY;
-  //      contentOffset = CGPointMake(0, (difference + bottomPadding));
-  //    }
-  //  }
-  return contentOffset;
-}
-
-- (NSInteger)chipRowWithRect:(CGRect)rect
-                textViewMinY:(CGFloat)textViewMinY
-               chipRowHeight:(CGFloat)chipRowHeight
-            interChipSpacing:(CGFloat)interChipSpacing {
-  CGFloat viewMidY = CGRectGetMidY(rect);
-  CGFloat midYAdjustedForContentInset = viewMidY - textViewMinY;
-  NSInteger row =
-      (NSInteger)midYAdjustedForContentInset / (NSInteger)(chipRowHeight + interChipSpacing);
-  return row;
 }
 
 - (NSArray<NSNumber *> *)
