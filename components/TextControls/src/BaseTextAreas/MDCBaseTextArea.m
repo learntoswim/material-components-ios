@@ -44,8 +44,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 
-@property(strong, nonatomic) UIView *maskedContainerView;
-@property(strong, nonatomic) UIView *touchForwardingView;
+@property(strong, nonatomic) UIView *maskedTextViewContainerView;
 @property(strong, nonatomic) MDCBaseTextAreaTextView *baseTextAreaTextView;
 
 @property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
@@ -86,7 +85,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   [self setUpColorViewModels];
   [self setUpLabel];
   [self setUpAssistiveLabels];
-  [self setUpTextAreaSpecificSubviews];
+  [self setUpTextView];
   [self observeTextViewNotifications];
 }
 
@@ -127,10 +126,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 - (void)setUpAssistiveLabels {
   self.assistiveLabelDrawPriority = MDCTextControlAssistiveLabelDrawPriorityTrailing;
   self.assistiveLabelView = [[MDCTextControlAssistiveLabelView alloc] init];
-  CGFloat assistiveFontSize = MDCRound([UIFont systemFontSize] * (CGFloat)0.75);
-  UIFont *assistiveFont = [UIFont systemFontOfSize:assistiveFontSize];
-  self.assistiveLabelView.leadingAssistiveLabel.font = assistiveFont;
-  self.assistiveLabelView.trailingAssistiveLabel.font = assistiveFont;
   [self addSubview:self.assistiveLabelView];
 }
 
@@ -139,18 +134,15 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   [self addSubview:self.label];
 }
 
-- (void)setUpTextAreaSpecificSubviews {
-  self.maskedContainerView = [[UIView alloc] init];
-  [self addSubview:self.maskedContainerView];
-
-  self.touchForwardingView = [[UIView alloc] init];
-  [self.maskedContainerView addSubview:self.touchForwardingView];
+- (void)setUpTextView {
+  self.maskedTextViewContainerView = [[UIView alloc] init];
+  [self addSubview:self.maskedTextViewContainerView];
 
   self.baseTextAreaTextView = [[MDCBaseTextAreaTextView alloc] init];
   self.baseTextAreaTextView.textAreaTextViewDelegate = self;
   self.baseTextAreaTextView.showsVerticalScrollIndicator = NO;
   self.baseTextAreaTextView.showsHorizontalScrollIndicator = NO;
-  [self.maskedContainerView addSubview:self.baseTextAreaTextView];
+  [self.maskedTextViewContainerView addSubview:self.baseTextAreaTextView];
 }
 
 #pragma mark UIView Overrides
@@ -179,14 +171,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   [self setNeedsLayout];
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-  UIView *result = [super hitTest:point withEvent:event];
-  if (result == self.touchForwardingView) {
-    return self;
-  }
-  return result;
-}
-
 - (void)setEnabled:(BOOL)enabled {
   [super setEnabled:enabled];
   self.textView.editable = enabled;
@@ -207,8 +191,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 }
 
 - (void)postLayoutSubviews {
-  self.maskedContainerView.frame = self.containerFrame;
-  self.touchForwardingView.frame = self.containerFrame;
+  self.maskedTextViewContainerView.frame = self.containerFrame;
   self.textView.frame = self.layout.textViewFrame;
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
@@ -272,7 +255,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   self.gradientManager.verticalGradient.frame = gradientLayerFrame;
   self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
   self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
-  self.maskedContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
+  self.maskedTextViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
 - (CGFloat)currentNumberOfLinesOfText {
@@ -433,22 +416,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
 }
 
-#pragma mark Custom UIView Geometry Methods
-
-- (CGPoint)offsetOfPoint:(CGPoint)point1 fromPoint:(CGPoint)point2 {
-  return CGPointMake(point1.x - point2.x, point1.y - point2.y);
-}
-
-- (CGPoint)absoluteOffsetOfOffset:(CGPoint)offset {
-  if (offset.x < 0) {
-    offset.x = offset.x * -1;
-  }
-  if (offset.y < 0) {
-    offset.y = offset.y * -1;
-  }
-  return offset;
-}
-
 #pragma mark InputChipViewTextViewDelegate
 
 - (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
@@ -573,13 +540,13 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   }
 }
 
-#pragma mark Notifications
-
 - (void)textViewChanged:(NSNotification *)notification {
   if (notification.object == self.baseTextAreaTextView) {
     [self setNeedsLayout];
   }
 }
+
+#pragma mark Notifications
 
 - (void)observeTextViewNotifications {
   [[NSNotificationCenter defaultCenter] addObserver:self
