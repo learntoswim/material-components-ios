@@ -14,8 +14,6 @@
 
 #import "MDCBaseTextFieldLayout.h"
 
-#import "MaterialMath.h"
-
 static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
 @interface MDCBaseTextFieldLayout ()
@@ -201,8 +199,9 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   CGFloat textRectWidth = textRectMaxX - textRectMinX;
   CGRect textRectNormal =
       CGRectMake(textRectMinX, textRectMinYNormal, textRectWidth, textRectHeight);
+  CGFloat halfOfTextRectHeight = textRectHeight * (CGFloat)0.5;
   CGFloat textRectMinYFloatingLabel =
-      (CGFloat)floor((double)(textRectCenterYWithFloatingLabel - (textRectHeight * (CGFloat)0.5)));
+      textRectCenterYWithFloatingLabel - halfOfTextRectHeight;
   CGRect textRectFloating =
       CGRectMake(textRectMinX, textRectMinYFloatingLabel, textRectWidth, textRectHeight);
 
@@ -260,7 +259,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 }
 
 - (CGFloat)minYForSubviewWithHeight:(CGFloat)height centerY:(CGFloat)centerY {
-  return (CGFloat)round((double)(centerY - ((CGFloat)0.5 * height)));
+  return centerY - ((CGFloat)0.5 * height);
 }
 
 - (BOOL)displaysSideView:(UIView *)subview
@@ -367,7 +366,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 }
 
 - (CGFloat)textHeightWithFont:(UIFont *)font {
-  return (CGFloat)ceil((double)font.lineHeight);
+  return font.lineHeight;
 }
 
 - (CGFloat)calculatedHeight {
@@ -376,7 +375,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   if (assistiveLabelViewMaxY > maxY) {
     maxY = assistiveLabelViewMaxY;
   }
-  return MDCCeil(maxY);
+  return maxY;
 }
 
 - (CGRect)labelFrameWithLabelState:(MDCTextControlLabelState)labelState {
