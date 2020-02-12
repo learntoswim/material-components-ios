@@ -110,18 +110,15 @@ static const CGFloat kGradientBlurLength = 4;
   CGFloat halfOfNormalLineHeight = (CGFloat)0.5 * font.lineHeight;
   CGFloat textViewMinYNormal = CGRectGetMidY(normalLabelFrame) - halfOfNormalLineHeight;
   CGFloat textViewMinY = textViewMinYNormal;
-  CGFloat textViewMinYWithFloatingLabel =
-      floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   if (labelState == MDCTextControlLabelStateFloating) {
-    // TODO: Can we get rid of labelstate from this class?
-    textViewMinY = textViewMinYWithFloatingLabel;
+    textViewMinY = floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   }
 
   CGSize scrollViewSize = CGSizeMake(size.width, positioningReference.containerHeight);
 
   CGFloat textViewHeight =
-      positioningReference.containerHeight - bottomPadding - textViewMinYWithFloatingLabel;
-  CGRect textViewFrame = CGRectMake(globalTextMinX, textViewMinYWithFloatingLabel,
+      positioningReference.containerHeight - bottomPadding - textViewMinY;
+  CGRect textViewFrame = CGRectMake(globalTextMinX, textViewMinY,
                                     globalTextMaxX - globalTextMinX, textViewHeight);
 
   CGPoint contentOffset = CGPointZero;

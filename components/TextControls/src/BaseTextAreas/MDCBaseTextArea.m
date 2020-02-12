@@ -425,10 +425,14 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
         }
       }
     } else {
-      if (hasText) {
+      if (isEditing) {
         return MDCTextControlLabelStateNone;
       } else {
-        return MDCTextControlLabelStateNormal;
+        if (hasText) {
+          return MDCTextControlLabelStateNone;
+        } else {
+          return MDCTextControlLabelStateNormal;
+        }
       }
     }
   } else {
