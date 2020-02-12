@@ -329,7 +329,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 
 - (CGFloat)currentNumberOfLinesOfText {
   CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.textView.bounds), CGFLOAT_MAX);
-  NSDictionary *attributes = @{NSFontAttributeName:self.textView.font};
+  NSDictionary *attributes = @{NSFontAttributeName : self.textView.font};
   CGRect boundingRect =
       [self.textView.text boundingRectWithSize:fittingSize
                                        options:NSStringDrawingUsesLineFragmentOrigin
@@ -505,11 +505,13 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 
 #pragma mark InputChipViewTextViewDelegate
 
--(void)textAreaTextView:(MDCBaseTextAreaTextView *)textView willBecomeFirstResponder:(BOOL)didBecome {
+- (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
+    willBecomeFirstResponder:(BOOL)didBecome {
   [self setNeedsLayout];
 }
 
--(void)textAreaTextView:(MDCBaseTextAreaTextView *)textView willResignFirstResponder:(BOOL)didResign {
+- (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
+    willResignFirstResponder:(BOOL)didResign {
   [self setNeedsLayout];
 }
 

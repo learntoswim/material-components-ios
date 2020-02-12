@@ -40,8 +40,8 @@ static const CGFloat kGradientBlurLength = 4;
                                label:(nonnull UILabel *)label
                           labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
-                   leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
-                  trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
+               leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
+              trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
@@ -57,8 +57,8 @@ static const CGFloat kGradientBlurLength = 4;
                                    label:label
                               labelState:labelState
                            labelBehavior:labelBehavior
-      leadingAssistiveLabel:leadingAssistiveLabel
-     trailingAssistiveLabel:trailingAssistiveLabel
+                   leadingAssistiveLabel:leadingAssistiveLabel
+                  trailingAssistiveLabel:trailingAssistiveLabel
               assistiveLabelDrawPriority:assistiveLabelDrawPriority
         customAssistiveLabelDrawPriority:normalizedCustomAssistiveLabelDrawPriority
                                    isRTL:isRTL
@@ -76,8 +76,8 @@ static const CGFloat kGradientBlurLength = 4;
                                label:(UILabel *)label
                           labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
-                  leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
-                 trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
+               leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
+              trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
@@ -129,8 +129,8 @@ static const CGFloat kGradientBlurLength = 4;
 
   self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
-                    leadingAssistiveLabel:leadingAssistiveLabel
-                   trailingAssistiveLabel:trailingAssistiveLabel
+                 leadingAssistiveLabel:leadingAssistiveLabel
+                trailingAssistiveLabel:trailingAssistiveLabel
             assistiveLabelDrawPriority:assistiveLabelDrawPriority
       customAssistiveLabelDrawPriority:customAssistiveLabelDrawPriority
                      horizontalPadding:kHorizontalPadding

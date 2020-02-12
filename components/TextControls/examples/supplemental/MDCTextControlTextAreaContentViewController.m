@@ -57,7 +57,7 @@
   return textArea;
 }
 
--(void)textViewDidChange:(UITextView *)textView {
+- (void)textViewDidChange:(UITextView *)textView {
   [self.view setNeedsLayout];
 }
 

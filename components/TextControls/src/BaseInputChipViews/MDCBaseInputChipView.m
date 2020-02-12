@@ -308,29 +308,28 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
                                              density:self.density
                             preferredContainerHeight:self.preferredContainerHeight];
 
-  return
-      [[MDCBaseInputChipViewLayout alloc] initWithSize:size
-                                  positioningReference:positioningReference
-                                                  text:self.inputChipViewTextField.text
-                                           placeholder:self.inputChipViewTextField.placeholder
-                                                  font:self.normalFont
-                                          floatingFont:self.floatingFont
-                                                 label:self.label
-                                            labelState:self.labelState
-                                         labelBehavior:self.labelBehavior
-                                                 chips:self.mutableChips
-                                        staleChipViews:self.mutableChips
-                                             chipsWrap:self.chipsWrap
-                                         chipRowHeight:self.chipRowHeight
-                              interChipVerticalSpacing:self.interChipVerticalSpacing
-                                     leadingAssistiveLabel:self.leadingAssistiveLabel
-                                    trailingAssistiveLabel:self.trailingAssistiveLabel
-                            assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
-                      customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
-                              preferredContainerHeight:self.preferredContainerHeight
-                          preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
-                                                 isRTL:self.isRTL
-                                             isEditing:self.inputChipViewTextField.isEditing];
+  return [[MDCBaseInputChipViewLayout alloc] initWithSize:size
+                                     positioningReference:positioningReference
+                                                     text:self.inputChipViewTextField.text
+                                              placeholder:self.inputChipViewTextField.placeholder
+                                                     font:self.normalFont
+                                             floatingFont:self.floatingFont
+                                                    label:self.label
+                                               labelState:self.labelState
+                                            labelBehavior:self.labelBehavior
+                                                    chips:self.mutableChips
+                                           staleChipViews:self.mutableChips
+                                                chipsWrap:self.chipsWrap
+                                            chipRowHeight:self.chipRowHeight
+                                 interChipVerticalSpacing:self.interChipVerticalSpacing
+                                    leadingAssistiveLabel:self.leadingAssistiveLabel
+                                   trailingAssistiveLabel:self.trailingAssistiveLabel
+                               assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
+                         customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
+                                 preferredContainerHeight:self.preferredContainerHeight
+                             preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
+                                                    isRTL:self.isRTL
+                                                isEditing:self.inputChipViewTextField.isEditing];
 }
 
 - (void)preLayoutSubviews {

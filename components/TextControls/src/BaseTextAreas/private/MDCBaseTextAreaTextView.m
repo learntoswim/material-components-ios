@@ -52,18 +52,20 @@
 
 - (BOOL)resignFirstResponder {
   BOOL superclassDidResignFirstResponder = [super resignFirstResponder];
-  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:willResignFirstResponder:)]) {
-    [self.textAreaTextViewDelegate
-     textAreaTextView:self willResignFirstResponder:superclassDidResignFirstResponder];
+  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:
+                                                            willResignFirstResponder:)]) {
+    [self.textAreaTextViewDelegate textAreaTextView:self
+                           willResignFirstResponder:superclassDidResignFirstResponder];
   }
   return superclassDidResignFirstResponder;
 }
 
 - (BOOL)becomeFirstResponder {
   BOOL superclassDidBecomeFirstResponder = [super becomeFirstResponder];
-  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:willBecomeFirstResponder:)]) {
-    [self.textAreaTextViewDelegate
-     textAreaTextView:self willBecomeFirstResponder:superclassDidBecomeFirstResponder];
+  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:
+                                                            willBecomeFirstResponder:)]) {
+    [self.textAreaTextViewDelegate textAreaTextView:self
+                           willBecomeFirstResponder:superclassDidBecomeFirstResponder];
   }
   return superclassDidBecomeFirstResponder;
 }

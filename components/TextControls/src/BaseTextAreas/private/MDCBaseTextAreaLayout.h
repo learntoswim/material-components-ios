@@ -49,8 +49,8 @@
                                label:(nonnull UILabel *)label
                           labelState:(MDCTextControlLabelState)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
-                   leadingAssistiveLabel:(nonnull UILabel *)leadingAssistiveLabel
-                  trailingAssistiveLabel:(nonnull UILabel *)trailingAssistiveLabel
+               leadingAssistiveLabel:(nonnull UILabel *)leadingAssistiveLabel
+              trailingAssistiveLabel:(nonnull UILabel *)trailingAssistiveLabel
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
