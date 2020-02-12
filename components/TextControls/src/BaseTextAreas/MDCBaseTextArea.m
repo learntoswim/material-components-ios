@@ -44,13 +44,9 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 
-@property(strong, nonatomic) UIView *maskedScrollViewContainerView;
-@property(strong, nonatomic) UIScrollView *scrollView;
-@property(strong, nonatomic) UIView *scrollViewContentViewTouchForwardingView;
+@property(strong, nonatomic) UIView *maskedContainerView;
+@property(strong, nonatomic) UIView *touchForwardingView;
 @property(strong, nonatomic) MDCBaseTextAreaTextView *baseTextAreaTextView;
-@property(strong, nonatomic) UITouch *lastTouch;
-@property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
-@property(nonatomic, assign) CGPoint lastTouchInitialLocation;
 
 @property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
 
@@ -144,21 +140,17 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 }
 
 - (void)setUpTextAreaSpecificSubviews {
-  self.maskedScrollViewContainerView = [[UIView alloc] init];
-  [self addSubview:self.maskedScrollViewContainerView];
+  self.maskedContainerView = [[UIView alloc] init];
+  [self addSubview:self.maskedContainerView];
 
-  self.scrollView = [[UIScrollView alloc] init];
-  self.scrollView.bounces = NO;
-  [self.maskedScrollViewContainerView addSubview:self.scrollView];
-
-  self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
-  [self.scrollView addSubview:self.scrollViewContentViewTouchForwardingView];
+  self.touchForwardingView = [[UIView alloc] init];
+  [self.maskedContainerView addSubview:self.touchForwardingView];
 
   self.baseTextAreaTextView = [[MDCBaseTextAreaTextView alloc] init];
   self.baseTextAreaTextView.textAreaTextViewDelegate = self;
   self.baseTextAreaTextView.showsVerticalScrollIndicator = NO;
   self.baseTextAreaTextView.showsHorizontalScrollIndicator = NO;
-  [self.scrollView addSubview:self.baseTextAreaTextView];
+  [self.maskedContainerView addSubview:self.baseTextAreaTextView];
 }
 
 #pragma mark UIView Overrides
@@ -189,55 +181,16 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
   UIView *result = [super hitTest:point withEvent:event];
-  if (result == self.scrollViewContentViewTouchForwardingView) {
+  if (result == self.touchForwardingView) {
     return self;
   }
   return result;
-}
-
-#pragma mark UIControl Overrides
-
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-  BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
-  self.lastTouchInitialContentOffset = self.scrollView.contentOffset;
-  self.lastTouchInitialLocation = [touch locationInView:self];
-  return result;
-}
-
-- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-  BOOL result = [super continueTrackingWithTouch:touch withEvent:event];
-
-  CGPoint location = [touch locationInView:self];
-  CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-
-  CGPoint offset = self.lastTouchInitialContentOffset;
-  CGFloat height = CGRectGetHeight(self.frame);
-  offset.y -= offsetFromStart.y;
-  if (offset.y < 0) {
-    offset.y = 0;
-  }
-  if (offset.y + height > self.scrollView.contentSize.height) {
-    offset.y = self.scrollView.contentSize.height - height;
-  }
-  self.scrollView.contentOffset = offset;
-
-  return result;
-}
-
-- (void)cancelTrackingWithEvent:(UIEvent *)event {
-  [super cancelTrackingWithEvent:event];
 }
 
 - (void)setEnabled:(BOOL)enabled {
   [super setEnabled:enabled];
   self.textView.editable = enabled;
   [self setNeedsLayout];
-}
-
-#pragma mark UIResponder Overrides
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-  [super touchesBegan:touches withEvent:event];
 }
 
 #pragma mark Layout
@@ -254,14 +207,9 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 }
 
 - (void)postLayoutSubviews {
-  self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
-  self.scrollView.frame = self.layout.scrollViewFrame;
-  self.scrollViewContentViewTouchForwardingView.frame =
-      self.layout.scrollViewContentViewTouchForwardingViewFrame;
+  self.maskedContainerView.frame = self.containerFrame;
+  self.touchForwardingView.frame = self.containerFrame;
   self.textView.frame = self.layout.textViewFrame;
-  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-  self.scrollView.contentSize = self.layout.scrollViewContentSize;
-  [self.scrollView setNeedsLayout];
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
   [self.assistiveLabelView setNeedsLayout];
@@ -319,12 +267,12 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 }
 
 - (void)layOutGradientLayers {
-  CGRect gradientLayerFrame = self.layout.maskedScrollViewContainerViewFrame;
+  CGRect gradientLayerFrame = self.containerFrame;
   self.gradientManager.horizontalGradient.frame = gradientLayerFrame;
   self.gradientManager.verticalGradient.frame = gradientLayerFrame;
   self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
   self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
-  self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
+  self.maskedContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
 - (CGFloat)currentNumberOfLinesOfText {
@@ -475,12 +423,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
 }
 
-#pragma mark User Interaction
-
-- (void)enforceCalculatedScrollViewContentOffset {
-  self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-}
-
 #pragma mark Fonts
 
 - (UIFont *)normalFont {
@@ -628,7 +570,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
     if (!self.textView.isFirstResponder) {
       [self.textView becomeFirstResponder];
     }
-    [self enforceCalculatedScrollViewContentOffset];
   }
 }
 

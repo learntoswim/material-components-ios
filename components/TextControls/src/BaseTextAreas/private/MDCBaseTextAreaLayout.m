@@ -114,15 +114,10 @@ static const CGFloat kGradientBlurLength = 4;
     textViewMinY = floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   }
 
-  CGSize scrollViewSize = CGSizeMake(size.width, positioningReference.containerHeight);
-
   CGFloat textViewHeight =
       positioningReference.containerHeight - bottomPadding - textViewMinY;
   CGRect textViewFrame = CGRectMake(globalTextMinX, textViewMinY,
                                     globalTextMaxX - globalTextMinX, textViewHeight);
-
-  CGPoint contentOffset = CGPointZero;
-  CGSize contentSize = scrollViewSize;
 
   self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
@@ -139,15 +134,8 @@ static const CGFloat kGradientBlurLength = 4;
 
   self.containerHeight = positioningReference.containerHeight;
   self.textViewFrame = textViewFrame;
-  self.scrollViewContentOffset = contentOffset;
-  self.scrollViewContentSize = contentSize;
-  self.scrollViewContentViewTouchForwardingViewFrame =
-      CGRectMake(0, 0, contentSize.width, contentSize.height);
   self.labelFrameFloating = floatingLabelFrame;
   self.labelFrameNormal = normalLabelFrame;
-  CGRect scrollViewRect = CGRectMake(0, 0, size.width, positioningReference.containerHeight);
-  self.maskedScrollViewContainerViewFrame = scrollViewRect;
-  self.scrollViewFrame = scrollViewRect;
 
   self.horizontalGradientLocations = [self
       determineHorizontalGradientLocationsWithGlobalTextMinX:globalTextMinX

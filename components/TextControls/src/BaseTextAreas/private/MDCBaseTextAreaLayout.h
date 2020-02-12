@@ -28,12 +28,6 @@
 @property(nonatomic, strong, nonnull)
     MDCTextControlAssistiveLabelViewLayout *assistiveLabelViewLayout;
 
-@property(nonatomic, assign) CGRect maskedScrollViewContainerViewFrame;
-@property(nonatomic, assign) CGRect scrollViewFrame;
-@property(nonatomic, assign) CGRect scrollViewContentViewTouchForwardingViewFrame;
-@property(nonatomic, assign) CGSize scrollViewContentSize;
-@property(nonatomic, assign) CGPoint scrollViewContentOffset;
-
 @property(nonatomic, readonly) CGFloat calculatedHeight;
 @property(nonatomic, readonly) CGFloat containerHeight;
 

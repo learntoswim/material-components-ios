@@ -34,13 +34,11 @@
   UIColor *inner = (id)UIColor.blackColor.CGColor;
   NSArray *colors = @[ outer, outer, inner, inner, outer, outer ];
   self.horizontalGradient = [CAGradientLayer layer];
-  //  self.horizontalGradient.frame = self.bounds;
   self.horizontalGradient.colors = colors;
   self.horizontalGradient.startPoint = CGPointMake(0.0, 0.5);
   self.horizontalGradient.endPoint = CGPointMake(1.0, 0.5);
 
   self.verticalGradient = [CAGradientLayer layer];
-  //  self.verticalGradient.frame = self.bounds;
   self.verticalGradient.colors = colors;
   self.verticalGradient.startPoint = CGPointMake(0.5, 0.0);
   self.verticalGradient.endPoint = CGPointMake(0.5, 1.0);
