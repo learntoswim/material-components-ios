@@ -54,7 +54,6 @@
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
-        preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing;
 

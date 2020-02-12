@@ -25,7 +25,7 @@
 #import "MDCOutlinedTextArea+MaterialTheming.h"
 #import "MDCOutlinedTextArea.h"
 
-@interface MDCTextControlTextAreaContentViewController ()
+@interface MDCTextControlTextAreaContentViewController () <UITextViewDelegate>
 @end
 
 @implementation MDCTextControlTextAreaContentViewController
@@ -34,6 +34,7 @@
 
 - (MDCFilledTextArea *)createMaterialFilledTextArea {
   MDCFilledTextArea *textArea = [[MDCFilledTextArea alloc] init];
+  textArea.textView.delegate = self;
   textArea.labelBehavior = MDCTextControlLabelBehaviorFloats;
   textArea.label.text = @"Phone number";
   textArea.leadingAssistiveLabel.text = @"This is a string.";
@@ -43,6 +44,7 @@
 
 - (MDCOutlinedTextArea *)createMaterialOutlinedTextArea {
   MDCOutlinedTextArea *textArea = [[MDCOutlinedTextArea alloc] init];
+  textArea.textView.delegate = self;
   textArea.label.text = @"Phone number";
   [textArea applyThemeWithScheme:self.containerScheme];
   return textArea;
@@ -50,8 +52,13 @@
 
 - (MDCBaseTextArea *)createDefaultBaseTextArea {
   MDCBaseTextArea *textArea = [[MDCBaseTextArea alloc] init];
+  textArea.textView.delegate = self;
   textArea.label.text = @"This is a floating label";
   return textArea;
+}
+
+-(void)textViewDidChange:(UITextView *)textView {
+  [self.view setNeedsLayout];
 }
 
 #pragma mark Overrides

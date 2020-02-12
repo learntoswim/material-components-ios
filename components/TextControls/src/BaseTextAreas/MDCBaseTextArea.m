@@ -25,6 +25,9 @@
 #import "private/MDCBaseTextAreaLayout.h"
 #import "private/MDCBaseTextAreaTextView.h"
 
+static const CGFloat kMDCBaseTextAreaDefaultMinimumNumberOfVisibleLines = (CGFloat)2.0;
+static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFloat)5.0;
+
 @interface MDCBaseTextArea () <MDCTextControl,
                                MDCBaseTextAreaTextViewDelegate,
                                UIGestureRecognizerDelegate>
@@ -44,7 +47,7 @@
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
 @property(strong, nonatomic) UIScrollView *scrollView;
 @property(strong, nonatomic) UIView *scrollViewContentViewTouchForwardingView;
-@property(strong, nonatomic) MDCBaseTextAreaTextView *inputChipViewTextView;
+@property(strong, nonatomic) MDCBaseTextAreaTextView *baseTextAreaTextView;
 @property(strong, nonatomic) UITouch *lastTouch;
 @property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
 @property(nonatomic, assign) CGPoint lastTouchInitialLocation;
@@ -104,8 +107,8 @@
   self.textControlState = [self determineCurrentTextControlState];
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
   self.colorViewModels = [[NSMutableDictionary alloc] init];
-
-  self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
+  self.minimumNumberOfVisibleRows = kMDCBaseTextAreaDefaultMinimumNumberOfVisibleLines;
+  self.maximumNumberOfVisibleRows = kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines;
   self.gradientManager = [[MDCTextControlGradientManager alloc] init];
 }
 
@@ -151,11 +154,11 @@
   self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
   [self.scrollView addSubview:self.scrollViewContentViewTouchForwardingView];
 
-  self.inputChipViewTextView = [[MDCBaseTextAreaTextView alloc] init];
-  self.inputChipViewTextView.textAreaTextViewDelegate = self;
-  self.inputChipViewTextView.showsVerticalScrollIndicator = NO;
-  self.inputChipViewTextView.showsHorizontalScrollIndicator = NO;
-  [self.scrollView addSubview:self.inputChipViewTextView];
+  self.baseTextAreaTextView = [[MDCBaseTextAreaTextView alloc] init];
+  self.baseTextAreaTextView.textAreaTextViewDelegate = self;
+  self.baseTextAreaTextView.showsVerticalScrollIndicator = NO;
+  self.baseTextAreaTextView.showsHorizontalScrollIndicator = NO;
+  [self.scrollView addSubview:self.baseTextAreaTextView];
 }
 
 #pragma mark UIView Overrides
@@ -274,7 +277,7 @@
       [self createPositioningReference];
   return [[MDCBaseTextAreaLayout alloc] initWithSize:size
                                 positioningReference:positioningReference
-                                                text:self.inputChipViewTextView.text
+                                                text:self.baseTextAreaTextView.text
                                                 font:self.normalFont
                                         floatingFont:self.floatingFont
                                                label:self.label
@@ -284,7 +287,6 @@
                               trailingAssistiveLabel:self.assistiveLabelView.trailingAssistiveLabel
                           assistiveLabelDrawPriority:self.assistiveLabelDrawPriority
                     customAssistiveLabelDrawPriority:clampedCustomAssistiveLabelDrawPriority
-                        preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
                                                isRTL:self.shouldLayoutForRTL
                                            isEditing:self.textView.isFirstResponder];
 }
@@ -325,6 +327,17 @@
   self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
+- (CGFloat)currentNumberOfLinesOfText {
+  CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.textView.bounds), CGFLOAT_MAX);
+  NSDictionary *attributes = @{NSFontAttributeName:self.textView.font};
+  CGRect boundingRect =
+      [self.textView.text boundingRectWithSize:fittingSize
+                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                    attributes:attributes
+                                       context:nil];
+  return MDCRound(CGRectGetHeight(boundingRect) / self.normalFont.lineHeight);
+}
+
 #pragma mark Dynamic Type
 
 - (void)setAdjustsFontForContentSizeCategory:(BOOL)adjustsFontForContentSizeCategory {
@@ -341,7 +354,7 @@
 #pragma mark MDCTextControlState
 
 - (MDCTextControlState)determineCurrentTextControlState {
-  return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextView.isEditable)
+  return [self textControlStateWithIsEnabled:(self.enabled && self.baseTextAreaTextView.isEditable)
                                    isEditing:self.textView.isFirstResponder];
 }
 
@@ -426,7 +439,7 @@
 #pragma mark Custom Accessors
 
 - (UITextView *)textView {
-  return self.inputChipViewTextView;
+  return self.baseTextAreaTextView;
 }
 
 - (UILabel *)leadingAssistiveLabel {
@@ -438,7 +451,13 @@
 }
 
 - (CGFloat)numberOfVisibleTextRows {
-  return self.preferredNumberOfVisibleRows;
+  CGFloat numberOfSimultaneouslyDisplayedLinesOfText = [self currentNumberOfLinesOfText];
+  if (numberOfSimultaneouslyDisplayedLinesOfText < self.minimumNumberOfVisibleRows) {
+    numberOfSimultaneouslyDisplayedLinesOfText = self.minimumNumberOfVisibleRows;
+  } else if (numberOfSimultaneouslyDisplayedLinesOfText > self.maximumNumberOfVisibleRows) {
+    numberOfSimultaneouslyDisplayedLinesOfText = self.maximumNumberOfVisibleRows;
+  }
+  return numberOfSimultaneouslyDisplayedLinesOfText;
 }
 
 #pragma mark MDCTextControl Accessors
@@ -461,7 +480,7 @@
 #pragma mark Fonts
 
 - (UIFont *)normalFont {
-  return self.inputChipViewTextView.font ?: MDCTextControlDefaultUITextFieldFont();
+  return self.baseTextAreaTextView.font ?: MDCTextControlDefaultUITextFieldFont();
 }
 
 - (UIFont *)floatingFont {
@@ -610,7 +629,9 @@
 #pragma mark Notifications
 
 - (void)textViewChanged:(NSNotification *)notification {
-  [self setNeedsLayout];
+  if (notification.object == self.baseTextAreaTextView) {
+    [self setNeedsLayout];
+  }
 }
 
 - (void)observeTextViewNotifications {

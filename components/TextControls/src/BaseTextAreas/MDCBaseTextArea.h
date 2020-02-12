@@ -54,9 +54,14 @@ The UITextView contained within the text area.
 @property(strong, nonatomic, readonly, nonnull) UITextView *textView;
 
 /**
-The preferred number of simultaneously visible lines.
+The minimum number of simultaneously visible lines of text. The height of the text area will reflect this value if the number of lines of total text is less than or equal to this value. Fractional values are allowed.
  */
-@property(nonatomic, assign) CGFloat preferredNumberOfVisibleRows;
+@property(nonatomic, assign) CGFloat minimumNumberOfVisibleRows;
+
+/**
+The maximum number of simultaneously visible lines of text. The height of the text area will reflect this value if the number of lines of total text is greater than or equal to this value. Fractional values are allowed.
+ */
+@property(nonatomic, assign) CGFloat maximumNumberOfVisibleRows;
 
 /**
  Sets the floating label color for a given state. Floating label color refers to the color of the

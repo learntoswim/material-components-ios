@@ -45,7 +45,6 @@ static const CGFloat kGradientBlurLength = 4;
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)normalizedCustomAssistiveLabelDrawPriority
-        preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing {
   self = [super init];
@@ -62,7 +61,6 @@ static const CGFloat kGradientBlurLength = 4;
      trailingAssistiveLabel:trailingAssistiveLabel
               assistiveLabelDrawPriority:assistiveLabelDrawPriority
         customAssistiveLabelDrawPriority:normalizedCustomAssistiveLabelDrawPriority
-            preferredNumberOfVisibleRows:preferredNumberOfVisibleRows
                                    isRTL:isRTL
                                isEditing:isEditing];
   }
@@ -83,7 +81,6 @@ static const CGFloat kGradientBlurLength = 4;
           assistiveLabelDrawPriority:
               (MDCTextControlAssistiveLabelDrawPriority)assistiveLabelDrawPriority
     customAssistiveLabelDrawPriority:(CGFloat)customAssistiveLabelDrawPriority
-        preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing {
   CGFloat globalTextMinX = isRTL ? kHorizontalPadding : kHorizontalPadding;
