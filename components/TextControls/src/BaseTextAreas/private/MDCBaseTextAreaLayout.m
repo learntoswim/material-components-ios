@@ -96,8 +96,6 @@ static const CGFloat kGradientBlurLength = 4;
                                                isRTL:isRTL];
   CGFloat floatingLabelMaxY = CGRectGetMaxY(floatingLabelFrame);
 
-  CGFloat bottomPadding = positioningReference.paddingBetweenEditingTextAndContainerBottom;
-
   CGRect normalLabelFrame =
       [self normalLabelFrameWithLabelText:label.text
                                               font:font
@@ -111,13 +109,14 @@ static const CGFloat kGradientBlurLength = 4;
   CGFloat textViewMinYNormal = CGRectGetMidY(normalLabelFrame) - halfOfNormalLineHeight;
   CGFloat textViewMinY = textViewMinYNormal;
   if (labelState == MDCTextControlLabelStateFloating) {
-    textViewMinY = floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
+    textViewMinY =
+        floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   }
 
-  CGFloat textViewHeight =
-      positioningReference.containerHeight - bottomPadding - textViewMinY;
-  CGRect textViewFrame = CGRectMake(globalTextMinX, textViewMinY,
-                                    globalTextMaxX - globalTextMinX, textViewHeight);
+  CGFloat bottomPadding = positioningReference.paddingBetweenEditingTextAndContainerBottom;
+  CGFloat textViewHeight = positioningReference.containerHeight - bottomPadding - textViewMinY;
+  CGRect textViewFrame =
+      CGRectMake(globalTextMinX, textViewMinY, globalTextMaxX - globalTextMinX, textViewHeight);
 
   self.assistiveLabelViewLayout = [[MDCTextControlAssistiveLabelViewLayout alloc]
                          initWithWidth:size.width
@@ -138,18 +137,30 @@ static const CGFloat kGradientBlurLength = 4;
   self.labelFrameNormal = normalLabelFrame;
 
   self.horizontalGradientLocations = [self
-      determineHorizontalGradientLocationsWithGlobalTextMinX:globalTextMinX
-                                              globalTextMaxX:globalTextMaxX
-                                                   viewWidth:size.width
-                                                  viewHeight:positioningReference.containerHeight];
+      determineHorizontalGradientLocationsWithLeftFadeStart:globalTextMinX - kGradientBlurLength
+                                                leftFadeEnd:globalTextMinX
+                                             rightFadeStart:globalTextMaxX
+                                               rightFadeEnd:globalTextMaxX + kGradientBlurLength
+                                                  viewWidth:size.width];
+
+  CGFloat topFadeStart = floatingLabelMaxY;
+  CGFloat topFadeEnd = floatingLabelMaxY + kGradientBlurLength;
+  CGFloat bottomFadeStart = positioningReference.containerHeight - bottomPadding;
+  CGFloat bottomFadeEnd = bottomFadeStart + kGradientBlurLength;
+  if (labelBehavior == MDCTextControlLabelBehaviorDisappears) {
+    topFadeStart = textViewMinY - kGradientBlurLength;
+    topFadeEnd = textViewMinY;
+    bottomFadeStart = textViewMinY + textViewHeight;
+    bottomFadeEnd = bottomFadeStart + kGradientBlurLength;
+  }
+
   self.verticalGradientLocations = [self
-      determineVerticalGradientLocationsWithGlobalTextMinX:globalTextMinX
-                                            globalTextMaxX:globalTextMaxX
-                                                 viewWidth:size.width
-                                                viewHeight:positioningReference.containerHeight
-                                         floatingLabelMaxY:floatingLabelMaxY
-                                             bottomPadding:bottomPadding
-                                      positioningReference:positioningReference];
+      determineVerticalGradientLocationsWithTopFadeStart:topFadeStart
+                                              topFadeEnd:topFadeEnd
+                                         bottomFadeStart:bottomFadeStart
+                                           bottomFadeEnd:bottomFadeEnd
+                                         containerHeight:positioningReference.containerHeight];
+
   return;
 }
 
@@ -221,74 +232,70 @@ static const CGFloat kGradientBlurLength = 4;
 }
 
 - (NSArray<NSNumber *> *)
-    determineHorizontalGradientLocationsWithGlobalTextMinX:(CGFloat)globalTextMinX
-                                            globalTextMaxX:(CGFloat)globalTextMaxX
-                                                 viewWidth:(CGFloat)viewWidth
-                                                viewHeight:(CGFloat)viewHeight {
-  CGFloat leftFadeStart = (globalTextMinX - kGradientBlurLength) / viewWidth;
-  if (leftFadeStart < 0) {
-    leftFadeStart = 0;
+    determineHorizontalGradientLocationsWithLeftFadeStart:(CGFloat)leftFadeStart
+                                              leftFadeEnd:(CGFloat)leftFadeEnd
+                                           rightFadeStart:(CGFloat)rightFadeStart
+                                             rightFadeEnd:(CGFloat)rightFadeEnd
+                                                viewWidth:(CGFloat)viewWidth {
+  CGFloat leftFadeStartLocation = leftFadeStart / viewWidth;
+  if (leftFadeStartLocation < 0) {
+    leftFadeStartLocation = 0;
   }
-  CGFloat leftFadeEnd = globalTextMinX / viewWidth;
-  if (leftFadeEnd < 0) {
-    leftFadeEnd = 0;
+  CGFloat leftFadeEndLocation = leftFadeEnd / viewWidth;
+  if (leftFadeEndLocation < 0) {
+    leftFadeEndLocation = 0;
   }
-  CGFloat rightFadeStart = (globalTextMaxX) / viewWidth;
-  if (rightFadeStart >= 1) {
-    rightFadeStart = 1;
+  CGFloat rightFadeStartLocation = rightFadeStart / viewWidth;
+  if (rightFadeStartLocation >= 1) {
+    rightFadeStartLocation = 1;
   }
-  CGFloat rightFadeEnd = (globalTextMaxX + kGradientBlurLength) / viewWidth;
-  if (rightFadeEnd >= 1) {
-    rightFadeEnd = 1;
-  }
-
-  return @[
-    @(0),
-    @(leftFadeStart),
-    @(leftFadeEnd),
-    @(rightFadeStart),
-    @(rightFadeEnd),
-    @(1),
-  ];
-}
-
-- (NSArray<NSNumber *> *)
-    determineVerticalGradientLocationsWithGlobalTextMinX:(CGFloat)globalTextMinX
-                                          globalTextMaxX:(CGFloat)globalTextMaxX
-                                               viewWidth:(CGFloat)viewWidth
-                                              viewHeight:(CGFloat)viewHeight
-                                       floatingLabelMaxY:(CGFloat)floatingLabelMaxY
-                                           bottomPadding:(CGFloat)bottomPadding
-                                    positioningReference:
-                                        (id<MDCTextControlVerticalPositioningReference>)
-                                            positioningReference {
-  CGFloat topFadeStart = floatingLabelMaxY / viewHeight;
-  if (topFadeStart <= 0) {
-    topFadeStart = 0;
-  }
-  CGFloat topFadeEnd = (floatingLabelMaxY + kGradientBlurLength) / viewHeight;
-  if (topFadeEnd <= 0) {
-    topFadeEnd = 0;
-  }
-  CGFloat bottomFadeStart = (viewHeight - bottomPadding) / viewHeight;
-  if (bottomFadeStart >= 1) {
-    bottomFadeStart = 1;
-  }
-  CGFloat bottomFadeEnd = (viewHeight - kGradientBlurLength) / viewHeight;
-  if (bottomFadeEnd >= 1) {
-    bottomFadeEnd = 1;
+  CGFloat rightFadeEndLocation = rightFadeEnd / viewWidth;
+  if (rightFadeEndLocation >= 1) {
+    rightFadeEndLocation = 1;
   }
 
   return @[
     @(0),
-    @(topFadeStart),
-    @(topFadeEnd),
-    @(bottomFadeStart),
-    @(bottomFadeEnd),
+    @(leftFadeStartLocation),
+    @(leftFadeEndLocation),
+    @(rightFadeStartLocation),
+    @(rightFadeEndLocation),
     @(1),
   ];
 }
 
+- (NSArray<NSNumber *> *)determineVerticalGradientLocationsWithTopFadeStart:(CGFloat)topFadeStart
+                                                                 topFadeEnd:(CGFloat)topFadeEnd
+                                                            bottomFadeStart:(CGFloat)bottomFadeStart
+                                                              bottomFadeEnd:(CGFloat)bottomFadeEnd
+                                                            containerHeight:
+                                                                (CGFloat)containerHeight {
+  CGFloat topFadeStartLocation = topFadeStart / containerHeight;
+  if (topFadeStartLocation <= 0) {
+    topFadeStartLocation = 0;
+  }
+  CGFloat topFadeEndLocation = topFadeEnd / containerHeight;
+  if (topFadeEndLocation <= 0) {
+    topFadeEndLocation = 0;
+  }
+  CGFloat bottomFadeStartLocation = bottomFadeStart / containerHeight;
+  if (bottomFadeStartLocation >= 1) {
+    bottomFadeStartLocation = 1;
+  }
+  CGFloat bottomFadeEndLocation = bottomFadeEnd / containerHeight;
+  if (bottomFadeEndLocation >= 1) {
+    bottomFadeEndLocation = 1;
+  }
+
+  return @[
+    @(0),
+    @(topFadeStartLocation),
+    @(topFadeEndLocation),
+    @(bottomFadeStartLocation),
+    @(bottomFadeEndLocation),
+    @(1),
+  ];
+}
 - (CGRect)labelFrameWithLabelState:(MDCTextControlLabelState)labelState {
   if (labelState == MDCTextControlLabelStateFloating) {
     return self.labelFrameFloating;

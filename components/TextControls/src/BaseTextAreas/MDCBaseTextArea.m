@@ -26,7 +26,7 @@
 #import "private/MDCBaseTextAreaTextView.h"
 
 static const CGFloat kMDCBaseTextAreaDefaultMinimumNumberOfVisibleLines = (CGFloat)2.0;
-static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFloat)5.0;
+static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFloat)4.0;
 
 @interface MDCBaseTextArea () <MDCTextControl,
                                MDCBaseTextAreaTextViewDelegate,
@@ -228,7 +228,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
                                 normalFontLineHeight:self.normalFont.lineHeight
                                        textRowHeight:(self.normalFont.lineHeight +
                                                       self.normalFont.leading)
-                                    numberOfTextRows:self.numberOfVisibleTextRows
+                                    numberOfTextRows:self.numberOfLinesOfVisibleText
                                              density:0
                             preferredContainerHeight:self.preferredContainerHeight];
 }
@@ -258,7 +258,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   self.maskedTextViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
-- (CGFloat)currentNumberOfLinesOfText {
+- (CGFloat)numberOfLinesOfText {
   CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.textView.bounds), CGFLOAT_MAX);
   NSDictionary *attributes = @{NSFontAttributeName : self.textView.font};
   CGRect boundingRect =
@@ -267,6 +267,16 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
                                     attributes:attributes
                                        context:nil];
   return MDCRound(CGRectGetHeight(boundingRect) / self.normalFont.lineHeight);
+}
+
+- (CGFloat)numberOfLinesOfVisibleText {
+  CGFloat numberOfLinesOfText = [self numberOfLinesOfText];
+  if (numberOfLinesOfText < self.minimumNumberOfVisibleRows) {
+    return self.minimumNumberOfVisibleRows;
+  } else if (numberOfLinesOfText > self.maximumNumberOfVisibleRows) {
+    return self.maximumNumberOfVisibleRows;
+  }
+  return numberOfLinesOfText;
 }
 
 #pragma mark Dynamic Type
@@ -385,16 +395,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   return self.assistiveLabelView.trailingAssistiveLabel;
 }
 
-- (CGFloat)numberOfVisibleTextRows {
-  CGFloat numberOfSimultaneouslyDisplayedLinesOfText = [self currentNumberOfLinesOfText];
-  if (numberOfSimultaneouslyDisplayedLinesOfText < self.minimumNumberOfVisibleRows) {
-    numberOfSimultaneouslyDisplayedLinesOfText = self.minimumNumberOfVisibleRows;
-  } else if (numberOfSimultaneouslyDisplayedLinesOfText > self.maximumNumberOfVisibleRows) {
-    numberOfSimultaneouslyDisplayedLinesOfText = self.maximumNumberOfVisibleRows;
-  }
-  return numberOfSimultaneouslyDisplayedLinesOfText;
-}
-
 #pragma mark MDCTextControl Accessors
 
 - (void)setContainerStyle:(id<MDCTextControlStyle>)containerStyle {
@@ -416,16 +416,20 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   return [self.containerStyle floatingFontWithNormalFont:self.normalFont];
 }
 
-#pragma mark InputChipViewTextViewDelegate
+#pragma mark MDCBaseTextAreaTextViewDelegate
 
 - (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
     willBecomeFirstResponder:(BOOL)didBecome {
-  [self setNeedsLayout];
+  if (textView == self.baseTextAreaTextView) {
+    [self setNeedsLayout];
+  }
 }
 
 - (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
     willResignFirstResponder:(BOOL)didResign {
-  [self setNeedsLayout];
+  if (textView == self.baseTextAreaTextView) {
+    [self setNeedsLayout];
+  }
 }
 
 #pragma mark Internationalization

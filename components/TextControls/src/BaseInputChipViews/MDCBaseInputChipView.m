@@ -618,7 +618,7 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
   [_containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
 }
 
-- (CGFloat)numberOfVisibleTextRows {
+- (CGFloat)numberOfLinesOfVisibleText {
   return self.preferredNumberOfVisibleRows;
 }
 

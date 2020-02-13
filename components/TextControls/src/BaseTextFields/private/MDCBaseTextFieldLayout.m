@@ -200,8 +200,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   CGRect textRectNormal =
       CGRectMake(textRectMinX, textRectMinYNormal, textRectWidth, textRectHeight);
   CGFloat halfOfTextRectHeight = textRectHeight * (CGFloat)0.5;
-  CGFloat textRectMinYFloatingLabel =
-      textRectCenterYWithFloatingLabel - halfOfTextRectHeight;
+  CGFloat textRectMinYFloatingLabel = textRectCenterYWithFloatingLabel - halfOfTextRectHeight;
   CGRect textRectFloating =
       CGRectMake(textRectMinX, textRectMinYFloatingLabel, textRectWidth, textRectHeight);
 

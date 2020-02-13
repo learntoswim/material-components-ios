@@ -174,7 +174,7 @@ static const CGFloat kMDCTextControlDefaultMultilineNumberOfVisibleRows = (CGFlo
  The number of rows of text the MDCTextControl shows at one time. For textfields, this will always
  be 1. For other views it can be more than that.
  */
-@property(nonatomic, assign, readonly) CGFloat numberOfVisibleTextRows;
+@property(nonatomic, assign, readonly) CGFloat numberOfLinesOfVisibleText;
 
 @end
 
