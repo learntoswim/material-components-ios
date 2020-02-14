@@ -199,6 +199,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   [self animateLabel];
   [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
   [self layOutGradientLayers];
+  [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
 - (MDCBaseTextAreaLayout *)calculateLayoutWithSize:(CGSize)size {
