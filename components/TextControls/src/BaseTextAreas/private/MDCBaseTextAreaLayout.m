@@ -305,10 +305,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
     @(1),
   ];
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
 - (CGRect)labelFrameWithLabelState:(MDCTextControlLabelState)labelState {
   if (labelState == MDCTextControlLabelStateFloating) {
     return self.labelFrameFloating;
