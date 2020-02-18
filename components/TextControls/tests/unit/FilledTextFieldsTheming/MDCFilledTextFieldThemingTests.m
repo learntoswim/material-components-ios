@@ -28,17 +28,6 @@ static const CGFloat kPrimaryFloatingLabelColorNormalOpacity = (CGFloat)0.60;
 static const CGFloat kPrimaryFloatingLabelColorEditingOpacity = (CGFloat)0.87;
 static const CGFloat kPrimaryUnderlineColorNormalOpacity = (CGFloat)0.42;
 
-static const CGFloat kDisabledOpacity = (CGFloat)0.60;
-
-static const CGFloat kFilledSublayerFillColorNormalOpacity = (CGFloat)0.12;
-static const CGFloat kTextColorNormalOpacity = (CGFloat)0.87;
-static const CGFloat kNormalLabelColorNormalOpacity = (CGFloat)0.60;
-
-static const CGFloat kPrimaryAssistiveLabelColorNormalOpacity = (CGFloat)0.60;
-static const CGFloat kPrimaryFloatingLabelColorNormalOpacity = (CGFloat)0.60;
-static const CGFloat kPrimaryFloatingLabelColorEditingOpacity = (CGFloat)0.87;
-static const CGFloat kPrimaryUnderlineColorNormalOpacity = (CGFloat)0.42;
-
 @interface MDCFilledTextFieldThemingTest : XCTestCase
 @property(nonatomic, strong) MDCFilledTextField *textField;
 @property(nonatomic, strong) MDCSemanticColorScheme *colorScheme;

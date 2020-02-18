@@ -22,16 +22,12 @@
 #import "MaterialTextControlsPrivate+Shared.h"
 #import "MaterialTypography.h"
 #import "private/MDCBaseInputChipViewLayout.h"
-//#import "private/MDCTextControlAssistiveLabelView.h"
-//#import "private/MDCTextControlColorViewModel.h"
-//#import "private/MDCTextControlGradientManager.h"
-//#import "private/MDCTextControlLabelAnimation.h"
 #import "MaterialTextControlsPrivate+BaseStyle.h"
-//#import "private/MDCTextControlStyleBase.h"
 #import "private/MDCBaseInputChipViewTextField.h"
 
 static const CGFloat kMinInterChipVerticalSpacing = (CGFloat)3.0;
 static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
+static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = (CGFloat)2.0;
 
 @interface MDCBaseInputChipView () <MDCTextControl,
                                     MDCBaseInputChipViewTextFieldDelegate,
@@ -123,7 +119,7 @@ static const CGFloat kMaxInterChipVerticalSpacing = (CGFloat)8.0;
   self.gradientManager = [[MDCTextControlGradientManager alloc] init];
   self.mutableChips = [[NSMutableArray alloc] init];
   self.chipsToRemove = [[NSMutableArray alloc] init];
-  self.preferredNumberOfVisibleRows = kMDCTextControlDefaultMultilineNumberOfVisibleRows;
+  self.preferredNumberOfVisibleRows = kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows;
 }
 
 - (void)setUpTapGesture {

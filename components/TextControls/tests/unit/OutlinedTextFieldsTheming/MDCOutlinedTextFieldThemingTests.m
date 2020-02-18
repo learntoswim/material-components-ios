@@ -27,16 +27,6 @@ static const CGFloat kOutlineColorNormalOpacity = (CGFloat)0.38;
 static const CGFloat kPrimaryFloatingLabelColorNormalOpacity = (CGFloat)0.60;
 static const CGFloat kPrimaryAssistiveLabelColorNormalOpacity = (CGFloat)0.60;
 
-static const CGFloat kDisabledOpacity = (CGFloat)0.60;
-
-static const CGFloat kTextColorNormalOpacity = (CGFloat)0.87;
-static const CGFloat kFloatingLabelColorEditingOpacity = (CGFloat)0.87;
-static const CGFloat kNormalLabelColorNormalOpacity = (CGFloat)0.60;
-static const CGFloat kOutlineColorNormalOpacity = (CGFloat)0.38;
-
-static const CGFloat kPrimaryFloatingLabelColorNormalOpacity = (CGFloat)0.60;
-static const CGFloat kPrimaryAssistiveLabelColorNormalOpacity = (CGFloat)0.60;
-
 @interface MDCOutlinedTextFieldThemingTest : XCTestCase
 @property(nonatomic, strong) MDCOutlinedTextField *textField;
 @property(nonatomic, strong) MDCSemanticColorScheme *colorScheme;
