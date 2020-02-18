@@ -214,7 +214,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                                                clearButtonSideLength, clearButtonSideLength);
 
   CGRect labelFrameNormal = [self labelFrameWithText:label.text
-                                          labelState:MDCTextControlLabelPositionNormal
+                                       labelPosition:MDCTextControlLabelPositionNormal
                                                 font:font
                                         floatingFont:floatingFont
                                    floatingLabelMinY:floatingLabelMinY
@@ -223,7 +223,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
                                             textRect:textRectNormal
                                                isRTL:isRTL];
   CGRect labelFrameFloating = [self labelFrameWithText:label.text
-                                            labelState:MDCTextControlLabelPositionFloating
+                                         labelPosition:MDCTextControlLabelPositionFloating
                                                   font:font
                                           floatingFont:floatingFont
                                      floatingLabelMinY:floatingLabelMinY
@@ -321,7 +321,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 }
 
 - (CGRect)labelFrameWithText:(NSString *)text
-                  labelState:(MDCTextControlLabelPosition)labelState
+               labelPosition:(MDCTextControlLabelPosition)labelPosition
                         font:(UIFont *)font
                 floatingFont:(UIFont *)floatingFont
            floatingLabelMinY:(CGFloat)floatingLabelMinY
@@ -334,7 +334,7 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   CGRect rect = CGRectZero;
   CGFloat originX = 0;
   CGFloat originY = 0;
-  switch (labelState) {
+  switch (labelPosition) {
     case MDCTextControlLabelPositionNone:
       break;
     case MDCTextControlLabelPositionFloating:
@@ -377,10 +377,10 @@ static const CGFloat kHorizontalPadding = (CGFloat)12.0;
   return maxY;
 }
 
-- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelState {
-  if (labelState == MDCTextControlLabelPositionFloating) {
+- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelPosition {
+  if (labelPosition == MDCTextControlLabelPositionFloating) {
     return self.labelFrameFloating;
-  } else if (labelState == MDCTextControlLabelPositionNormal) {
+  } else if (labelPosition == MDCTextControlLabelPositionNormal) {
     return self.labelFrameNormal;
   } else {
     return CGRectZero;

@@ -47,7 +47,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
                                label:(nonnull UILabel *)label
-                          labelState:(MDCTextControlLabelPosition)labelState
+                       labelPosition:(MDCTextControlLabelPosition)labelPosition
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
               trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
@@ -64,7 +64,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
                                     font:font
                             floatingFont:floatingFont
                                    label:label
-                              labelState:labelState
+                           labelPosition:labelPosition
                            labelBehavior:labelBehavior
                    leadingAssistiveLabel:leadingAssistiveLabel
                   trailingAssistiveLabel:trailingAssistiveLabel
@@ -83,7 +83,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
                                label:(UILabel *)label
-                          labelState:(MDCTextControlLabelPosition)labelState
+                       labelPosition:(MDCTextControlLabelPosition)labelPosition
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
               trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
@@ -117,7 +117,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
   CGFloat halfOfNormalLineHeight = (CGFloat)0.5 * font.lineHeight;
   CGFloat textViewMinYNormal = CGRectGetMidY(normalLabelFrame) - halfOfNormalLineHeight;
   CGFloat textViewMinY = textViewMinYNormal;
-  if (labelState == MDCTextControlLabelPositionFloating) {
+  if (labelPosition == MDCTextControlLabelPositionFloating) {
     textViewMinY =
         floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   }
@@ -306,10 +306,10 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
   ];
 }
 
-- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelState {
-  if (labelState == MDCTextControlLabelPositionFloating) {
+- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelPosition {
+  if (labelPosition == MDCTextControlLabelPositionFloating) {
     return self.labelFrameFloating;
-  } else if (labelState == MDCTextControlLabelPositionNormal) {
+  } else if (labelPosition == MDCTextControlLabelPositionNormal) {
     return self.labelFrameNormal;
   } else {
     return CGRectZero;

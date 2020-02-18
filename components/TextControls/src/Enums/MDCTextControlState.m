@@ -14,7 +14,7 @@
 
 #import "MDCTextControlState.h"
 
-MDCTextControlState MDCTextControlStateWithIsEnabled(BOOL isEnabled, BOOL isEditing) {
+MDCTextControlState MDCTextControlStateWith(BOOL isEnabled, BOOL isEditing) {
   if (isEnabled) {
     if (isEditing) {
       return MDCTextControlStateEditing;

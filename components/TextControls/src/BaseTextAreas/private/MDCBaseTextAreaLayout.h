@@ -49,7 +49,7 @@
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
                                label:(nonnull UILabel *)label
-                          labelState:(MDCTextControlLabelPosition)labelState
+                       labelPosition:(MDCTextControlLabelPosition)labelPosition
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                leadingAssistiveLabel:(nonnull UILabel *)leadingAssistiveLabel
               trailingAssistiveLabel:(nonnull UILabel *)trailingAssistiveLabel
@@ -59,6 +59,6 @@
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing;
 
-- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelState;
+- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelPosition;
 
 @end

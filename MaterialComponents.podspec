@@ -717,6 +717,7 @@ Pod::Spec.new do |mdc|
     ]
     component.framework = "CoreGraphics", "QuartzCore"
 
+    component.dependency "MaterialComponents/Availability"
     component.dependency "MaterialComponents/CollectionCells"
     component.dependency "MaterialComponents/CollectionLayoutAttributes"
     component.dependency "MaterialComponents/Ink"
@@ -1169,6 +1170,7 @@ Pod::Spec.new do |mdc|
       "components/#{component.base_name}/src/private/*.{h,m}"
     ]
 
+    component.dependency "MaterialComponents/Availability"
     component.dependency "MaterialComponents/private/Application"
 
     component.test_spec 'UnitTests' do |unit_tests|
@@ -2197,6 +2199,7 @@ Pod::Spec.new do |mdc|
         "components/private/#{component.base_name}/src/private/*.{h,m}"
       ]
 
+      component.dependency "MaterialComponents/Availability"
       component.dependency "MaterialComponents/Ink"
       component.dependency "MaterialComponents/Ripple"
       component.dependency "MaterialComponents/ShadowElevations"
