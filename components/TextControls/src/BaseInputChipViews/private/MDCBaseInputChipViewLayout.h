@@ -52,7 +52,7 @@
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
                                label:(nonnull UILabel *)label
-                          labelState:(MDCTextControlLabelState)labelState
+                          labelState:(MDCTextControlLabelPosition)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                                chips:(nonnull NSArray<UIView *> *)chips
                       staleChipViews:(nonnull NSArray<UIView *> *)staleChipViews

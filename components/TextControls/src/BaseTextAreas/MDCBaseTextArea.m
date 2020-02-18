@@ -36,7 +36,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 @property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
 @property(strong, nonatomic) MDCBaseTextAreaLayout *layout;
 @property(nonatomic, assign) MDCTextControlState textControlState;
-@property(nonatomic, assign) MDCTextControlLabelState labelState;
+@property(nonatomic, assign) MDCTextControlLabelPosition labelPosition;
 @property(nonatomic, assign) CGRect labelFrame;
 @property(nonatomic, assign) NSTimeInterval animationDuration;
 
@@ -97,7 +97,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 - (void)initializeProperties {
   self.animationDuration = kMDCTextControlDefaultAnimationDuration;
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
-  self.labelState = [self determineCurrentLabelState];
+  self.labelPosition = [self determineCurrentLabelPosition];
   self.textControlState = [self determineCurrentTextControlState];
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
   self.colorViewModels = [[NSMutableDictionary alloc] init];
@@ -178,13 +178,13 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 
 - (void)preLayoutSubviews {
   self.textControlState = [self determineCurrentTextControlState];
-  self.labelState = [self determineCurrentLabelState];
+  self.labelPosition = [self determineCurrentLabelPosition];
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
-  [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
+  [self applyColorViewModel:colorViewModel withLabelState:self.labelPosition];
   CGSize fittingSize = CGSizeMake(CGRectGetWidth(self.frame), CGFLOAT_MAX);
   self.layout = [self calculateLayoutWithSize:fittingSize];
-  self.labelFrame = [self.layout labelFrameWithLabelState:self.labelState];
+  self.labelFrame = [self.layout labelFrameWithLabelPosition:self.labelPosition];
 }
 
 - (void)postLayoutSubviews {
@@ -210,7 +210,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
                                                 font:self.normalFont
                                         floatingFont:self.floatingFont
                                                label:self.label
-                                          labelState:self.labelState
+                                          labelState:self.labelPosition
                                        labelBehavior:self.labelBehavior
                                leadingAssistiveLabel:self.assistiveLabelView.leadingAssistiveLabel
                               trailingAssistiveLabel:self.assistiveLabelView.trailingAssistiveLabel
@@ -309,7 +309,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 - (void)animateLabel {
   __weak MDCBaseTextArea *weakSelf = self;
   [MDCTextControlLabelAnimation animateLabel:self.label
-                                       state:self.labelState
+                                       state:self.labelPosition
                             normalLabelFrame:self.layout.labelFrameNormal
                           floatingLabelFrame:self.layout.labelFrameFloating
                                   normalFont:self.normalFont
@@ -328,8 +328,8 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   return self.labelBehavior == MDCTextControlLabelBehaviorFloats;
 }
 
-- (MDCTextControlLabelState)determineCurrentLabelState {
-  return MDCTextControlLabelStateWith(self.label.text.length > 0,
+- (MDCTextControlLabelPosition)determineCurrentLabelPosition {
+  return MDCTextControlLabelPositionWith(self.label.text.length > 0,
                                       self.textView.text.length > 0,
                                       self.canLabelFloat,
                                       self.textView.isFirstResponder);
@@ -402,11 +402,11 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 #pragma mark Coloring
 
 - (void)applyColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
-             withLabelState:(MDCTextControlLabelState)labelState {
+             withLabelState:(MDCTextControlLabelPosition)labelState {
   UIColor *labelColor = [UIColor clearColor];
-  if (labelState == MDCTextControlLabelStateNormal) {
+  if (labelState == MDCTextControlLabelPositionNormal) {
     labelColor = colorViewModel.normalLabelColor;
-  } else if (labelState == MDCTextControlLabelStateFloating) {
+  } else if (labelState == MDCTextControlLabelPositionFloating) {
     labelColor = colorViewModel.floatingLabelColor;
   }
   self.textView.textColor = colorViewModel.textColor;

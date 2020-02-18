@@ -44,7 +44,7 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
                                label:(UILabel *)label
-                          labelState:(MDCTextControlLabelState)labelState
+                          labelState:(MDCTextControlLabelPosition)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                                chips:(NSArray<UIView *> *)chips
                       staleChipViews:(NSArray<UIView *> *)staleChipViews
@@ -96,7 +96,7 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
                                label:(UILabel *)label
-                          labelState:(MDCTextControlLabelState)labelState
+                          labelState:(MDCTextControlLabelPosition)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                                chips:(NSArray<UIView *> *)chips
                       staleChipViews:(NSArray<UIView *> *)staleChipViews
@@ -147,7 +147,7 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
   initialChipRowMinYNormal = positioningReference.paddingBetweenContainerTopAndNormalLabel +
                              halfOfNormalLabelHeight - halfOfChipRowHeight;
   CGFloat initialChipRowMinY = initialChipRowMinYNormal;
-  if (labelState == MDCTextControlLabelStateFloating) {
+  if (labelState == MDCTextControlLabelPositionFloating) {
     initialChipRowMinY = initialChipRowMinYWithFloatingLabel;
   }
 
@@ -229,7 +229,7 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
                                                     globalChipRowMaxX:globalChipRowMaxX
                                                             viewWidth:size.width];
   CGFloat topFadeStartingY = bottomPadding;
-  if (labelState == MDCTextControlLabelStateFloating) {
+  if (labelState == MDCTextControlLabelPositionFloating) {
     topFadeStartingY = floatingLabelMaxY;
   }
   self.verticalGradientLocations =

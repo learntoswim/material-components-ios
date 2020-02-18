@@ -41,7 +41,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 @property(strong, nonatomic) MDCBaseInputChipViewLayout *layout;
 @property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 @property(nonatomic, assign) MDCTextControlState textControlState;
-@property(nonatomic, assign) MDCTextControlLabelState labelState;
+@property(nonatomic, assign) MDCTextControlLabelPosition labelPosition;
 @property(nonatomic, strong)
     NSMutableDictionary<NSNumber *, MDCTextControlColorViewModel *> *colorViewModels;
 @property(nonatomic, assign) CGRect labelFrame;
@@ -111,7 +111,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   self.animationDuration = kMDCTextControlDefaultAnimationDuration;
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
-  self.labelState = [self determineCurrentLabelState];
+  self.labelPosition = [self determineCurrentLabelPosition];
   self.textControlState = [self determineCurrentTextControlState];
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
   self.colorViewModels = [[NSMutableDictionary alloc] init];
@@ -311,7 +311,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
                                                      font:self.normalFont
                                              floatingFont:self.floatingFont
                                                     label:self.label
-                                               labelState:self.labelState
+                                               labelState:self.labelPosition
                                             labelBehavior:self.labelBehavior
                                                     chips:self.mutableChips
                                            staleChipViews:self.mutableChips
@@ -330,11 +330,11 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 
 - (void)preLayoutSubviews {
   self.textControlState = [self determineCurrentTextControlState];
-  self.labelState = [self determineCurrentLabelState];
+  self.labelPosition = [self determineCurrentLabelPosition];
   self.interChipVerticalSpacing = [self determineInterChipVerticalSpacing];
   MDCTextControlColorViewModel *colorViewModel =
       [self textControlColorViewModelForState:self.textControlState];
-  [self applyColorViewModel:colorViewModel withLabelState:self.labelState];
+  [self applyColorViewModel:colorViewModel withLabelState:self.labelPosition];
   self.layout = [self calculateLayoutWithSize:self.bounds.size];
 }
 
@@ -347,7 +347,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
 
-  self.label.hidden = self.labelState == MDCTextControlLabelStateNone;
+  self.label.hidden = self.labelPosition == MDCTextControlLabelPositionNone;
 
   [self animateChipLayoutChangesWithChips:self.mutableChips
                                chipFrames:self.layout.chipFrames
@@ -513,7 +513,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 - (void)animateLabel {
   __weak MDCBaseInputChipView *weakSelf = self;
   [MDCTextControlLabelAnimation animateLabel:self.label
-                                       state:self.labelState
+                                       state:self.labelPosition
                             normalLabelFrame:self.layout.labelFrameNormal
                           floatingLabelFrame:self.layout.labelFrameFloating
                                   normalFont:self.normalFont
@@ -529,10 +529,10 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 }
 
 - (void)positionLabel {
-  if (self.labelState == MDCTextControlLabelStateFloating) {
+  if (self.labelPosition == MDCTextControlLabelPositionFloating) {
     self.label.frame = self.layout.labelFrameFloating;
     self.label.hidden = NO;
-  } else if (self.labelState == MDCTextControlLabelStateNormal) {
+  } else if (self.labelPosition == MDCTextControlLabelPositionNormal) {
     self.label.frame = self.layout.labelFrameNormal;
     self.label.hidden = NO;
   } else {
@@ -545,7 +545,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   return self.labelBehavior == MDCTextControlLabelBehaviorFloats;
 }
 
-- (MDCTextControlLabelState)determineCurrentLabelState {
+- (MDCTextControlLabelPosition)determineCurrentLabelPosition {
   return [self labelStateWithLabelText:self.label.text
                          textFieldText:self.textField.text
                          canLabelFloat:self.canLabelFloat
@@ -553,7 +553,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
                                  chips:self.mutableChips];
 }
 
-- (MDCTextControlLabelState)labelStateWithLabelText:(NSString *)labelText
+- (MDCTextControlLabelPosition)labelStateWithLabelText:(NSString *)labelText
                                       textFieldText:(NSString *)text
                                       canLabelFloat:(BOOL)canLabelFloat
                                           isEditing:(BOOL)isEditing
@@ -564,23 +564,23 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   if (hasLabelText) {
     if (canLabelFloat) {
       if (isEditing) {
-        return MDCTextControlLabelStateFloating;
+        return MDCTextControlLabelPositionFloating;
       } else {
         if (hasText || hasChips) {
-          return MDCTextControlLabelStateFloating;
+          return MDCTextControlLabelPositionFloating;
         } else {
-          return MDCTextControlLabelStateNormal;
+          return MDCTextControlLabelPositionNormal;
         }
       }
     } else {
       if (hasText || hasChips) {
-        return MDCTextControlLabelStateNone;
+        return MDCTextControlLabelPositionNone;
       } else {
-        return MDCTextControlLabelStateNormal;
+        return MDCTextControlLabelPositionNormal;
       }
     }
   } else {
-    return MDCTextControlLabelStateNone;
+    return MDCTextControlLabelPositionNone;
   }
 }
 
@@ -664,11 +664,11 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 #pragma mark Coloring
 
 - (void)applyColorViewModel:(MDCTextControlColorViewModel *)colorViewModel
-             withLabelState:(MDCTextControlLabelState)labelState {
+             withLabelState:(MDCTextControlLabelPosition)labelState {
   UIColor *labelColor = [UIColor clearColor];
-  if (labelState == MDCTextControlLabelStateNormal) {
+  if (labelState == MDCTextControlLabelPositionNormal) {
     labelColor = colorViewModel.normalLabelColor;
-  } else if (labelState == MDCTextControlLabelStateFloating) {
+  } else if (labelState == MDCTextControlLabelPositionFloating) {
     labelColor = colorViewModel.floatingLabelColor;
   }
   self.textField.textColor = colorViewModel.textColor;

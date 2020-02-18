@@ -19,37 +19,17 @@
 #import "MDCTextControlColorViewModel.h"
 #import "MDCTextControlLabelAnimation.h"
 #import "MDCTextControlLabelBehavior.h"
-#import "MDCTextControlLabelState.h"
+#import "MDCTextControlLabelPosition.h"
 #import "MDCTextControlState.h"
 #import "MDCTextControlVerticalPositioningReference.h"
 
-static inline UIFont *_Nonnull MDCTextControlDefaultUITextFieldFont() {
-  return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-}
+UIFont * _Nonnull MDCTextControlDefaultUITextFieldFont(void);
 
-static inline CGFloat MDCTextControlPaddingValueWithMinimumPadding(CGFloat minimumPadding,
-                                                                   CGFloat maximumPadding,
-                                                                   CGFloat density) {
-  if (minimumPadding > maximumPadding) {
-    return 0;
-  } else if (minimumPadding == maximumPadding) {
-    return minimumPadding;
-  } else {
-    CGFloat minMaxPaddingDifference = maximumPadding - minimumPadding;
-    CGFloat additionToMinPadding = minMaxPaddingDifference * (1 - density);
-    return minimumPadding + additionToMinPadding;
-  }
-}
+CGFloat MDCTextControlPaddingValueWithMinimumPadding(CGFloat minimumPadding,
+                                                            CGFloat maximumPadding,
+                                                            CGFloat density);
 
-static inline CGFloat MDCTextControlNormalizeDensity(CGFloat density) {
-  CGFloat normalizedDensity = density;
-  if (normalizedDensity < 0) {
-    normalizedDensity = 0;
-  } else if (normalizedDensity > 1) {
-    normalizedDensity = 1;
-  }
-  return normalizedDensity;
-}
+CGFloat MDCTextControlNormalizeDensity(CGFloat density);
 
 FOUNDATION_EXTERN const CGFloat kMDCTextControlDefaultAnimationDuration;
 
@@ -71,11 +51,11 @@ FOUNDATION_EXTERN const CGFloat kMDCTextControlDefaultAnimationDuration;
 @property(nonatomic, assign, readonly) MDCTextControlState textControlState;
 
 /**
- Describes the current MDCTextControlLabelState of the contained input view. This
+ Describes the current MDCTextControlLabelPosition of the contained input view. This
  value is affected by things like the view's @c textControlState, its @c labelBehavior, and the
  text of the floating label.
  */
-@property(nonatomic, assign, readonly) MDCTextControlLabelState labelState;
+@property(nonatomic, assign, readonly) MDCTextControlLabelPosition labelPosition;
 
 /**
  The value for the label frame that should be used for style application. While style application

@@ -47,7 +47,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
                                 font:(nonnull UIFont *)font
                         floatingFont:(nonnull UIFont *)floatingFont
                                label:(nonnull UILabel *)label
-                          labelState:(MDCTextControlLabelState)labelState
+                          labelState:(MDCTextControlLabelPosition)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
               trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
@@ -83,7 +83,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
                                 font:(UIFont *)font
                         floatingFont:(UIFont *)floatingFont
                                label:(UILabel *)label
-                          labelState:(MDCTextControlLabelState)labelState
+                          labelState:(MDCTextControlLabelPosition)labelState
                        labelBehavior:(MDCTextControlLabelBehavior)labelBehavior
                leadingAssistiveLabel:(UILabel *)leadingAssistiveLabel
               trailingAssistiveLabel:(UILabel *)trailingAssistiveLabel
@@ -117,7 +117,7 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
   CGFloat halfOfNormalLineHeight = (CGFloat)0.5 * font.lineHeight;
   CGFloat textViewMinYNormal = CGRectGetMidY(normalLabelFrame) - halfOfNormalLineHeight;
   CGFloat textViewMinY = textViewMinYNormal;
-  if (labelState == MDCTextControlLabelStateFloating) {
+  if (labelState == MDCTextControlLabelPositionFloating) {
     textViewMinY =
         floatingLabelMaxY + positioningReference.paddingBetweenFloatingLabelAndEditingText;
   }
@@ -306,10 +306,10 @@ static const CGFloat kGradientBlurLength = (CGFloat)4.0;
   ];
 }
 
-- (CGRect)labelFrameWithLabelState:(MDCTextControlLabelState)labelState {
-  if (labelState == MDCTextControlLabelStateFloating) {
+- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelState {
+  if (labelState == MDCTextControlLabelPositionFloating) {
     return self.labelFrameFloating;
-  } else if (labelState == MDCTextControlLabelStateNormal) {
+  } else if (labelState == MDCTextControlLabelPositionNormal) {
     return self.labelFrameNormal;
   } else {
     return CGRectZero;

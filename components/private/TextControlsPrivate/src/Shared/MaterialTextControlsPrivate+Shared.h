@@ -18,5 +18,5 @@
 #import "MDCTextControlColorViewModel.h"
 #import "MDCTextControlGradientManager.h"
 #import "MDCTextControlLabelAnimation.h"
-#import "MDCTextControlLabelState.h"
+#import "MDCTextControlLabelPosition.h"
 #import "MDCTextControlVerticalPositioningReference.h"
