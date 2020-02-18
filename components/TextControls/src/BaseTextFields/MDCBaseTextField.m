@@ -536,19 +536,7 @@
 #pragma mark MDCTextControlState
 
 - (MDCTextControlState)determineCurrentTextControlState {
-  return [self textControlStateWithIsEnabled:self.isEnabled isEditing:self.isEditing];
-}
-
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
-  if (isEnabled) {
-    if (isEditing) {
-      return MDCTextControlStateEditing;
-    } else {
-      return MDCTextControlStateNormal;
-    }
-  } else {
-    return MDCTextControlStateDisabled;
-  }
+  return MDCTextControlStateWithIsEnabled(self.isEnabled, self.isEditing);
 }
 
 #pragma mark Placeholder
@@ -605,43 +593,10 @@
 }
 
 - (MDCTextControlLabelState)determineCurrentLabelState {
-  return [self labelStateWithLabel:self.label
-                              text:self.text
-                     canLabelFloat:self.canLabelFloat
-                         isEditing:self.isEditing];
-}
-
-- (MDCTextControlLabelState)labelStateWithLabel:(UILabel *)label
-                                           text:(NSString *)text
-                                  canLabelFloat:(BOOL)canLabelFloat
-                                      isEditing:(BOOL)isEditing {
-  BOOL hasFloatingLabelText = label.text.length > 0;
-  BOOL hasText = text.length > 0;
-  if (hasFloatingLabelText) {
-    if (canLabelFloat) {
-      if (isEditing) {
-        return MDCTextControlLabelStateFloating;
-      } else {
-        if (hasText) {
-          return MDCTextControlLabelStateFloating;
-        } else {
-          return MDCTextControlLabelStateNormal;
-        }
-      }
-    } else {
-      if (isEditing) {
-        return MDCTextControlLabelStateNone;
-      } else {
-        if (hasText) {
-          return MDCTextControlLabelStateNone;
-        } else {
-          return MDCTextControlLabelStateNormal;
-        }
-      }
-    }
-  } else {
-    return MDCTextControlLabelStateNone;
-  }
+  return MDCTextControlLabelStateWith(self.label.text.length > 0,
+                                      self.text.length > 0,
+                                      self.canLabelFloat,
+                                      self.isEditing);
 }
 
 #pragma mark Coloring

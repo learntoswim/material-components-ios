@@ -296,20 +296,9 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 #pragma mark MDCTextControlState
 
 - (MDCTextControlState)determineCurrentTextControlState {
-  return [self textControlStateWithIsEnabled:(self.enabled && self.baseTextAreaTextView.isEditable)
-                                   isEditing:self.textView.isFirstResponder];
-}
-
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
-  if (isEnabled) {
-    if (isEditing) {
-      return MDCTextControlStateEditing;
-    } else {
-      return MDCTextControlStateNormal;
-    }
-  } else {
-    return MDCTextControlStateDisabled;
-  }
+  BOOL isEnabled = self.enabled && self.baseTextAreaTextView.isEditable;
+  BOOL isEditing = self.textView.isFirstResponder;
+  return MDCTextControlStateWithIsEnabled(isEnabled, isEditing);
 }
 
 #pragma mark MDCTextControl accessors
@@ -343,43 +332,10 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 }
 
 - (MDCTextControlLabelState)determineCurrentLabelState {
-  return [self labelStateWithLabelText:self.label.text
-                                  text:self.textView.text
-                         canLabelFloat:self.canLabelFloat
-                             isEditing:self.textView.isFirstResponder];
-}
-
-- (MDCTextControlLabelState)labelStateWithLabelText:(NSString *)labelText
-                                               text:(NSString *)text
-                                      canLabelFloat:(BOOL)canLabelFloat
-                                          isEditing:(BOOL)isEditing {
-  BOOL hasLabelText = labelText.length > 0;
-  BOOL hasText = text.length > 0;
-  if (hasLabelText) {
-    if (canLabelFloat) {
-      if (isEditing) {
-        return MDCTextControlLabelStateFloating;
-      } else {
-        if (hasText) {
-          return MDCTextControlLabelStateFloating;
-        } else {
-          return MDCTextControlLabelStateNormal;
-        }
-      }
-    } else {
-      if (isEditing) {
-        return MDCTextControlLabelStateNone;
-      } else {
-        if (hasText) {
-          return MDCTextControlLabelStateNone;
-        } else {
-          return MDCTextControlLabelStateNormal;
-        }
-      }
-    }
-  } else {
-    return MDCTextControlLabelStateNone;
-  }
+  return MDCTextControlLabelStateWith(self.label.text.length > 0,
+                                      self.textView.text.length > 0,
+                                      self.canLabelFloat,
+                                      self.textView.isFirstResponder);
 }
 
 #pragma mark Custom Accessors

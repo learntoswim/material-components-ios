@@ -31,3 +31,34 @@ typedef NS_ENUM(NSUInteger, MDCTextControlLabelState) {
    */
   MDCTextControlLabelStateNormal,
 };
+
+static inline MDCTextControlLabelState MDCTextControlLabelStateWith(BOOL hasLabelText,
+                                                                    BOOL hasText,
+                                                                    BOOL canLabelFloat,
+                                                                    BOOL isEditing) {
+  if (hasLabelText) {
+    if (canLabelFloat) {
+      if (isEditing) {
+        return MDCTextControlLabelStateFloating;
+      } else {
+        if (hasText) {
+          return MDCTextControlLabelStateFloating;
+        } else {
+          return MDCTextControlLabelStateNormal;
+        }
+      }
+    } else {
+      if (isEditing) {
+        return MDCTextControlLabelStateNone;
+      } else {
+        if (hasText) {
+          return MDCTextControlLabelStateNone;
+        } else {
+          return MDCTextControlLabelStateNormal;
+        }
+      }
+    }
+  } else {
+    return MDCTextControlLabelStateNone;
+  }
+}
