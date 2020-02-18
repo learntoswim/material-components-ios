@@ -1,4 +1,4 @@
-// Copyright 2019-present the Material Components for iOS authors. All Rights Reserved.
+// Copyright 2020-present the Material Components for iOS authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 #import "MaterialMath.h"
 #import "MaterialTextControlsPrivate+BaseStyle.h"
 #import "MaterialTextControlsPrivate+Shared.h"
-#import "MaterialTypography.h"
 #import "private/MDCBaseTextAreaLayout.h"
 #import "private/MDCBaseTextAreaTextView.h"
 
@@ -140,8 +139,6 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 
   self.baseTextAreaTextView = [[MDCBaseTextAreaTextView alloc] init];
   self.baseTextAreaTextView.textAreaTextViewDelegate = self;
-  self.baseTextAreaTextView.showsVerticalScrollIndicator = NO;
-  self.baseTextAreaTextView.showsHorizontalScrollIndicator = NO;
   [self.maskedTextViewContainerView addSubview:self.baseTextAreaTextView];
 }
 
@@ -198,7 +195,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   [self.assistiveLabelView setNeedsLayout];
   [self animateLabel];
   [self.containerStyle applyStyleToTextControl:self animationDuration:self.animationDuration];
-  [self layOutGradientLayers];
+  [self layoutGradientLayers];
   [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
@@ -250,7 +247,7 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
   return CGSizeMake(width, layout.calculatedHeight);
 }
 
-- (void)layOutGradientLayers {
+- (void)layoutGradientLayers {
   CGRect gradientLayerFrame = self.containerFrame;
   self.gradientManager.horizontalGradient.frame = gradientLayerFrame;
   self.gradientManager.verticalGradient.frame = gradientLayerFrame;
@@ -376,14 +373,14 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 #pragma mark MDCBaseTextAreaTextViewDelegate
 
 - (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
-    willBecomeFirstResponder:(BOOL)didBecome {
+    willBecomeFirstResponder:(BOOL)willBecome {
   if (textView == self.baseTextAreaTextView) {
     [self setNeedsLayout];
   }
 }
 
 - (void)textAreaTextView:(MDCBaseTextAreaTextView *)textView
-    willResignFirstResponder:(BOOL)didResign {
+    willResignFirstResponder:(BOOL)willResign {
   if (textView == self.baseTextAreaTextView) {
     [self setNeedsLayout];
   }

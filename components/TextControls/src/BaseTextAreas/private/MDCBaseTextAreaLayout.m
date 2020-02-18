@@ -1,4 +1,4 @@
-// Copyright 2019-present the Material Components for iOS authors. All Rights Reserved.
+// Copyright 2020-present the Material Components for iOS authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,17 +15,26 @@
 #import "MDCBaseTextAreaLayout.h"
 
 #import <MDFInternationalization/MDFInternationalization.h>
-#import "MDCBaseInputChipView.h"
 
 static const CGFloat kHorizontalPadding = (CGFloat)12.0;
 
-static const CGFloat kGradientBlurLength = 4;
+static const CGFloat kGradientBlurLength = (CGFloat)4.0;
 
 @interface MDCBaseTextAreaLayout ()
 
-@property(nonatomic, assign) CGFloat calculatedHeight;
-@property(nonatomic, assign) CGFloat minimumHeight;
-@property(nonatomic, assign) CGFloat containerHeight;
+@property(nonatomic, assign) CGRect labelFrameFloating;
+@property(nonatomic, assign) CGRect labelFrameNormal;
+
+@property(nonatomic, assign) CGRect textViewFrame;
+
+@property(nonatomic, assign) CGRect assistiveLabelViewFrame;
+@property(nonatomic, strong, nonnull)
+    MDCTextControlAssistiveLabelViewLayout *assistiveLabelViewLayout;
+
+@property(nonatomic) CGFloat containerHeight;
+
+@property(nonatomic, strong, nonnull) NSArray<NSNumber *> *verticalGradientLocations;
+@property(nonatomic, strong, nonnull) NSArray<NSNumber *> *horizontalGradientLocations;
 
 @end
 
@@ -296,6 +305,10 @@ static const CGFloat kGradientBlurLength = 4;
     @(1),
   ];
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 - (CGRect)labelFrameWithLabelState:(MDCTextControlLabelState)labelState {
   if (labelState == MDCTextControlLabelStateFloating) {
     return self.labelFrameFloating;

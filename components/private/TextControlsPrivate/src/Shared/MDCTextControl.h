@@ -51,8 +51,7 @@ static inline CGFloat MDCTextControlNormalizeDensity(CGFloat density) {
   return normalizedDensity;
 }
 
-static const CGFloat kMDCTextControlDefaultAnimationDuration = (CGFloat)0.15;
-static const CGFloat kMDCTextControlDefaultMultilineNumberOfVisibleRows = (CGFloat)2.0;
+FOUNDATION_EXTERN const CGFloat kMDCTextControlDefaultAnimationDuration;
 
 @protocol MDCTextControlStyle;
 

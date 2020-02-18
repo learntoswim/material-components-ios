@@ -1,4 +1,4 @@
-// Copyright 2019-present the Material Components for iOS authors. All Rights Reserved.
+// Copyright 2020-present the Material Components for iOS authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,12 +34,14 @@
 }
 
 - (void)commonMDCBaseTextAreaTextViewInit {
-  self.backgroundColor = [UIColor clearColor];
+  self.backgroundColor = UIColor.clearColor;
   self.textContainerInset = UIEdgeInsetsZero;
   self.layoutMargins = UIEdgeInsetsZero;
   self.textContainer.lineFragmentPadding = 0;
   self.font = MDCTextControlDefaultUITextFieldFont();
   self.clipsToBounds = NO;
+  self.showsVerticalScrollIndicator = NO;
+  self.showsHorizontalScrollIndicator = NO;
 }
 
 - (void)setFont:(UIFont *)font {
@@ -48,8 +50,8 @@
 
 - (BOOL)resignFirstResponder {
   BOOL superclassDidResignFirstResponder = [super resignFirstResponder];
-  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:
-                                                            willResignFirstResponder:)]) {
+  SEL selector = @selector(textAreaTextView:willResignFirstResponder:);
+  if ([self.textAreaTextViewDelegate respondsToSelector:selector]) {
     [self.textAreaTextViewDelegate textAreaTextView:self
                            willResignFirstResponder:superclassDidResignFirstResponder];
   }
@@ -58,8 +60,8 @@
 
 - (BOOL)becomeFirstResponder {
   BOOL superclassDidBecomeFirstResponder = [super becomeFirstResponder];
-  if ([self.textAreaTextViewDelegate respondsToSelector:@selector(textAreaTextView:
-                                                            willBecomeFirstResponder:)]) {
+  SEL selector = @selector(textAreaTextView:willBecomeFirstResponder:);
+  if ([self.textAreaTextViewDelegate respondsToSelector:selector]) {
     [self.textAreaTextViewDelegate textAreaTextView:self
                            willBecomeFirstResponder:superclassDidBecomeFirstResponder];
   }

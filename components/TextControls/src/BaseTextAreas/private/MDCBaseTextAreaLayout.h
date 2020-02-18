@@ -19,21 +19,29 @@
 
 @interface MDCBaseTextAreaLayout : NSObject
 
-@property(nonatomic, assign) CGRect labelFrameFloating;
-@property(nonatomic, assign) CGRect labelFrameNormal;
+@property(nonatomic, assign, readonly) CGRect labelFrameFloating;
+@property(nonatomic, assign, readonly) CGRect labelFrameNormal;
 
-@property(nonatomic, assign) CGRect textViewFrame;
+@property(nonatomic, assign, readonly) CGRect textViewFrame;
 
-@property(nonatomic, assign) CGRect assistiveLabelViewFrame;
-@property(nonatomic, strong, nonnull)
+@property(nonatomic, assign, readonly) CGRect assistiveLabelViewFrame;
+@property(nonatomic, strong, nonnull, readonly)
     MDCTextControlAssistiveLabelViewLayout *assistiveLabelViewLayout;
 
 @property(nonatomic, readonly) CGFloat calculatedHeight;
 @property(nonatomic, readonly) CGFloat containerHeight;
 
-@property(nonatomic, strong, nonnull) NSArray<NSNumber *> *verticalGradientLocations;
-@property(nonatomic, strong, nonnull) NSArray<NSNumber *> *horizontalGradientLocations;
+@property(nonatomic, strong, nonnull, readonly) NSArray<NSNumber *> *verticalGradientLocations;
+@property(nonatomic, strong, nonnull, readonly) NSArray<NSNumber *> *horizontalGradientLocations;
 
+/**
+ Initializing an MDCBaseTextAreaLayout object with this initializer is tantamount to calculating a
+ layout for a text area. The  long parameter list includes everything that might impact
+ the layout of the textfield. Providing the object with everything that it needs to calculate a
+ layout allows it to do so all in one place, in isolation, and in a top down fashion. The inability
+ of other objects to interfere with this process helps ensure that the resulting layout is correct
+ and reliable.
+*/
 - (nonnull instancetype)initWithSize:(CGSize)size
                 positioningReference:
                     (nonnull id<MDCTextControlVerticalPositioningReference>)positioningReference
