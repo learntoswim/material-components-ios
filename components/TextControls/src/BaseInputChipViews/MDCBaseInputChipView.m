@@ -19,10 +19,10 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "MaterialMath.h"
+#import "MaterialTextControlsPrivate+BaseStyle.h"
 #import "MaterialTextControlsPrivate+Shared.h"
 #import "MaterialTypography.h"
 #import "private/MDCBaseInputChipViewLayout.h"
-#import "MaterialTextControlsPrivate+BaseStyle.h"
 #import "private/MDCBaseInputChipViewTextField.h"
 
 static const CGFloat kMinInterChipVerticalSpacing = (CGFloat)3.0;
@@ -554,10 +554,10 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 }
 
 - (MDCTextControlLabelPosition)labelStateWithLabelText:(NSString *)labelText
-                                      textFieldText:(NSString *)text
-                                      canLabelFloat:(BOOL)canLabelFloat
-                                          isEditing:(BOOL)isEditing
-                                              chips:(NSArray<UIView *> *)chips {
+                                         textFieldText:(NSString *)text
+                                         canLabelFloat:(BOOL)canLabelFloat
+                                             isEditing:(BOOL)isEditing
+                                                 chips:(NSArray<UIView *> *)chips {
   BOOL hasLabelText = labelText.length > 0;
   BOOL hasText = text.length > 0;
   BOOL hasChips = chips.count > 0;

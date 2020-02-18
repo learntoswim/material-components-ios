@@ -23,11 +23,11 @@
 #import "MDCTextControlState.h"
 #import "MDCTextControlVerticalPositioningReference.h"
 
-UIFont * _Nonnull MDCTextControlDefaultUITextFieldFont(void);
+UIFont *_Nonnull MDCTextControlDefaultUITextFieldFont(void);
 
 CGFloat MDCTextControlPaddingValueWithMinimumPadding(CGFloat minimumPadding,
-                                                            CGFloat maximumPadding,
-                                                            CGFloat density);
+                                                     CGFloat maximumPadding,
+                                                     CGFloat density);
 
 CGFloat MDCTextControlNormalizeDensity(CGFloat density);
 

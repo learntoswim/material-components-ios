@@ -329,10 +329,8 @@ static const CGFloat kMDCBaseTextAreaDefaultMaximumNumberOfVisibleLines = (CGFlo
 }
 
 - (MDCTextControlLabelPosition)determineCurrentLabelPosition {
-  return MDCTextControlLabelPositionWith(self.label.text.length > 0,
-                                      self.textView.text.length > 0,
-                                      self.canLabelFloat,
-                                      self.textView.isFirstResponder);
+  return MDCTextControlLabelPositionWith(self.label.text.length > 0, self.textView.text.length > 0,
+                                         self.canLabelFloat, self.textView.isFirstResponder);
 }
 
 #pragma mark Custom Accessors

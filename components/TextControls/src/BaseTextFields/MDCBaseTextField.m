@@ -588,10 +588,8 @@
 }
 
 - (MDCTextControlLabelPosition)determineCurrentLabelPosition {
-  return MDCTextControlLabelPositionWith(self.label.text.length > 0,
-                                      self.text.length > 0,
-                                      self.canLabelFloat,
-                                      self.isEditing);
+  return MDCTextControlLabelPositionWith(self.label.text.length > 0, self.text.length > 0,
+                                         self.canLabelFloat, self.isEditing);
 }
 
 #pragma mark Coloring

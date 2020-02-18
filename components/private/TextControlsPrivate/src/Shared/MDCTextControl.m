@@ -24,8 +24,8 @@ UIFont *_Nonnull MDCTextControlDefaultUITextFieldFont(void) {
 }
 
 CGFloat MDCTextControlPaddingValueWithMinimumPadding(CGFloat minimumPadding,
-                                                                   CGFloat maximumPadding,
-                                                                   CGFloat density) {
+                                                     CGFloat maximumPadding,
+                                                     CGFloat density) {
   if (minimumPadding > maximumPadding) {
     return 0;
   } else if (minimumPadding == maximumPadding) {
