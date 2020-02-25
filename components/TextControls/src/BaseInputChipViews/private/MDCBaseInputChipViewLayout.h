@@ -68,4 +68,7 @@
         preferredNumberOfVisibleRows:(CGFloat)preferredNumberOfVisibleRows
                                isRTL:(BOOL)isRTL
                            isEditing:(BOOL)isEditing;
-@end
+
+- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelPosition;
+
+  @end

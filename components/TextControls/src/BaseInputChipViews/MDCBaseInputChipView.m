@@ -31,8 +31,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 
 @interface MDCBaseInputChipView () <MDCTextControl,
                                     MDCBaseInputChipViewTextFieldDelegate,
-                                    UIGestureRecognizerDelegate,
-                                    UIScrollViewDelegate>
+                                    UIGestureRecognizerDelegate>
 
 #pragma mark MDCTextControl properties
 
@@ -49,10 +48,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 
 @property(strong, nonatomic) UIView *maskedScrollViewContainerView;
 @property(strong, nonatomic) UIScrollView *scrollView;
-@property(strong, nonatomic) UIView *scrollViewContentViewTouchForwardingView;
 @property(strong, nonatomic) MDCBaseInputChipViewTextField *inputChipViewTextField;
-@property(nonatomic, assign) CGPoint lastTouchInitialContentOffset;
-@property(nonatomic, assign) CGPoint lastTouchInitialLocation;
 @property(nonatomic, strong) MDCTextControlGradientManager *gradientManager;
 
 @property(strong, nonatomic) NSMutableArray *mutableChips;
@@ -169,13 +165,8 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   [self addSubview:self.maskedScrollViewContainerView];
 
   self.scrollView = [[UIScrollView alloc] init];
-  self.scrollView.bounces = NO;
-  self.scrollView.delegate = self;
   self.scrollView.scrollsToTop = NO;
   [self.maskedScrollViewContainerView addSubview:self.scrollView];
-
-  self.scrollViewContentViewTouchForwardingView = [[UIView alloc] init];
-  [self.scrollView addSubview:self.scrollViewContentViewTouchForwardingView];
 
   self.inputChipViewTextField = [[MDCBaseInputChipViewTextField alloc] init];
   self.inputChipViewTextField.inputChipViewTextFieldDelegate = self;
@@ -223,73 +214,12 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-  UIView *result = [super hitTest:point withEvent:event];
-  if (result == self.scrollViewContentViewTouchForwardingView) {
-    return self;
-  }
-  return result;
-}
-
 #pragma mark UIControl Overrides
 
 - (void)setEnabled:(BOOL)enabled {
   [super setEnabled:enabled];
   self.textField.enabled = enabled;
   [self setNeedsLayout];
-}
-
-- (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-  BOOL result = [super beginTrackingWithTouch:touch withEvent:event];
-  self.lastTouchInitialContentOffset = self.scrollView.contentOffset;
-  self.lastTouchInitialLocation = [touch locationInView:self];
-  return result;
-}
-
-- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-  BOOL result = [super continueTrackingWithTouch:touch withEvent:event];
-
-  CGPoint location = [touch locationInView:self];
-  CGPoint offsetFromStart = [self offsetOfPoint:location fromPoint:self.lastTouchInitialLocation];
-
-  CGPoint newContentOffset = self.lastTouchInitialContentOffset;
-  if (self.chipsWrap) {
-    CGFloat height = CGRectGetHeight(self.scrollView.frame);
-    newContentOffset.y -= offsetFromStart.y;
-    if (newContentOffset.y < 0) {
-      newContentOffset.y = 0;
-    }
-    if (newContentOffset.y + height > self.scrollView.contentSize.height) {
-      newContentOffset.y = self.scrollView.contentSize.height - height;
-    }
-  } else {
-    if (self.isRTL) {
-      CGFloat width = CGRectGetWidth(self.scrollView.frame);
-      newContentOffset.x -= offsetFromStart.x;
-      CGFloat minOffset = 0;
-      CGFloat maxOffset = self.scrollView.contentSize.width - width;
-      if (newContentOffset.x > maxOffset) {
-        newContentOffset.x = maxOffset;
-      }
-      if (newContentOffset.x < minOffset) {
-        newContentOffset.x = minOffset;
-      }
-    } else {
-      CGFloat width = CGRectGetWidth(self.frame);
-      newContentOffset.x -= offsetFromStart.x;
-      CGFloat minOffset = 0;
-      if (newContentOffset.x < minOffset) {
-        newContentOffset.x = minOffset;
-      }
-      CGFloat maxOffset = self.scrollView.contentSize.width - width;
-      if (newContentOffset.x > maxOffset) {
-        newContentOffset.x = maxOffset;
-      }
-    }
-  }
-  self.scrollView.contentOffset = newContentOffset;
-
-  return result;
 }
 
 #pragma mark Layout
@@ -336,24 +266,20 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
       [self textControlColorViewModelForState:self.textControlState];
   [self applyColorViewModel:colorViewModel withLabelState:self.labelPosition];
   self.layout = [self calculateLayoutWithSize:self.bounds.size];
+  self.labelFrame = [self.layout labelFrameWithLabelPosition:self.labelPosition];
+
 }
 
 - (void)postLayoutSubviews {
   self.maskedScrollViewContainerView.frame = self.layout.maskedScrollViewContainerViewFrame;
   self.scrollView.frame = self.layout.scrollViewFrame;
-  self.scrollViewContentViewTouchForwardingView.frame =
-      self.layout.scrollViewContentViewTouchForwardingViewFrame;
   self.textField.frame = self.layout.textFieldFrame;
   self.scrollView.contentSize = self.layout.scrollViewContentSize;
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
 
   self.label.hidden = self.labelPosition == MDCTextControlLabelPositionNone;
 
-  [self animateChipLayoutChangesWithChips:self.mutableChips
-                               chipFrames:self.layout.chipFrames
-                            chipsToRemove:self.chipsToRemove
-                               chipsToAdd:self.chipsToAdd];
-  [self.scrollView setNeedsLayout];
+  [self updateChips];
 
   self.assistiveLabelView.frame = self.layout.assistiveLabelViewFrame;
   self.assistiveLabelView.layout = self.layout.assistiveLabelViewLayout;
@@ -378,97 +304,39 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
 }
 
-- (void)animateChipLayoutChangesWithChips:(NSArray<UIView *> *)chips
-                               chipFrames:(NSArray<NSValue *> *)frames
-                            chipsToRemove:(NSArray<UIView *> *)chipsToRemove
-                               chipsToAdd:(NSArray<UIView *> *)chipsToAdd {
-  [self performChipRemovalOnCompletion:^{
-    [self performChipPositioningOnCompletion:^{
-      [self performChipAdditionsOnCompletion:nil];
-    }];
-  }];
+- (void)updateChips {
+  [self performChipRemoval];
+  [self performChipPositioning];
+  [self performChipAddition];
 }
 
-- (void)performChipRemovalOnCompletion:(void (^)(void))completion {
-  if (self.chipsToRemove.count > 0) {
-    [UIView animateWithDuration:0
-        animations:^{
-          for (UIView *chip in self.chipsToRemove) {
-            chip.alpha = 0;
-          }
-        }
-        completion:^(BOOL finished) {
-          for (UIView *chip in self.chipsToRemove) {
-            [chip removeFromSuperview];
-          }
-          [self.chipsToRemove removeAllObjects];
-          if (completion) {
-            completion();
-          }
-        }];
-  } else if (completion) {
-    completion();
+- (void)performChipRemoval {
+  for (UIView *chip in self.chipsToRemove) {
+    [chip removeFromSuperview];
+  }
+  [self.chipsToRemove removeAllObjects];
+}
+
+- (void)performChipPositioning {
+  for (NSUInteger idx = 0; idx < self.mutableChips.count; idx++) {
+    UIView *chip = self.mutableChips[idx];
+    CGRect frame = CGRectZero;
+    if (self.layout.chipFrames.count > idx) {
+      frame = [self.layout.chipFrames[idx] CGRectValue];
+    }
+    chip.frame = frame;
   }
 }
 
-- (void)performChipPositioningOnCompletion:(void (^)(void))completion {
-  [UIView animateWithDuration:0
-      animations:^{
-        for (NSUInteger idx = 0; idx < self.mutableChips.count; idx++) {
-          UIView *chip = self.mutableChips[idx];
-          CGRect frame = CGRectZero;
-          if (self.layout.chipFrames.count > idx) {
-            frame = [self.layout.chipFrames[idx] CGRectValue];
-          }
-          chip.frame = frame;
-        }
-      }
-      completion:^(BOOL finished) {
-        if (completion) {
-          completion();
-        }
-      }];
-}
-
-- (void)performChipAdditionsOnCompletion:(void (^)(void))completion {
+- (void)performChipAddition {
   NSArray<UIView *> *chipsToAdd = self.chipsToAdd;
   for (UIView *chip in chipsToAdd) {
     [self.scrollView addSubview:chip];
-    chip.alpha = 0;
-  }
-  if (chipsToAdd.count > 0) {
-    [UIView animateWithDuration:0
-        animations:^{
-          for (UIView *chip in chipsToAdd) {
-            chip.alpha = 1;
-          }
-        }
-        completion:^(BOOL finished) {
-          if (completion) {
-            completion();
-          }
-        }];
-  } else if (completion) {
-    completion();
   }
 }
 
 - (void)enforceCalculatedScrollViewContentOffset {
   self.scrollView.contentOffset = self.layout.scrollViewContentOffset;
-}
-
-- (CGPoint)absoluteOffsetOfOffset:(CGPoint)offset {
-  if (offset.x < 0) {
-    offset.x = offset.x * -1;
-  }
-  if (offset.y < 0) {
-    offset.y = offset.y * -1;
-  }
-  return offset;
-}
-
-- (CGPoint)offsetOfPoint:(CGPoint)point1 fromPoint:(CGPoint)point2 {
-  return CGPointMake(point1.x - point2.x, point1.y - point2.y);
 }
 
 - (CGFloat)determineNumberOfVisibleRows {
@@ -501,7 +369,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 - (NSArray<UIView *> *)chipsToAdd {
   NSMutableArray *chips = [[NSMutableArray alloc] init];
   for (UIView *chip in self.mutableChips) {
-    if (!chip.superview) {
+    if (chip.superview != self.scrollView) {
       [chips addObject:chip];
     }
   }
@@ -521,24 +389,9 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
                            animationDuration:self.animationDuration
                                   completion:^(BOOL finished) {
                                     if (finished) {
-                                      // Ensure that the label position is correct in case of
-                                      // competing animations.
-                                      [weakSelf positionLabel];
+                                      weakSelf.label.frame = weakSelf.labelFrame;
                                     }
                                   }];
-}
-
-- (void)positionLabel {
-  if (self.labelPosition == MDCTextControlLabelPositionFloating) {
-    self.label.frame = self.layout.labelFrameFloating;
-    self.label.hidden = NO;
-  } else if (self.labelPosition == MDCTextControlLabelPositionNormal) {
-    self.label.frame = self.layout.labelFrameNormal;
-    self.label.hidden = NO;
-  } else {
-    self.label.frame = CGRectZero;
-    self.label.hidden = YES;
-  }
 }
 
 - (BOOL)canLabelFloat {
@@ -546,61 +399,19 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 }
 
 - (MDCTextControlLabelPosition)determineCurrentLabelPosition {
-  return [self labelStateWithLabelText:self.label.text
-                         textFieldText:self.textField.text
-                         canLabelFloat:self.canLabelFloat
-                             isEditing:self.textField.isEditing
-                                 chips:self.mutableChips];
-}
-
-- (MDCTextControlLabelPosition)labelStateWithLabelText:(NSString *)labelText
-                                         textFieldText:(NSString *)text
-                                         canLabelFloat:(BOOL)canLabelFloat
-                                             isEditing:(BOOL)isEditing
-                                                 chips:(NSArray<UIView *> *)chips {
-  BOOL hasLabelText = labelText.length > 0;
-  BOOL hasText = text.length > 0;
-  BOOL hasChips = chips.count > 0;
-  if (hasLabelText) {
-    if (canLabelFloat) {
-      if (isEditing) {
-        return MDCTextControlLabelPositionFloating;
-      } else {
-        if (hasText || hasChips) {
-          return MDCTextControlLabelPositionFloating;
-        } else {
-          return MDCTextControlLabelPositionNormal;
-        }
-      }
-    } else {
-      if (hasText || hasChips) {
-        return MDCTextControlLabelPositionNone;
-      } else {
-        return MDCTextControlLabelPositionNormal;
-      }
-    }
-  } else {
-    return MDCTextControlLabelPositionNone;
-  }
+  BOOL hasTextFieldText = self.textField.text.length > 0;
+  BOOL hasChips = self.mutableChips.count > 0;
+  BOOL hasText = hasTextFieldText || hasChips;
+  return MDCTextControlLabelPositionWith(self.label.text.length > 0,
+                                         hasText,
+                                         self.canLabelFloat,
+                                         self.textField.isEditing);
 }
 
 #pragma mark MDCTextControlState
 
 - (MDCTextControlState)determineCurrentTextControlState {
-  return [self textControlStateWithIsEnabled:(self.enabled && self.inputChipViewTextField.enabled)
-                                   isEditing:self.inputChipViewTextField.isEditing];
-}
-
-- (MDCTextControlState)textControlStateWithIsEnabled:(BOOL)isEnabled isEditing:(BOOL)isEditing {
-  if (isEnabled) {
-    if (isEditing) {
-      return MDCTextControlStateEditing;
-    } else {
-      return MDCTextControlStateNormal;
-    }
-  } else {
-    return MDCTextControlStateDisabled;
-  }
+  return MDCTextControlStateWith((self.enabled && self.inputChipViewTextField.enabled), self.inputChipViewTextField.isEditing);
 }
 
 #pragma mark MDCTextControl Accessors

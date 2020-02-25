@@ -722,4 +722,14 @@ static const CGFloat kInterChipHorizontalSpacing = 5;
   ];
 }
 
+- (CGRect)labelFrameWithLabelPosition:(MDCTextControlLabelPosition)labelPosition {
+  if (labelPosition == MDCTextControlLabelPositionFloating) {
+    return self.labelFrameFloating;
+  } else if (labelPosition == MDCTextControlLabelPositionNormal) {
+    return self.labelFrameNormal;
+  } else {
+    return CGRectZero;
+  }
+}
+
 @end
