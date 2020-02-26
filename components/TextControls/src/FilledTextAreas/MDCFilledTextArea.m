@@ -1,4 +1,4 @@
-// Copyright 2019-present the Material Components for iOS authors. All Rights Reserved.
+// Copyright 2020-present the Material Components for iOS authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
 
 #import "MDCFilledTextArea.h"
 
-#import <Foundation/Foundation.h>
-
 #import "MaterialTextControlsPrivate+FilledStyle.h"
 #import "MaterialTextControlsPrivate+Shared.h"
 
 @interface MDCFilledTextArea (Private) <MDCTextControl>
-@end
-
-@interface MDCFilledTextArea ()
 @end
 
 @implementation MDCFilledTextArea
@@ -44,8 +39,7 @@
 }
 
 - (void)commonMDCFilledTextAreaInit {
-  MDCTextControlStyleFilled *filledStyle = [[MDCTextControlStyleFilled alloc] init];
-  self.containerStyle = filledStyle;
+  self.containerStyle = [[MDCTextControlStyleFilled alloc] init];
 }
 
 #pragma mark Stateful Color APIs
