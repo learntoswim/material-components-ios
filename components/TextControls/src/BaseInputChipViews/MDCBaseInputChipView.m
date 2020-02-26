@@ -38,7 +38,6 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 @property(strong, nonatomic) UILabel *label;
 @property(nonatomic, strong) MDCTextControlAssistiveLabelView *assistiveLabelView;
 @property(strong, nonatomic) MDCBaseInputChipViewLayout *layout;
-@property(nonatomic, assign) UIUserInterfaceLayoutDirection layoutDirection;
 @property(nonatomic, assign) MDCTextControlState textControlState;
 @property(nonatomic, assign) MDCTextControlLabelPosition labelPosition;
 @property(nonatomic, strong)
@@ -58,6 +57,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 
 @property(nonatomic, assign) CGFloat interChipVerticalSpacing;
 @property(nonatomic, assign) CGFloat density;
+@property(nonatomic, assign) CGSize mostRecentlyComputedIntrinsicContentSize;
 
 @end
 
@@ -88,13 +88,14 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 
 - (void)commonMDCBaseInputChipViewInit {
   [self initializeProperties];
-  [self setUpTapGesture];
   [self setUpColorViewModels];
   [self setUpLabel];
   [self setUpAssistiveLabels];
   [self createSubviews];
   [self setUpChipRowHeight];
   [self observeUITextFieldNotifications];
+  [self observeContentSizeCategoryNotifications];
+  [self setUpTapGesture];
 }
 
 - (void)dealloc {
@@ -106,7 +107,6 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 - (void)initializeProperties {
   self.animationDuration = kMDCTextControlDefaultAnimationDuration;
   self.labelBehavior = MDCTextControlLabelBehaviorFloats;
-  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
   self.labelPosition = [self determineCurrentLabelPosition];
   self.textControlState = [self determineCurrentTextControlState];
   self.containerStyle = [[MDCTextControlStyleBase alloc] init];
@@ -200,18 +200,19 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
 }
 
 - (CGSize)intrinsicContentSize {
-  return [self preferredSizeWithWidth:CGRectGetWidth(self.bounds)];
-}
-
-- (CGSize)preferredSizeWithWidth:(CGFloat)width {
-  CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
-  MDCBaseInputChipViewLayout *layout = [self calculateLayoutWithSize:fittingSize];
-  return CGSizeMake(width, layout.calculatedHeight);
+  self.mostRecentlyComputedIntrinsicContentSize =
+      [self preferredSizeWithWidth:CGRectGetWidth(self.bounds)];
+  return self.mostRecentlyComputedIntrinsicContentSize;
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
-  self.layoutDirection = self.mdf_effectiveUserInterfaceLayoutDirection;
+  [self setNeedsLayout];
+}
+
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute {
+  [super setSemanticContentAttribute:semanticContentAttribute];
+  [self setNeedsLayout];
 }
 
 #pragma mark UIControl Overrides
@@ -254,7 +255,7 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
                          customAssistiveLabelDrawPriority:self.customAssistiveLabelDrawPriority
                                  preferredContainerHeight:self.preferredContainerHeight
                              preferredNumberOfVisibleRows:self.preferredNumberOfVisibleRows
-                                                    isRTL:self.isRTL
+                                                    isRTL:self.shouldLayoutForRTL
                                                 isEditing:self.inputChipViewTextField.isEditing];
 }
 
@@ -291,6 +292,32 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   [self layOutGradientLayers];
 }
 
+- (CGSize)preferredSizeWithWidth:(CGFloat)width {
+  CGSize fittingSize = CGSizeMake(width, CGFLOAT_MAX);
+  MDCBaseInputChipViewLayout *layout = [self calculateLayoutWithSize:fittingSize];
+  return CGSizeMake(width, layout.calculatedHeight);
+}
+
+- (BOOL)widthHasChangedSinceIntrinsicContentSizeWasLastComputed {
+  return CGRectGetWidth(self.bounds) != self.mostRecentlyComputedIntrinsicContentSize.width;
+}
+
+- (BOOL)calculatedHeightHasChangedSinceIntrinsicContentSizeWasLastComputed {
+  return self.layout.calculatedHeight != self.mostRecentlyComputedIntrinsicContentSize.height;
+}
+
+- (BOOL)shouldLayoutForRTL {
+  if (self.semanticContentAttribute == UISemanticContentAttributeForceRightToLeft) {
+    return YES;
+  } else if (self.semanticContentAttribute == UISemanticContentAttributeForceLeftToRight) {
+    return NO;
+  } else {
+    return self.mdf_effectiveUserInterfaceLayoutDirection ==
+           UIUserInterfaceLayoutDirectionRightToLeft;
+  }
+}
+
+
 - (CGRect)containerFrame {
   return CGRectMake(0, 0, CGRectGetWidth(self.frame), self.layout.containerHeight);
 }
@@ -302,37 +329,6 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   self.gradientManager.horizontalGradient.locations = self.layout.horizontalGradientLocations;
   self.gradientManager.verticalGradient.locations = self.layout.verticalGradientLocations;
   self.maskedScrollViewContainerView.layer.mask = [self.gradientManager combinedGradientMaskLayer];
-}
-
-- (void)updateChips {
-  [self performChipRemoval];
-  [self performChipPositioning];
-  [self performChipAddition];
-}
-
-- (void)performChipRemoval {
-  for (UIView *chip in self.chipsToRemove) {
-    [chip removeFromSuperview];
-  }
-  [self.chipsToRemove removeAllObjects];
-}
-
-- (void)performChipPositioning {
-  for (NSUInteger idx = 0; idx < self.mutableChips.count; idx++) {
-    UIView *chip = self.mutableChips[idx];
-    CGRect frame = CGRectZero;
-    if (self.layout.chipFrames.count > idx) {
-      frame = [self.layout.chipFrames[idx] CGRectValue];
-    }
-    chip.frame = frame;
-  }
-}
-
-- (void)performChipAddition {
-  NSArray<UIView *> *chipsToAdd = self.chipsToAdd;
-  for (UIView *chip in chipsToAdd) {
-    [self.scrollView addSubview:chip];
-  }
 }
 
 - (void)enforceCalculatedScrollViewContentOffset {
@@ -374,6 +370,41 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
     }
   }
   return [chips copy];
+}
+
+- (NSArray<UIView *> *)chips {
+  return [self.mutableChips copy];
+}
+
+- (void)updateChips {
+  [self performChipRemoval];
+  [self performChipPositioning];
+  [self performChipAddition];
+}
+
+- (void)performChipRemoval {
+  for (UIView *chip in self.chipsToRemove) {
+    [chip removeFromSuperview];
+  }
+  [self.chipsToRemove removeAllObjects];
+}
+
+- (void)performChipPositioning {
+  for (NSUInteger idx = 0; idx < self.mutableChips.count; idx++) {
+    UIView *chip = self.mutableChips[idx];
+    CGRect frame = CGRectZero;
+    if (self.layout.chipFrames.count > idx) {
+      frame = [self.layout.chipFrames[idx] CGRectValue];
+    }
+    chip.frame = frame;
+  }
+}
+
+- (void)performChipAddition {
+  NSArray<UIView *> *chipsToAdd = self.chipsToAdd;
+  for (UIView *chip in chipsToAdd) {
+    [self.scrollView addSubview:chip];
+  }
 }
 
 #pragma mark Label
@@ -466,10 +497,15 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   }
 }
 
-#pragma mark Internationalization
+- (void)observeContentSizeCategoryNotifications {
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(contentSizeCategoryDidChange:)
+                                               name:UIContentSizeCategoryDidChangeNotification
+                                             object:nil];
+}
 
-- (BOOL)isRTL {
-  return self.layoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+- (void)contentSizeCategoryDidChange:(NSNotification *)notification {
+  [self setNeedsLayout];
 }
 
 #pragma mark Coloring
@@ -580,9 +616,6 @@ static const CGFloat kMDCBaseInputChipViewDefaultMultilineNumberOfVisibleRows = 
   [self setNeedsLayout];
 }
 
-- (NSArray<UIView *> *)chips {
-  return [self.mutableChips copy];
-}
 
 #pragma mark UITextField Notifications
 

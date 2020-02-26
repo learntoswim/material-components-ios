@@ -260,8 +260,8 @@
 
 - (CGFloat)clearButtonSideLengthWithTextFieldSize:(CGSize)textFieldSize {
   CGRect bounds = CGRectMake(0, 0, textFieldSize.width, textFieldSize.height);
-  CGRect systemPlaceholderRect = [super clearButtonRectForBounds:bounds];
-  return systemPlaceholderRect.size.height;
+  CGRect systemClearButtonRect = [super clearButtonRectForBounds:bounds];
+  return systemClearButtonRect.size.height;
 }
 
 - (CGSize)preferredSizeWithWidth:(CGFloat)width {
