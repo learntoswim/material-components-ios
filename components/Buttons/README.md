@@ -45,9 +45,7 @@ There are four types of buttons:
 
 - [Using Buttons](#using-buttons)
   - [Installing Buttons](#installing-buttons)
-- [Accessibility](#accessibility)
-  - [Set `-accessibilityLabel`](#set-`-accessibilitylabel`)
-  - [Minimum touch size](#minimum-touch-size)
+  - [Accessibility](#accessibility)
   - [Typical use](#typical-use)
   - [Typical use: floating action buttons](#typical-use-floating-action-buttons)
   - [Customizing elevation](#customizing-elevation)
@@ -106,36 +104,36 @@ import MaterialComponents.MaterialButtons
 
 <!-- Extracted from docs/accessibility.md -->
 
-## Accessibility
+### Accessibility
 
 To help ensure your buttons are accessible to as many users as possible, please
 be sure to review the following recommendations:
 
-### Set `-accessibilityLabel`
+#### Set `-accessibilityLabel`
 
 Set an appropriate
 [`accessibilityLabel`](https://developer.apple.com/documentation/uikit/uiaccessibilityelement/1619577-accessibilitylabel)
 value if your button does not have a title. This is often the case with Floating
 Action Button instances which typically only have an icon.
 
-#### Objective-C
+##### Objective-C
 
 ```objc
 button.accessibilityLabel = @"Create";
 ```
 
-#### Swift
+##### Swift
 
 ```swift
 button.accessibilityLabel = "Create"
 ```
 
-### Minimum touch size
+#### Minimum touch size
 
 Make sure that your buttons have a minimum touch area. The Material spec
 for buttons calls for buttons that have a [visual height of
 36](https://material.io/design/components/buttons.html#specs)
-and that [touch areas should be at least 48 points high and 48
+and that [touch areas should be at least 44 points high and 44
 wide](https://material.io/design/layout/spacing-methods.html#touch-click-targets).
 
 #### Set the touch size
@@ -188,7 +186,7 @@ button.minimumSize = CGSizeMake(64, 36);
 button.minimumSize = CGSize(width: 64, height: 48)
 ```
 
-##### Exceptions
+#### Exceptions
 
 However there are
 [some](https://material.io/design/components/buttons.html#toggle-button) clear
