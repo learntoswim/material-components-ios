@@ -14,11 +14,19 @@ api_doc_root: true
 
 [![Open bugs badge](https://img.shields.io/badge/dynamic/json.svg?label=open%20bugs&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dis%253Aopen%2Blabel%253Atype%253ABug%2Blabel%253A%255BButtons%255D&query=%24.total_count)](https://github.com/material-components/material-components-ios/issues?q=is%3Aopen+is%3Aissue+label%3Atype%3ABug+label%3A%5BButtons%5D)
 
-Material design buttons allow users to take actions, and make choices, with a single tap. There are
-many distinct button styles including text buttons, contained buttons, and floating action buttons.
+[Buttons](https://material.io/components/buttons/) allow users to take actions, and make choices, with a single tap.
 
-<img src="docs/assets/text.gif" alt="An animation showing a Material Design text button." width="115"> <img src="docs/assets/outlined.gif" alt="An animation showing a Material Design outlined button." width="115"> <img src="docs/assets/contained.gif" alt="An animation showing a Material Design contained button." width="115"> <img src="docs/assets/fab.gif" alt="An animation showing a Material Design floating action button." width="99">
+There are four types of buttons:
 
+1. [Text button](#text-button)
+2. [Outlined button](#outlined-button)
+3. [Contained button](#contained-button)
+4. [Toggle button](#toggle-button) (*not fully supported in iOS*)
+
+![Example of the four button types](docs/assets/buttons_types.png)
+
+<!-- <img src="docs/assets/text.gif" alt="An animation showing a Material Design text button." width="115"> <img src="docs/assets/outlined.gif" alt="An animation showing a Material Design outlined button." width="115"> <img src="docs/assets/contained.gif" alt="An animation showing a Material Design contained button." width="115"> <img src="docs/assets/fab.gif" alt="An animation showing a Material Design floating action button." width="99">
+ -->
 ## Design & API documentation
 
 <ul class="icon-list">
@@ -35,10 +43,9 @@ many distinct button styles including text buttons, contained buttons, and float
 
 ## Table of contents
 
-- [Installing Buttons](#installing-buttons)
+- [Using Buttons](#using-buttons)
   - [Installation with CocoaPods](#installation-with-cocoapods)
   - [Importing](#importing)
-- [Using Buttons](#using-buttons)
 - [Accessibility](#accessibility)
   - [Set `-accessibilityLabel`](#set-`-accessibilitylabel`)
   - [Minimum touch size](#minimum-touch-size)
@@ -62,7 +69,7 @@ many distinct button styles including text buttons, contained buttons, and float
 `MDCButton` is a highly-configurable UIButton implementation that provides support for shadow
 elevation, Material Design ripples, and other stateful design APIs.
 
-## Installing Buttons
+## Using Buttons
 
 <!-- Extracted from docs/../../../docs/component-installation.md -->
 
@@ -97,9 +104,6 @@ import MaterialComponents.MaterialButtons
 #import "MaterialButtons.h"
 ```
 <!--</div>-->
-
-
-## Using Buttons
 
 <!-- Extracted from docs/accessibility.md -->
 
