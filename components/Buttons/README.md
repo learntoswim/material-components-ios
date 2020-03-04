@@ -44,8 +44,7 @@ There are four types of buttons:
 ## Table of contents
 
 - [Using Buttons](#using-buttons)
-  - [Installation with CocoaPods](#installation-with-cocoapods)
-  - [Importing](#importing)
+  - [Installing Buttons](#installing-buttons)
 - [Accessibility](#accessibility)
   - [Set `-accessibilityLabel`](#set-`-accessibilitylabel`)
   - [Minimum touch size](#minimum-touch-size)
@@ -73,7 +72,9 @@ elevation, Material Design ripples, and other stateful design APIs.
 
 <!-- Extracted from docs/../../../docs/component-installation.md -->
 
-### Installation with CocoaPods
+### Installing Buttons
+
+#### Cocoapods
 
 Add the following to your `Podfile`:
 
@@ -88,17 +89,15 @@ Then, run the following command:
 pod install
 ```
 
-### Importing
-
 To import the component:
 
 <!--<div class="material-code-render" markdown="1">-->
-#### Swift
+##### Swift
 ```swift
 import MaterialComponents.MaterialButtons
 ```
 
-#### Objective-C
+##### Objective-C
 
 ```objc
 #import "MaterialButtons.h"
