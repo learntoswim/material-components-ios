@@ -168,6 +168,9 @@ cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
     cat "$TMP_TOC_PATH" | while read toc; do
       indent=$(echo $toc | cut -d' ' -f1 | sed "s/###/  -/" | sed "s/##/-/g")
       text=$(echo $toc | cut -d' ' -f2-)
+      echo $text
+      echo $indent
+
       url=$(echo $text | awk '{print tolower($0)}')
       url=${url//:} # Strip invalid characters
       url=${url//,} # Strip invalid characters
@@ -185,7 +188,7 @@ done
 echo "Generating pretty lists..."
 
 # Convert * spec urls to stylized lists
-perl -pi -e "s|^\* \[(.+)\]\\((.+?)/go/design-(.+)\\)|  <li class=\"icon-list-item icon-list-item--spec\"><a href=\"\2/go/design-\3\">\1</a></li>|g" "$TMP_README_PATH"
+#perl -pi -e "s|^\* \[(.+)\]\\((.+?)/go/design-(.+)\\)|  <li class=\"icon-list-item icon-list-item--spec\"><a href=\"\2/go/design-\3\">\1</a></li>|g" "$TMP_README_PATH"
 
 # Convert * list urls to stylized lists
 perl -pi -e "s|^\* (.*)\[(.+)\]\\((.+)\\)|  <li class=\"icon-list-item icon-list-item--link\">\1<a href=\"\3\">\2</a></li>|g" "$TMP_README_PATH"

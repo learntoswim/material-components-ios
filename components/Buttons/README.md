@@ -30,7 +30,7 @@ There are four types of buttons:
 ## Design & API documentation
 
 <ul class="icon-list">
-  <li class="icon-list-item icon-list-item--spec"><a href="https://material.io/go/design-buttons">Material Design guidelines: Buttons</a></li>
+  <li class="icon-list-item icon-list-item--link"><a href="https://material.io/go/design-buttons">Material Design guidelines: Buttons</a></li>
   <li class="icon-list-item icon-list-item--link">Class: <a href="https://material.io/components/ios/catalog/buttons/api-docs/Classes.html#/c:objc(cs)MDCRaisedButton">MDCRaisedButton</a></li>
   <li class="icon-list-item icon-list-item--link">Class: <a href="https://material.io/components/ios/catalog/buttons/api-docs/Classes/MDCButton.html">MDCButton</a></li>
   <li class="icon-list-item icon-list-item--link">Class: <a href="https://material.io/components/ios/catalog/buttons/api-docs/Classes/MDCFlatButton.html">MDCFlatButton</a></li>
@@ -47,7 +47,7 @@ There are four types of buttons:
   - [Installing Buttons](#installing-buttons)
   - [Accessibility](#accessibility)
 - [Text button](#text-button)
-  - [Theming](#theming)
+  - [Text buttons](#text-buttons)
   - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
   - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
 - [Outlined button](#outlined-button)
@@ -231,7 +231,7 @@ this day."
 ## Text button
 <!-- Extracted from docs/text-button.md -->
 
-### Theming
+### Text buttons
 
 You can theme an MDCButton to match a
 [Material Design button style](https://material.io/design/components/buttons.html) using theming

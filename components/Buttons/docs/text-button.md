@@ -1,4 +1,4 @@
-### Theming
+### Text buttons
 
 You can theme an MDCButton to match a
 [Material Design button style](https://material.io/design/components/buttons.html) using theming
