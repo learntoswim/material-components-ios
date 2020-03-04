@@ -28,7 +28,19 @@ elevation, Material Design ripples, and other stateful design APIs.
 
 - [Typical installation](../../../docs/component-installation.md)
 - [Accessibility](accessibility.md)
-- [Typical use](typical-use.md)
+
+## Text button
+- [Text button](text-button.md)
+
+## Outlined button
+- [Outlined button](outlined-button.md)
+
+## Contained button
+- [Contained button](contained-button.md)
+
+## Toggle button (*not fully supported in iOS*)
+- [Toggle button](toggle-button.md)
+
 - [Typical use: floating action buttons](typical-use-floating-action-buttons.md)
 - [Customizing elevation](customizing-elevation.md)
 - [Customizing floating action buttons](customizing-floating-action-buttons.md)

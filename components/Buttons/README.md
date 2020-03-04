@@ -46,7 +46,22 @@ There are four types of buttons:
 - [Using Buttons](#using-buttons)
   - [Installing Buttons](#installing-buttons)
   - [Accessibility](#accessibility)
-  - [Typical use](#typical-use)
+- [Text button](#text-button)
+  - [Theming](#theming)
+  - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
+  - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
+- [Outlined button](#outlined-button)
+  - [Theming](#theming)
+  - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
+  - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
+- [Contained button](#contained-button)
+  - [Theming](#theming)
+  - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
+  - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
+- [Toggle button (*not fully supported in iOS*)](#toggle-button-(*not-fully-supported-in-ios*))
+  - [Theming](#theming)
+  - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
+  - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
   - [Typical use: floating action buttons](#typical-use-floating-action-buttons)
   - [Customizing elevation](#customizing-elevation)
   - [Customizing floating action buttons](#customizing-floating-action-buttons)
@@ -205,37 +220,533 @@ A well-crafted, thoughtful user interface can remove the need for
 choose one or more days of the week for a repeating calendar event:
 
 <ul class="icon-list">
-  <li class="icon-list-item icon-list-item">  (Good) The dialog includes a header above the list of days reading, "Event</li>
+  <li class="icon-list-item icon-list-item">(Good) The dialog includes a header above the list of days reading, "Event</li>
 repeats weekly on the following day(s)." The list items do not need
 `accessibilityHint` values.
-  <li class="icon-list-item icon-list-item">  (Bad) The dialog has no header above the list of days. Each list item</li>
+  <li class="icon-list-item icon-list-item">(Bad) The dialog has no header above the list of days. Each list item</li>
 (representing a day of the week) has the `accessibilityHint` value, "Toggles
 this day."
 
-<!-- Extracted from docs/typical-use.md -->
 
-### Typical use
+## Text button
+<!-- Extracted from docs/text-button.md -->
 
-`MDCButton` is a subclass of UIButton, but with more options for customizing the button's style and
-behavior. To initialize an MDCButton, you must alloc/init an instance directly instead of using
-`buttonWithType:`, which has been marked unavailable.
+### Theming
+
+You can theme an MDCButton to match a
+[Material Design button style](https://material.io/design/components/buttons.html) using theming
+extensions. [Learn more about theming extensions](../../docs/theming.md).
+
+### How to theme an MDCButton
+
+First, import both Buttons and Buttons Theming and create an instance of MDCButton.
 
 <!--<div class="material-code-render" markdown="1">-->
 #### Swift
 ```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponents.MaterialButtons_Theming
+
 let button = MDCButton()
 ```
 
 #### Objective-C
 
 ```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
 MDCButton *button = [[MDCButton alloc] init];
 ```
 <!--</div>-->
 
-See the
-[MDCButton API docs](https://material.io/develop/ios/components/buttons/api-docs/Classes/MDCButton.html)
-for a complete list of features that MDCButton provides in addition to UIButton's features.
+You can then provide a container scheme instance to any of the MDCButton theming extensions.
+[Learn more about container schemes](../../docs/theming.md).
+
+[Material text button](https://material.io/design/components/buttons.html#text-button) theming:
+
+<img src="docs/assets/text.gif" alt="An animation showing a Material Design text button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyTextTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyTextThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material outlined button](https://material.io/design/components/buttons.html#outlined-button)
+theming:
+
+<img src="docs/assets/outlined.gif" alt="An animation showing a Material Design outlined button." width="115">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyOutlinedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyOutlinedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material contained button](https://material.io/design/components/buttons.html#contained-button)
+theming:
+
+<img src="docs/assets/contained.gif" alt="An animation showing a Material Design contained button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyContainedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyContainedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+### How to theme an MDCFloatingButton
+
+First, create a button and import the theming extension header for Buttons.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponentsBeta.MaterialButtons_Theming
+
+let floatingButton = MDCFloatingButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCFloatingButton *floatingButton = [[MDCFloatingButton alloc] init];
+```
+<!--</div>-->
+
+[Material floating action button](https://material.io/design/components/buttons-floating-action-button.html)
+theming:
+
+<img src="docs/assets/fab.gif" alt="An animation showing a Material Design floating action button." width="99">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+floatingButton.applySecondaryTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.floatingButton applySecondaryThemeWithScheme: self.containerScheme];
+```
+<!--</div>-->
+
+
+## Outlined button
+<!-- Extracted from docs/outlined-button.md -->
+
+### Theming
+
+You can theme an MDCButton to match a
+[Material Design button style](https://material.io/design/components/buttons.html) using theming
+extensions. [Learn more about theming extensions](../../docs/theming.md).
+
+### How to theme an MDCButton
+
+First, import both Buttons and Buttons Theming and create an instance of MDCButton.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponents.MaterialButtons_Theming
+
+let button = MDCButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCButton *button = [[MDCButton alloc] init];
+```
+<!--</div>-->
+
+You can then provide a container scheme instance to any of the MDCButton theming extensions.
+[Learn more about container schemes](../../docs/theming.md).
+
+[Material text button](https://material.io/design/components/buttons.html#text-button) theming:
+
+<img src="docs/assets/text.gif" alt="An animation showing a Material Design text button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyTextTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyTextThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material outlined button](https://material.io/design/components/buttons.html#outlined-button)
+theming:
+
+<img src="docs/assets/outlined.gif" alt="An animation showing a Material Design outlined button." width="115">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyOutlinedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyOutlinedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material contained button](https://material.io/design/components/buttons.html#contained-button)
+theming:
+
+<img src="docs/assets/contained.gif" alt="An animation showing a Material Design contained button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyContainedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyContainedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+### How to theme an MDCFloatingButton
+
+First, create a button and import the theming extension header for Buttons.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponentsBeta.MaterialButtons_Theming
+
+let floatingButton = MDCFloatingButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCFloatingButton *floatingButton = [[MDCFloatingButton alloc] init];
+```
+<!--</div>-->
+
+[Material floating action button](https://material.io/design/components/buttons-floating-action-button.html)
+theming:
+
+<img src="docs/assets/fab.gif" alt="An animation showing a Material Design floating action button." width="99">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+floatingButton.applySecondaryTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.floatingButton applySecondaryThemeWithScheme: self.containerScheme];
+```
+<!--</div>-->
+
+
+## Contained button
+<!-- Extracted from docs/contained-button.md -->
+
+### Theming
+
+You can theme an MDCButton to match a
+[Material Design button style](https://material.io/design/components/buttons.html) using theming
+extensions. [Learn more about theming extensions](../../docs/theming.md).
+
+### How to theme an MDCButton
+
+First, import both Buttons and Buttons Theming and create an instance of MDCButton.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponents.MaterialButtons_Theming
+
+let button = MDCButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCButton *button = [[MDCButton alloc] init];
+```
+<!--</div>-->
+
+You can then provide a container scheme instance to any of the MDCButton theming extensions.
+[Learn more about container schemes](../../docs/theming.md).
+
+[Material text button](https://material.io/design/components/buttons.html#text-button) theming:
+
+<img src="docs/assets/text.gif" alt="An animation showing a Material Design text button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyTextTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyTextThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material outlined button](https://material.io/design/components/buttons.html#outlined-button)
+theming:
+
+<img src="docs/assets/outlined.gif" alt="An animation showing a Material Design outlined button." width="115">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyOutlinedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyOutlinedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material contained button](https://material.io/design/components/buttons.html#contained-button)
+theming:
+
+<img src="docs/assets/contained.gif" alt="An animation showing a Material Design contained button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyContainedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyContainedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+### How to theme an MDCFloatingButton
+
+First, create a button and import the theming extension header for Buttons.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponentsBeta.MaterialButtons_Theming
+
+let floatingButton = MDCFloatingButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCFloatingButton *floatingButton = [[MDCFloatingButton alloc] init];
+```
+<!--</div>-->
+
+[Material floating action button](https://material.io/design/components/buttons-floating-action-button.html)
+theming:
+
+<img src="docs/assets/fab.gif" alt="An animation showing a Material Design floating action button." width="99">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+floatingButton.applySecondaryTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.floatingButton applySecondaryThemeWithScheme: self.containerScheme];
+```
+<!--</div>-->
+
+
+## Toggle button (*not fully supported in iOS*)
+<!-- Extracted from docs/toggle-button.md -->
+
+### Theming
+
+You can theme an MDCButton to match a
+[Material Design button style](https://material.io/design/components/buttons.html) using theming
+extensions. [Learn more about theming extensions](../../docs/theming.md).
+
+### How to theme an MDCButton
+
+First, import both Buttons and Buttons Theming and create an instance of MDCButton.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponents.MaterialButtons_Theming
+
+let button = MDCButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCButton *button = [[MDCButton alloc] init];
+```
+<!--</div>-->
+
+You can then provide a container scheme instance to any of the MDCButton theming extensions.
+[Learn more about container schemes](../../docs/theming.md).
+
+[Material text button](https://material.io/design/components/buttons.html#text-button) theming:
+
+<img src="docs/assets/text.gif" alt="An animation showing a Material Design text button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyTextTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyTextThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material outlined button](https://material.io/design/components/buttons.html#outlined-button)
+theming:
+
+<img src="docs/assets/outlined.gif" alt="An animation showing a Material Design outlined button." width="115">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyOutlinedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyOutlinedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+[Material contained button](https://material.io/design/components/buttons.html#contained-button)
+theming:
+
+<img src="docs/assets/contained.gif" alt="An animation showing a Material Design contained button." width="128">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+button.applyContainedTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.button applyContainedThemeWithScheme:self.containerScheme];
+```
+<!--</div>-->
+
+### How to theme an MDCFloatingButton
+
+First, create a button and import the theming extension header for Buttons.
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+import MaterialComponents.MaterialButtons
+import MaterialComponentsBeta.MaterialButtons_Theming
+
+let floatingButton = MDCFloatingButton()
+```
+
+#### Objective-C
+
+```objc
+#import <MaterialComponents/MaterialButtons.h>
+#import <MaterialComponentsBeta/MaterialButtons+Theming.h>
+
+MDCFloatingButton *floatingButton = [[MDCFloatingButton alloc] init];
+```
+<!--</div>-->
+
+[Material floating action button](https://material.io/design/components/buttons-floating-action-button.html)
+theming:
+
+<img src="docs/assets/fab.gif" alt="An animation showing a Material Design floating action button." width="99">
+
+<!--<div class="material-code-render" markdown="1">-->
+#### Swift
+```swift
+floatingButton.applySecondaryTheme(withScheme: containerScheme)
+```
+
+#### Objective-C
+
+```objc
+[self.floatingButton applySecondaryThemeWithScheme: self.containerScheme];
+```
+<!--</div>-->
+
 
 <!-- Extracted from docs/typical-use-floating-action-buttons.md -->
 
