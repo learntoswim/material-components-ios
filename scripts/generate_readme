@@ -168,6 +168,7 @@ cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
     cat "$TMP_TOC_PATH" | while read toc; do
       indent=$(echo $toc | cut -d' ' -f1 | sed "s/###/  -/" | sed "s/##/-/g")
       text=$(echo $toc | cut -d' ' -f2-)
+      echo shit
       echo $text
       echo $indent
 

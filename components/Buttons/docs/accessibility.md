@@ -98,9 +98,9 @@ A well-crafted, thoughtful user interface can remove the need for
 `accessibilityHint` in most situations. Examples for a selection dialog to
 choose one or more days of the week for a repeating calendar event:
 
-* (Good) The dialog includes a header above the list of days reading, "Event
+- (Good) The dialog includes a header above the list of days reading, "Event
 repeats weekly on the following day(s)." The list items do not need
 `accessibilityHint` values.
-* (Bad) The dialog has no header above the list of days. Each list item
+- (Bad) The dialog has no header above the list of days. Each list item
 (representing a day of the week) has the `accessibilityHint` value, "Toggles
 this day."
