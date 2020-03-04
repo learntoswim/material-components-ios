@@ -13,27 +13,25 @@ many distinct button styles including text buttons, contained buttons, and float
 
 - - -
 
-## Overview
-
 `MDCButton` is a highly-configurable UIButton implementation that provides support for shadow
 elevation, Material Design ripples, and other stateful design APIs.
 
-## Installation
+## Installing Buttons
 
 - [Typical installation](../../../docs/component-installation.md)
 
-## Usage
+## Using Buttons
 
+- [Accessibility](accessibility.md)
 - [Typical use](typical-use.md)
 - [Typical use: floating action buttons](typical-use-floating-action-buttons.md)
 - [Customizing elevation](customizing-elevation.md)
 - [Customizing floating action buttons](customizing-floating-action-buttons.md)
 - [Interface Builder](interface-builder.md)
 
-## Extensions
+## Theming
 
 - [Theming](theming.md)
-- [Accessibility](accessibility.md)
 
 ## Unsupported
 
