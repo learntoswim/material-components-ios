@@ -68,6 +68,13 @@
 @property(nonatomic, assign) UITextFieldViewMode trailingViewMode;
 
 /**
+ This property influences the vertical density of the text field. Density refers to how "squished"
+ the text field is. When the value is 0, the text field is vertically spread out. When the value is
+ 1, the text field is vertically compressed. The default value is 0.
+ */
+@property(nonatomic, assign) CGFloat verticalDensity;
+
+/**
  Sets the floating label color for a given state.
  Floating label color refers to the color of the label when it's in its "floating position," i.e.
  when it's above the text area.

@@ -49,6 +49,7 @@
   textField.label.text = @"Phone number";
   textField.clearButtonMode = UITextFieldViewModeWhileEditing;
   [textField applyThemeWithScheme:self.containerScheme];
+  textField.verticalDensity = 1;
   return textField;
 }
 

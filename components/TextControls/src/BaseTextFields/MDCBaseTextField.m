@@ -242,7 +242,7 @@
                                 normalFontLineHeight:self.normalFont.lineHeight
                                        textRowHeight:self.normalFont.lineHeight
                                     numberOfTextRows:self.numberOfLinesOfVisibleText
-                                             density:0
+                                             density:self.verticalDensity
                             preferredContainerHeight:self.preferredContainerHeight];
 }
 

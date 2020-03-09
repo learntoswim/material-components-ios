@@ -19,8 +19,10 @@
  achieve the look and feel of the textfields at
  https://material.io/design/components/text-fields.html.
 */
-static const CGFloat kMinPaddingBetweenFloatingLabelAndEditingText = (CGFloat)8.0;
+static const CGFloat kMinPaddingBetweenFloatingLabelAndEditingText = (CGFloat)4.0;
 static const CGFloat kMaxPaddingBetweenFloatingLabelAndEditingText = (CGFloat)12.0;
+static const CGFloat kMinPaddingBetweenEditingTextAndContainerBottom = (CGFloat)6.0;
+static const CGFloat kMaxPaddingBetweenEditingTextAndContainerBottom = (CGFloat)12.0;
 static const CGFloat kMinPaddingAroundAssistiveLabels = (CGFloat)3.0;
 static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
 
@@ -81,6 +83,10 @@ static const CGFloat kMaxPaddingAroundAssistiveLabels = (CGFloat)6.0;
   _paddingBetweenContainerTopAndNormalLabel =
       halfOfFloatingLabelHeight + _paddingBetweenFloatingLabelAndEditingText;
   _paddingBetweenEditingTextAndContainerBottom = _paddingBetweenContainerTopAndNormalLabel;
+  _paddingBetweenEditingTextAndContainerBottom =
+      [self paddingValueWithMinimumPadding:kMinPaddingBetweenEditingTextAndContainerBottom
+                            maximumPadding:kMaxPaddingBetweenEditingTextAndContainerBottom
+                                   density:normalizedDensity];
 
   _paddingAroundAssistiveLabels =
       [self paddingValueWithMinimumPadding:kMinPaddingAroundAssistiveLabels
