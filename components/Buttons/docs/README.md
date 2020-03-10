@@ -21,9 +21,6 @@ There are four types of buttons:
 
 - - -
 
-`MDCButton` is a highly-configurable UIButton implementation that provides support for shadow
-elevation, Material Design ripples, and other stateful design APIs.
-
 ## Using Buttons
 
 - [Typical installation](../../../docs/component-installation.md)

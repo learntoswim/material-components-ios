@@ -120,13 +120,13 @@ echo "Generating table of contents..."
 # Write the table of contents and design/api links
 cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
   if [ "$line" = "$DESIGN_AND_API_STRING" ]; then
-    echo "## Design & API documentation" >> "$TMP_README_PATH"
-    echo "" >> "$TMP_README_PATH"
+    # echo "## Design & API documentation" >> "$TMP_README_PATH"
+    # echo "" >> "$TMP_README_PATH"
 
     if [[ $(grep -e "^guidelines_short_link=" "$VARS_PATH") && $(grep -e "^guidelines_title=" "$VARS_PATH") ]]; then
       guidelines_short_link=$(grep -e "^guidelines_short_link=" "$VARS_PATH" | cut -d'=' -f2-)
       guidelines_title=$(grep -e "^guidelines_title=" "$VARS_PATH" | cut -d'=' -f2-)
-      echo "* [Material Design guidelines: $guidelines_title](https://material.io/go/$guidelines_short_link)" >> "$TMP_README_PATH"
+      # echo "* [Material Design guidelines: $guidelines_title](https://material.io/go/$guidelines_short_link)" >> "$TMP_README_PATH"
     else
       echo ".vars is missing guidelines_short_link= and guidelines_title=."
       echo "No Material Design guidelines link will be generated."
@@ -151,9 +151,9 @@ cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
     echo
 
     jazzy . --output apidocs --framework-root=.
-    extract_apis_of_type "Classes" "Class" >> "$TMP_README_PATH"
-    extract_apis_of_type "Protocols" "Protocol" >> "$TMP_README_PATH"
-    extract_apis_of_type "Enums" "Enumeration" >> "$TMP_README_PATH"
+    # extract_apis_of_type "Classes" "Class" >> "$TMP_README_PATH"
+    # extract_apis_of_type "Protocols" "Protocol" >> "$TMP_README_PATH"
+    # extract_apis_of_type "Enums" "Enumeration" >> "$TMP_README_PATH"
     popd >> /dev/null
 
   elif [ "$line" = "$TOC_STRING" ]; then
@@ -181,7 +181,8 @@ cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
       # echo "$indent [$text](#$url)" >> "$TMP_README_PATH"
     done
   elif [ "$line" = "$BADGES_STRING" ]; then
-    echo "[![Open bugs badge](https://img.shields.io/badge/dynamic/json.svg?label=open%20bugs&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dis%253Aopen%2Blabel%253Atype%253ABug%2Blabel%253A%255B${COMPONENT}%255D&query=%24.total_count)](https://github.com/material-components/material-components-ios/issues?q=is%3Aopen+is%3Aissue+label%3Atype%3ABug+label%3A%5B${COMPONENT}%5D)" >> "$TMP_README_PATH"
+    continue
+    # echo "[![Open bugs badge](https://img.shields.io/badge/dynamic/json.svg?label=open%20bugs&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dis%253Aopen%2Blabel%253Atype%253ABug%2Blabel%253A%255B${COMPONENT}%255D&query=%24.total_count)](https://github.com/material-components/material-components-ios/issues?q=is%3Aopen+is%3Aissue+label%3Atype%3ABug+label%3A%5B${COMPONENT}%5D)" >> "$TMP_README_PATH"
   else
     echo "$line" >> "$TMP_README_PATH"
   fi
