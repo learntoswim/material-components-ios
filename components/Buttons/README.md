@@ -32,6 +32,8 @@ There are four types of buttons:
 
 ## Using Buttons
 
+If you're just getting started using Material Components iOS, consider visiting our library's [readme](https://github.com/material-components/material-components-ios).
+
 <!-- Extracted from docs/../../../docs/component-installation.md -->
 
 ### Installing Buttons

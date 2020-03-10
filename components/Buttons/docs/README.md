@@ -23,6 +23,8 @@ There are four types of buttons:
 
 ## Using Buttons
 
+<!-- getting-started -->
+
 - [Typical installation](../../../docs/component-installation.md)
 - [Accessibility](accessibility.md)
 
