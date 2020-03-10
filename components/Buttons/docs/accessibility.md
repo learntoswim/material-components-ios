@@ -1,4 +1,4 @@
-### Accessibility
+### Making Buttons accessible
 
 To help ensure your buttons are accessible to as many users as possible, please
 be sure to review the following recommendations:

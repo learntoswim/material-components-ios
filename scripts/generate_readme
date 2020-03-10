@@ -157,8 +157,8 @@ cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
     popd >> /dev/null
 
   elif [ "$line" = "$TOC_STRING" ]; then
-    echo "## Table of contents" >> "$TMP_README_PATH"
-    echo "" >> "$TMP_README_PATH"
+    # echo "## Table of contents" >> "$TMP_README_PATH"
+    # echo "" >> "$TMP_README_PATH"
     grep -e "^#" -e "^$TOC_STRING" "$TMP_EXPANDED_README_PATH" \
       | grep -v "####" \
       | grep -v "#\w" \
@@ -168,16 +168,17 @@ cat "$TMP_EXPANDED_README_PATH" | while read -r line; do
     cat "$TMP_TOC_PATH" | while read toc; do
       indent=$(echo $toc | cut -d' ' -f1 | sed "s/###/  -/" | sed "s/##/-/g")
       text=$(echo $toc | cut -d' ' -f2-)
-      echo shit
-      echo $text
-      echo $indent
+      # echo shit
+      # echo $text
+      # echo $indent
 
       url=$(echo $text | awk '{print tolower($0)}')
       url=${url//:} # Strip invalid characters
       url=${url//,} # Strip invalid characters
       url=${url//\/} # Strip invalid characters
       url=${url// /-} # Turn spaces into dashes
-      echo "$indent [$text](#$url)" >> "$TMP_README_PATH"
+      # echo "$indent [$text](#$url)"
+      # echo "$indent [$text](#$url)" >> "$TMP_README_PATH"
     done
   elif [ "$line" = "$BADGES_STRING" ]; then
     echo "[![Open bugs badge](https://img.shields.io/badge/dynamic/json.svg?label=open%20bugs&url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dis%253Aopen%2Blabel%253Atype%253ABug%2Blabel%253A%255B${COMPONENT}%255D&query=%24.total_count)](https://github.com/material-components/material-components-ios/issues?q=is%3Aopen+is%3Aissue+label%3Atype%3ABug+label%3A%5B${COMPONENT}%5D)" >> "$TMP_README_PATH"

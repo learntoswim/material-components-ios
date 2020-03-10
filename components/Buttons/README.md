@@ -41,34 +41,6 @@ There are four types of buttons:
   <li class="icon-list-item icon-list-item--link">Enumeration: <a href="https://material.io/components/ios/catalog/buttons/api-docs/Enums/MDCFloatingButtonShape.html">MDCFloatingButtonShape</a></li>
 </ul>
 
-## Table of contents
-
-- [Using Buttons](#using-buttons)
-  - [Installing Buttons](#installing-buttons)
-  - [Accessibility](#accessibility)
-- [Text button](#text-button)
-  - [Text button example](#text-button-example)
-- [Outlined button](#outlined-button)
-  - [Outlined button example](#outlined-button-example)
-- [Contained button](#contained-button)
-  - [Contained button example](#contained-button-example)
-- [Toggle button (*not fully supported in iOS*)](#toggle-button-(*not-fully-supported-in-ios*))
-  - [Theming](#theming)
-  - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
-  - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
-  - [Typical use: floating action buttons](#typical-use-floating-action-buttons)
-  - [Customizing elevation](#customizing-elevation)
-  - [Customizing floating action buttons](#customizing-floating-action-buttons)
-  - [Interface Builder](#interface-builder)
-- [Theming](#theming)
-  - [Theming](#theming)
-  - [How to theme an MDCButton](#how-to-theme-an-mdcbutton)
-  - [How to theme an MDCFloatingButton](#how-to-theme-an-mdcfloatingbutton)
-- [Unsupported](#unsupported)
-  - [How to theme a button using a themer](#how-to-theme-a-button-using-a-themer)
-  - [Color Theming](#color-theming)
-  - [Typography Theming](#typography-theming)
-  - [Shape Theming](#shape-theming)
 
 - - -
 
@@ -113,7 +85,7 @@ import MaterialComponents.MaterialButtons
 
 <!-- Extracted from docs/accessibility.md -->
 
-### Accessibility
+### Making Buttons accessible
 
 To help ensure your buttons are accessible to as many users as possible, please
 be sure to review the following recommendations:
