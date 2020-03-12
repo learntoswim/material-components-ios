@@ -22,13 +22,31 @@ usage() {
   echo "Example usage: $0"
 }
 
+declare -a all_components_using_new_readme_generataor=("Buttons")
+
+## now loop through the above array
+for i in "${arr[@]}"
+do
+   echo "$i"
+   # or do whatever with individual element of the array
+done
+
+echo $components_using_new_readme_generataor
+
 find components -type d | cut -d'/' -f1-2 | sort | uniq | grep / | while read line; do
   component=$(echo "$line" | cut -d'/' -f2)
   if [ ! -f "$line/docs/README.md" ]; then
     continue
   fi
 
-  echo "Generating readme for $component..."
-
-  ./scripts/generate_readme $component
+  for component_using_new_readme_generataor in "${all_components_using_new_readme_generataor[@]}"
+  do
+    if [ "$component_using_new_readme_generataor" = "$component" ]; then
+      echo "WOW!"
+      echo $component
+    else
+      echo "Generating legacy readme for $component..."
+    #   # ./scripts/generate_readme $component
+    fi
+  done
 done
