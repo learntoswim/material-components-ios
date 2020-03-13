@@ -1,6 +1,4 @@
-### Installing <#ComponentName#>
-
-#### Cocoapods
+### Installation with CocoaPods
 
 Add the following to your `Podfile`:
 
@@ -15,15 +13,17 @@ Then, run the following command:
 pod install
 ```
 
+### Importing
+
 To import the component:
 
 <!--<div class="material-code-render" markdown="1">-->
-##### Swift
+#### Swift
 ```swift
 import MaterialComponents.Material<#ComponentName#>
 ```
 
-##### Objective-C
+#### Objective-C
 
 ```objc
 #import "Material<#ComponentName#>.h"

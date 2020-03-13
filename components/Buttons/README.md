@@ -8,7 +8,7 @@ path: /catalog/buttons/
 api_doc_root: true
 -->
 
-<!-- This file was auto-generated using ./scripts/generate_readme Buttons -->
+<!-- This file was auto-generated using ./scripts/generate_readme_new Buttons -->
 
 # Buttons
 
@@ -34,7 +34,7 @@ There are four types of buttons:
 
 If you're just getting started using Material Components iOS, consider visiting our library's [readme](https://github.com/material-components/material-components-ios).
 
-<!-- Extracted from docs/../../../docs/component-installation.md -->
+<!-- Extracted from docs/../../../docs/component-installation-new.md -->
 
 ### Installing Buttons
 
@@ -201,6 +201,10 @@ button.applyTextTheme(withScheme: containerScheme)
 [self.button applyTextThemeWithScheme:self.containerScheme];
 ```
 <!--</div>-->
+
+### Anatomy and Key properties
+
+
 
 
 ## Outlined button

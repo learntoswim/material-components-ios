@@ -25,28 +25,9 @@ Replace the url with the API's URL.
 * [OtherComponent](../../OtherComponent)
 -->
 
-<!-- toc -->
 
 - - -
 
-## Overview
-
-<!-- Template:
-Detailed summary of the important APIs that are provided by this component.
--->
-
-## Installation
-
-- [Typical installation](../../../docs/legacy-component-installation.md)
-
-## Usage
-
-<!-- Template: Include at least one typical use article demonstrating the most common use case for
-the component.
-
-- [Typical use](typical-use.md)
-- [An article covering a specific topic](article.md)
--->
 
 ## Extensions
 

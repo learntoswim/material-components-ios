@@ -33,16 +33,16 @@ find components -type d | cut -d'/' -f1-2 | sort | uniq | grep / | while read li
 
   if [ ${#all_components_using_new_readme_generataor[@]} -eq 0 ]; then
       echo "Generating legacy readme for $component..."
-      ./scripts/generate_legacy_readme $component
+      ./scripts/generate_readme $component
   else
     for component_using_new_readme_generataor in "${all_components_using_new_readme_generataor[@]}"
     do
       if [ "$component_using_new_readme_generataor" = "$component" ]; then
         echo "Generating readme for $component..."
-        ./scripts/generate_readme $component
+        ./scripts/generate_readme_new $component
       else
         echo "Generating legacy readme for $component..."
-        ./scripts/generate_legacy_readme $component
+        ./scripts/generate_readme $component
       fi
     done
   fi

@@ -25,7 +25,7 @@ There are four types of buttons:
 
 <!-- getting-started -->
 
-- [Typical installation](../../../docs/component-installation.md)
+- [Typical installation](../../../docs/component-installation-new.md)
 - [Accessibility](accessibility.md)
 
 ## Text button
