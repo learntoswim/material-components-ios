@@ -23,7 +23,7 @@ usage() {
 }
 
 # Add component names to this array as needed
-declare -a all_components_using_new_readme_generataor=()
+declare -a all_components_using_new_readme_generataor=("Buttons")
 
 find components -type d | cut -d'/' -f1-2 | sort | uniq | grep / | while read line; do
   component=$(echo "$line" | cut -d'/' -f2)

@@ -85,9 +85,11 @@ fi
 
 echo "Generating template readme..."
 if [[ $(grep -e "^root_path=" "$VARS_PATH") ]]; then
-  ./scripts/apply_template "$COMPONENT" scripts/templates/component/README.md.template "$TMP_README_PATH" >> /dev/null
+  ./scripts/apply_template "$COMPONENT" scripts/templates/component/LEGACY_README.md.template "$TMP_README_PATH" #>> /dev/null
   COMPONENT_SITE_PATH=$(grep -e "^root_path=" "$VARS_PATH" | cut -d'=' -f2-)
+  echo "$COMPONENT_SITE_PATH"
 fi
+
 
 COMPONENT_NAME=$(grep -e "^component=" "$VARS_PATH" | cut -d'=' -f2-)
 

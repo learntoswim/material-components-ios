@@ -8,7 +8,7 @@ path: /catalog/chips/
 api_doc_root: true
 -->
 
-<!-- This file was auto-generated using ./scripts/generate_readme Chips -->
+<!-- This file was auto-generated using ./scripts/generate_legacy_readme Chips -->
 
 # Chips
 
@@ -32,8 +32,7 @@ Chips are compact elements that represent an input, attribute, or action.
 ## Table of contents
 
 - [Installation](#installation)
-  - [Installation with CocoaPods](#installation-with-cocoapods)
-  - [Importing](#importing)
+  - [Installing Chips](#installing-chips)
 - [Chips Collections](#chips-collections)
   - [Input Chips](#input-chips)
   - [Choice Chips](#choice-chips)
@@ -61,7 +60,9 @@ Chips are compact elements that represent an input, attribute, or action.
 
 <!-- Extracted from docs/../../../docs/component-installation.md -->
 
-### Installation with CocoaPods
+### Installing Chips
+
+#### Cocoapods
 
 Add the following to your `Podfile`:
 
@@ -76,17 +77,15 @@ Then, run the following command:
 pod install
 ```
 
-### Importing
-
 To import the component:
 
 <!--<div class="material-code-render" markdown="1">-->
-#### Swift
+##### Swift
 ```swift
 import MaterialComponents.MaterialChips
 ```
 
-#### Objective-C
+##### Objective-C
 
 ```objc
 #import "MaterialChips.h"
