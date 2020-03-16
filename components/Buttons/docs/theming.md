@@ -1,12 +1,10 @@
-### Theming
-
 You can theme an MDCButton to match a
 [Material Design button style](https://material.io/design/components/buttons.html) using theming
 extensions. [Learn more about theming extensions](../../../docs/theming.md).
 
 ### How to theme an MDCButton
 
-To theme an instance of MDCButton you must import the theming extensions and call the methods shown for each button type above.
+To make use of the theming methods above import the theming extensions by doing the following:
 
 <!--<div class="material-code-render" markdown="1">-->
 #### Swift
@@ -26,5 +24,3 @@ let button = MDCButton()
 MDCButton *button = [[MDCButton alloc] init];
 ```
 <!--</div>-->
-
-Read more about container schemes [here](../../../docs/theming.md).
