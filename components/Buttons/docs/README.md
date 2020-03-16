@@ -40,11 +40,6 @@ There are four types of buttons:
 ## Toggle button (*not supported in iOS*)
 - [Toggle button](toggle-button.md)
 
-- [Typical use: floating action buttons](typical-use-floating-action-buttons.md)
-- [Customizing elevation](customizing-elevation.md)
-- [Customizing floating action buttons](customizing-floating-action-buttons.md)
-- [Interface Builder](interface-builder.md)
-
 ## Theming
 
 - [Theming](theming.md)
