@@ -355,7 +355,7 @@ extensions. [Learn more about theming extensions](../../docs/theming.md).
 
 ### How to theme an MDCButton
 
-First, import both Buttons and Buttons Theming and create an instance of MDCButton.
+To theme an instance of MDCButton you must import the theming extensions and call the methods shown for each button type above.
 
 <!--<div class="material-code-render" markdown="1">-->
 #### Swift
@@ -376,6 +376,5 @@ MDCButton *button = [[MDCButton alloc] init];
 ```
 <!--</div>-->
 
-You can then provide a container scheme instance to any of the MDCButton theming extensions.
-[Learn more about container schemes](../../docs/theming.md).
+Read more about container schemes [here](../../docs/theming.md).
 
