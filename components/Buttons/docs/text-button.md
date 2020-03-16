@@ -25,8 +25,8 @@ A text button has a text label and an optional icon.
 
 ![Text button anatomy diagram](assets/text-button-anatomy.png)
 
-A. Text label<br>
-B. Container (Text buttons do not have containers.)<br>
+A. Text label
+B. Container (Text buttons do not have containers.)
 C. Icon
 
 _**Note** A container in iOS refers to a set of components with an applied Material Theme. A container with respect to anatomy refers to the visible bounds of a component._
