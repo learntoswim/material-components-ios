@@ -223,31 +223,12 @@ _**Note** A container in iOS refers to a set of components with an applied Mater
 |  | Attribute | Related method(s) | Default value |
 | --- | --- | --- | --- |
 | **Text label** | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623992-titlelabel"><code>titleLabel</code></a> |  | |
-| |  | <a href="https://material.io/develop/ios/components/buttons/api-docs/Classes/MDCButton.html#/c:objc(cs)MDCButton(py)uppercaseTitle"><code>uppercaseTitle</code></a> | YES |
-| |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623993-settitlecolor"><code>setTitleColor:forState:</code></a> | System default |
-| |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1624018-settitle"><code>setTitle:forState:</code></a> | Black |
-| **Color** |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623993-settitlecolor"><code>setTitleColor:forState:</code></a> | System value |
-| **Typography** |  | | Access the <code>font</code> property on <code>textLabel</code>> like you would any other UIButton. |
-| **Icon** | | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623997-setimage"><code>setImage:forState:</code></a> | nil |
-| **Size** | | | It depends on the system settings and how the properties are set. |
-| **Gravity** (position relative to text label) | | | |
-| **Padding** (space between icon and text label) | | | System default (not configurable) |
+| **Icon** | <a href="https://developer.apple.com/documentation/uikit/uibutton/1624033-imageview"><code>imageView</code></a> |  | |
 
 </details>
 
-<details>
-<summary><b>Container</b> attributes</summary>
-<br>
-
-|  | Attribute | Related method(s) | Default value |
-| --- | --- | --- | --- |
-| **Color** |  |  | |
-| **Stroke color** | |  | |
-| **Stroke width** |  |  |  |
-| **Shape** |  | | |
-| **Elevation** | | | |
-| **Ripple color** | | | | 
-</details>
+We recommend using [Material Theming](https://material.io/components/\Buttons/#theming) to apply your customizations across your application. For a full list of component properties, go to the API docs:"
+List the links to each API
 
 
 ## Outlined button
