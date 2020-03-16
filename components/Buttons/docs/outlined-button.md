@@ -29,8 +29,6 @@ A. Text label<br>
 B. Container<br>
 C. Icon<br>
 
-_**Note** A container in iOS refers to a set of components with an applied Material Theme. A container with respect to anatomy refers to the visible bounds of a component._
-
 <details>
 <summary>Outlined button attributes</summary>
 <br>

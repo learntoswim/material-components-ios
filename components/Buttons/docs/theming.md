@@ -4,7 +4,7 @@ extensions. [Learn more about theming extensions](../../../docs/theming.md).
 
 ### How to theme an MDCButton
 
-To make use of the theming methods above import the theming extensions by doing the following:
+To make use of the theming methods shown in the examples above import the theming extensions by doing the following:
 
 <!--<div class="material-code-render" markdown="1">-->
 #### Swift
