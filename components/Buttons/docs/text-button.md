@@ -23,7 +23,7 @@ button.applyTextTheme(withScheme: containerScheme)
 
 A text button has a text label and an optional icon.
 
-![Text button anatomy diagram](docs/assets/text-button-anatomy.png)
+![Text button anatomy diagram](docs/assets/text-button-diagram.png)
 
 A. Text label<br>
 B. Container (Text buttons do not have containers.)<br>
