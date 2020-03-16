@@ -32,7 +32,7 @@ C. Icon<br>
 _**Note** A container in iOS refers to a set of components with an applied Material Theme. A container with respect to anatomy refers to the visible bounds of a component._
 
 <details>
-<summary><b>Text label</b> and <b>Icon</b> attributes</summary>
+<summary>Text button attributes</summary>
 <br>
 
 |  | Attribute | Related method(s) | Default value |

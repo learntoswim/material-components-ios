@@ -9,7 +9,7 @@ There are four types of buttons:
 1. [Text button](#text-button)
 2. [Outlined button](#outlined-button)
 3. [Contained button](#contained-button)
-4. [Toggle button](#toggle-button) (*not fully supported in iOS*)
+4. [Toggle button](#toggle-button) (*not supported in iOS*)
 
 ![Example of the four button types](docs/assets/buttons_types.png)
 
@@ -37,7 +37,7 @@ There are four types of buttons:
 ## Contained button
 - [Contained button](contained-button.md)
 
-## Toggle button (*not fully supported in iOS*)
+## Toggle button (*not supported in iOS*)
 - [Toggle button](toggle-button.md)
 
 - [Typical use: floating action buttons](typical-use-floating-action-buttons.md)
