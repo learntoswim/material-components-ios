@@ -1,5 +1,7 @@
 ### Installing <#ComponentName#>
 
+Material Components iOS is currently only available throgh Cocoapods.
+
 #### Cocoapods
 
 Add the following to your `Podfile`:
