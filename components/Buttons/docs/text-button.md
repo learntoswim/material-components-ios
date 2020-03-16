@@ -39,15 +39,14 @@ _**Note** A container in iOS refers to a set of components with an applied Mater
 | --- | --- | --- | --- |
 | **Text label** | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623992-titlelabel"><code>titleLabel</code></a> |  | |
 | |  | <a href="https://material.io/develop/ios/components/buttons/api-docs/Classes/MDCButton.html#/c:objc(cs)MDCButton(py)uppercaseTitle"><code>uppercaseTitle</code></a> | YES |
-| |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623993-settitlecolor"><code>setTitleColor:forState:</code></a> | System default |
+| |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623993-settitlecolor"><code>setTitleColor:forState:</code></a> | system default |
 | |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1624018-settitle"><code>setTitle:forState:</code></a> | Black |
-| **Color** |  |  | |
-| **Typography** |  |  |  |
-| **Icon** | | | |
-| **Size** | | | |
+| **Color** |  | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623993-settitlecolor"><code>setTitleColor:forState:</code></a> | System value |
+| **Typography** |  | | Access the <code>font</code> property on <code>textLabel</code>> like you would any other UIButton. |
+| **Icon** | | <a href="https://developer.apple.com/documentation/uikit/uibutton/1623997-setimage"><code>setImage:forState:</code></a> | nil |
+| **Size** | | | It depends on the system settings and how the properties are set. |
 | **Gravity** (position relative to text label) | | | |
-| **Padding** (space between icon and text label) | | | |
-
+| **Padding** (space between icon and text label) | | | system default (not configurable) |
 
 </details>
 
