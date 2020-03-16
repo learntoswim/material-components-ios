@@ -37,7 +37,7 @@ There are four types of buttons:
 ## Contained button
 - [Contained button](contained-button.md)
 
-## Toggle button (*not supported in iOS*)
+## Toggle button
 - [Toggle button](toggle-button.md)
 
 ## Theming

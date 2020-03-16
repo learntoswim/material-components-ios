@@ -337,7 +337,7 @@ We recommend using [Material Theming](https://material.io/components/\Buttons/#t
 List the links to each API
 
 
-## Toggle button (*not supported in iOS*)
+## Toggle button
 <!-- Extracted from docs/toggle-button.md -->
 
 There is currently no way to achieve a toggle button on iOS.
