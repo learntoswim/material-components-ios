@@ -43,10 +43,3 @@ There are four types of buttons:
 ## Theming
 
 - [Theming](theming.md)
-
-## Unsupported
-
-- [How to theme a button using a themer](theming-with-themers.md)
-- [Color Theming](color-theming.md)
-- [Typography Theming](typography-theming.md)
-- [Shape Theming](shape-theming.md)
